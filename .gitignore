@@ -1,24 +1,40 @@
-# Compiled class file
-*.class
+# === Java / Maven ===
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
 
-# Log file
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.iws
+
+# === Logs ===
 *.log
 
-# BlueJ files
-*.ctxt
+# === Sistema operativo ===
+.DS_Store
+Thumbs.db
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# === Archivos temporales ===
+*.tmp
+*.swp
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+# === Variables de entorno ===
+.env
+.env.*
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# === VSCode (por si usas para el frontend) ===
+.vscode/
+
+# === Frontend React (Node.js) ===
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.next/
+frontend/.turbo/
+
