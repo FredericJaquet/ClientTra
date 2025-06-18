@@ -1,389 +1,555 @@
 -- ******************
 -- DELETE DATA
 -- ******************
+SET FOREIGN_KEY_CHECKS = 0;
 DELETE FROM DocumentOrders;
 DELETE FROM Items;
 DELETE FROM Orders;
-DELETE FROM DocumentDetails;
 DELETE FROM Documents;
-DELETE FROM SchemeEntities;
 DELETE FROM SchemeLines;
 DELETE FROM Schemes;
 DELETE FROM Providers;
 DELETE FROM Customers;
 DELETE FROM Users;
-DELETE FROM Companies;
 DELETE FROM BankAccounts;
 DELETE FROM ContactPersons;
 DELETE FROM Phones;
 DELETE FROM Addresses;
 DELETE FROM ChangeRates;
 DELETE FROM Entities;
+SET FOREIGN_KEY_CHECKS = 1;
 
 
 -- ******************
 -- TEST DATA CLIENTTRA
 -- ******************
--- ENTIDADES COMPANY (idEntity 1 a 2)
+-- **********************
+-- Users
+-- **********************
 -- Entities
+-- Entity 1
 INSERT INTO Entities (vatNumber, comName, legalName, email, web) VALUES
-('B12345678', 'Compañía Alfa', 'Compañía Alfa SL', 'contacto@alfa.com', 'www.alfa.com'),
-('C87654321', 'Beta Traducciones', 'Beta Traducciones SA', 'info@beta.com', 'www.beta.com');
+('ESB12345678', 'Empresa Uno S.L.', 'Empresa Uno Sociedad Limitada', 'info@empresa1.com', 'https://empresa1.com');
+
+-- Entity 2
+INSERT INTO Entities (vatNumber, comName, legalName, email, web) VALUES
+('ESA87654321', 'Empresa Dos S.L.', 'Empresa Dos Sociedad Limitada', 'info@empresa2.com', 'https://empresa2.com');
+
+UPDATE Entities 
+SET idOwnerEntity = idEntity 
+WHERE vatNumber IN ('ESB12345678', 'ESA87654321');
+
+-- Addresses
+-- Address for Entity 1
+INSERT INTO Addresses (street, stNumber, apt, cp, city, state, country, idEntity) VALUES
+('Calle Mayor', '10', '1ºA', '28013', 'Madrid', 'Madrid', 'España', 1);
+
+-- Address for Entity 2
+INSERT INTO Addresses (street, stNumber, apt, cp, city, state, country, idEntity) VALUES
+('Avenida del Sol', '25', '2ºB', '08029', 'Barcelona', 'Cataluña', 'España', 2);
+
+-- Phones
+-- Phones for Entity 1
+INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
+('+34910000001', 'fijo', 1),
+('+34600000001', 'móvil', 1);
+
+-- Phones forEntity 2
+INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
+('+34910000002', 'fijo', 2),
+('+34600000002', 'móvil', 2);
+
+-- Contact Persons
+-- Contacts for Entity 1
+INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
+('Laura',  'Gómez', '', 'Gerente', 'laura@empresa1.com', 1);
+
+-- Contacts for Entity 2
+INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
+('Carlos', 'Ruiz', '', 'CEO', 'carlos@empresa2.com', 2);
+
+-- Bank Accounts
+-- Bank Accounts for Entity 1
+INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
+('ES9121000418450200051332', 'CAIXESBBXXX', 'Empresa Uno S.L.', 'Oficina Central', 1);
+
+-- Bank Accounts for Entity 2
+INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
+('ES9820385778983000760236', 'BBVAESMMXXX', 'Empresa Dos S.L.', 'Sucursal Norte', 2);
+
+-- Users
+-- Entity 1
+INSERT INTO Users (userName, passwd, email, idEntity, idRole, idPlan) VALUES
+('admin1',      '$2a$10$CMo9X.9spkAPlsCkGl/E3OT/U7o.kOV.YmK94Fz9vPGMJqGWzST/y', 'admin1@example.com',      1, 1, 1),
+('accounting1', '$2a$10$chOc95TWlCVF1RCIGFeg7uAwBfOOPcE34w9Z9PR/BINgOZBvSkq1W', 'accounting1@example.com', 1, 2, 1),
+('user1',       '$2a$10$dLTPQeS8FbQcoHChNExnme3zAxkTuZimKFnUjEMe1jz.kj6He.uxK', 'user1@example.com',       1, 3, 1);
+
+-- Entity 2
+INSERT INTO Users (userName, passwd, email, idEntity, idRole, idPlan) VALUES
+('admin2',      '$2a$10$SNgZ8Zjozom14rdM.1FjD.np7ZJda7Th1xSncsivNDy.owQkEYgVW', 'admin2@example.com',      2, 1, 1),
+('accounting2', '$2a$10$duKUVX.lPfqFmbiK4zZju.AU0k3byEqM9ERvnLPuCJZfFCciMK.Ru', 'accounting2@example.com', 2, 2, 1),
+('user2',       '$2a$10$bdFkoGZVRVRI6hMLptO0d.KbHV2PFfOTpEXG7QzDEWp0aOJe9D0Oa', 'user2@example.com',       2, 3, 1);
+
+-- **********************
+-- Customers
+-- **********************
+
+-- 5 Customers for Entity 1 (Empresa Uno S.L.)
+INSERT INTO Entities (vatNumber, comName, legalName, email, web, idOwnerEntity) VALUES
+('ESB11111111', 'Cliente Uno S.A.', 'Cliente Uno Sociedad Anónima', 'info@cliente1.com', 'https://cliente1.com', 1),
+('ESB22222222', 'Cliente Dos S.L.', 'Cliente Dos Sociedad Limitada', 'info@cliente2.com', 'https://cliente2.com', 1),
+('ESB33333333', 'Cliente Tres S.L.', 'Cliente Tres Sociedad Limitada', 'info@cliente3.com', 'https://cliente3.com', 1),
+('ESB44444444', 'Cliente Cuatro S.A.', 'Cliente Cuatro Sociedad Anónima', 'info@cliente4.com', 'https://cliente4.com', 1),
+('ESB55555555', 'Cliente Cinco S.L.', 'Cliente Cinco Sociedad Limitada', 'info@cliente5.com', 'https://cliente5.com', 1);
+
+-- Addresses for Customers of Entity 1
+INSERT INTO Addresses (street, stNumber, apt, cp, city, state, country, idEntity) VALUES
+('Calle del Cliente', '1', 'A', '28001', 'Madrid', 'Madrid', 'España', 3),
+('Avenida Principal', '10', NULL, '08001', 'Barcelona', 'Cataluña', 'España', 4),
+('Plaza Central', '5', '3ºD', '46001', 'Valencia', 'Valencia', 'España', 5),
+('Calle Secundaria', '15', '2ºB', '41001', 'Sevilla', 'Andalucía', 'España', 6),
+('Paseo del Parque', '20', NULL, '48001', 'Bilbao', 'País Vasco', 'España', 7);
+
+-- Phones for Customers of Entity 1
+INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
+('+34911000011', 'fijo', 3),
+('+34600000111', 'móvil', 3),
+('+34911000022', 'fijo', 4),
+('+34600000222', 'móvil', 4),
+('+34911000033', 'fijo', 5),
+('+34600000333', 'móvil', 5),
+('+34911000044', 'fijo', 6),
+('+34600000444', 'móvil', 6),
+('+34911000055', 'fijo', 7),
+('+34600000555', 'móvil', 7);
+
+-- Contacts for Customers of Entity 1
+INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
+('Ana', '', 'García', 'Directora de Compras', 'ana.garcia@cliente1.com', 3),
+('Luis', 'Miguel', 'Fernández', 'Gerente', 'luis.fernandez@cliente2.com', 4),
+('Marta', '', 'Rodríguez', 'Responsable de Proyectos', 'marta.rodriguez@cliente3.com', 5),
+('Javier', '', 'Martínez', 'Director Financiero', 'javier.martinez@cliente4.com', 6),
+('Sofía', '', 'López', 'CEO', 'sofia.lopez@cliente5.com', 7);
+
+-- Bank Accounts for Customers of Entity 1
+INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
+('ES7621000000000000001111', 'CAIXESBBXXX', 'Cliente Uno S.A.', 'Madrid Centro', 3),
+('ES7621000000000000002222', 'BBVAESMMXXX', 'Cliente Dos S.L.', 'Barcelona Plaza', 4),
+('ES7621000000000000003333', 'BSCHESMMXXX', 'Cliente Tres S.L.', 'Valencia Norte', 5),
+('ES7621000000000000004444', 'SABCESBBXXX', 'Cliente Cuatro S.A.', 'Sevilla Este', 6),
+('ES7621000000000000005555', 'BASKES2BXXX', 'Cliente Cinco S.L.', 'Bilbao Deusto', 7);
+
+-- Customers for Entity 1
+INSERT INTO Customers (invoicingMethod, duedate, payMethod, defaultLanguage, defaultVAT, defaultWithholding, europe, enabled, idEntity, idOwnerEntity) VALUES
+('Mensual', 30, 'Transferencia', 'es', 0.21, 0.15, 1, 1, 3, 1),
+('Trimestral', 60, 'Domiciliación', 'en', 0.21, 0.15, 1, 1, 4, 1),
+('Anual', 90, 'Transferencia', 'fr', 0.21, 0.10, 1, 1, 5, 1),
+('Bimestral', 45, 'Tarjeta', 'de', 0.21, 0.20, 1, 1, 6, 1),
+('Semestral', 30, 'Efectivo', 'it', 0.10, 0.00, 1, 1, 7, 1);
+
+-- 5 Customers for Entity 2 (Empresa Dos S.L.)
+INSERT INTO Entities (vatNumber, comName, legalName, email, web, idOwnerEntity) VALUES
+('ESA66666666', 'Cliente Seis S.L.', 'Cliente Seis Sociedad Limitada', 'info@cliente6.com', 'https://cliente6.com', 2),
+('ESA77777777', 'Cliente Siete S.A.', 'Cliente Siete Sociedad Anónima', 'info@cliente7.com', 'https://cliente7.com', 2),
+('ESA88888888', 'Cliente Ocho S.L.', 'Cliente Ocho Sociedad Limitada', 'info@cliente8.com', 'https://cliente8.com', 2),
+('ESA99999999', 'Cliente Nueve S.A.', 'Cliente Nueve Sociedad Anónima', 'info@cliente9.com', 'https://cliente9.com', 2),
+('ESA10101010', 'Cliente Diez S.L.', 'Cliente Diez Sociedad Limitada', 'info@cliente10.com', 'https://cliente10.com', 2);
+
+-- Addresses for Customers of Entity 2
+INSERT INTO Addresses (street, stNumber, apt, cp, city, state, country, idEntity) VALUES
+('Calle del Mar', '100', '1ºA', '08003', 'Barcelona', 'Cataluña', 'España', 8),
+('Avenida de la Libertad', '25', NULL, '28004', 'Madrid', 'Madrid', 'España', 9),
+('Paseo de la Habana', '30', '4ºD', '28036', 'Madrid', 'Madrid', 'España', 10),
+('Calle Mallorca', '200', NULL, '08008', 'Barcelona', 'Cataluña', 'España', 11),
+('Gran Vía', '50', '5ºB', '28013', 'Madrid', 'Madrid', 'España', 12);
+
+-- Phones for Customers of Entity 2
+INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
+('+34912000066', 'fijo', 8),
+('+34600000666', 'móvil', 8),
+('+34912000077', 'fijo', 9),
+('+34600000777', 'móvil', 9),
+('+34912000088', 'fijo', 10),
+('+34600000888', 'móvil', 10),
+('+34912000099', 'fijo', 11),
+('+34600000999', 'móvil', 11),
+('+34912000101', 'fijo', 12),
+('+34600001010', 'móvil', 12);
+
+-- Contacts for Customers of Entity 2
+INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
+('David', 'Sánchez', 'Rodriguez', 'Director Comercial', 'david.sanchez@cliente6.com', 8),
+('Elena', 'Pérez', '', 'Responsable de Ventas', 'elena.perez@cliente7.com', 9),
+('Pablo', 'González', 'Perez', 'CEO', 'pablo.gonzalez@cliente8.com', 10),
+('Lucía', 'Díaz', '', 'Directora Financiera', 'lucia.diaz@cliente9.com', 11),
+('Raúl', 'Hernández', '', 'Gerente', 'raul.hernandez@cliente10.com', 12);
+
+-- Bank Accounts for Customers of Entity 2
+INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
+('ES8521000000000000006666', 'CAIXESBBXXX', 'Cliente Seis S.L.', 'Barcelona Centro', 8),
+('ES8521000000000000007777', 'BBVAESMMXXX', 'Cliente Siete S.A.', 'Madrid Norte', 9),
+('ES8521000000000000008888', 'BSCHESMMXXX', 'Cliente Ocho S.L.', 'Madrid Sur', 10),
+('ES8521000000000000009999', 'SABCESBBXXX', 'Cliente Nueve S.A.', 'Barcelona Diagonal', 11),
+('ES8521000000000000010101', 'BASKES2BXXX', 'Cliente Diez S.L.', 'Madrid Castellana', 12);
+
+-- Customers for Entity 2
+INSERT INTO Customers (invoicingMethod, duedate, payMethod, defaultLanguage, defaultVAT, defaultWithholding, europe, enabled, idEntity, idOwnerEntity) VALUES
+('Mensual', 15, 'Transferencia', 'es', 0.21, 0.15, 1, 1, 8, 2),
+('Bimestral', 30, 'Domiciliación', 'en', 0.21, 0.10, 1, 1, 9, 2),
+('Trimestral', 60, 'Tarjeta', 'fr', 0.21, 0.20, 1, 1, 10, 2),
+('Semestral', 90, 'Transferencia', 'de', 0.10, 0.00, 1, 1, 11, 2),
+('Anual', 30, 'Efectivo', 'it', 0.21, 0.15, 1, 1, 12, 2);
+
+-- Schemes for Entity 1
+-- Price Schemes for Customers (idEntities 3 to 12)
+
+-- Customer 1 (Entity 3, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Basic Spanish-English', 0.10, 'word', 'totalWords', 'es', 'en', 3, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('General translation', 0, 1),
+('Legal documents', 5, 1);
+
+-- Customer 2 (Entity 4, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Technical Translations', 0.12, 'word', 'totalWords', 'en', 'es', 4, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Manuals', 0, 2),
+('Instructions', 3, 2),
+('Datasheets', 2, 2);
+
+-- Customer 3 (Entity 5, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Basic French', 0.09, 'word', 'totalWords', 'fr', 'es', 5, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Email translation', 0, 3);
+
+-- Customer 4 (Entity 6, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('DE-ES Standard', 0.11, 'word', 'totalWords', 'de', 'es', 6, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Technical content', 4, 4),
+('Legal agreements', 2, 4);
+
+-- Customer 5 (Entity 7, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Italian Pack', 0.10, 'word', 'totalWords', 'it', 'es', 7, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Commercial', 5, 5);
+
+-- Customer 6 (Entity 8, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Monthly Spanish', 0.08, 'word', 'totalWords', 'es', 'en', 8, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Blog posts', 0, 6),
+('Product descriptions', 2, 6);
+
+-- Customer 7 (Entity 9, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('EN to DE', 0.13, 'word', 'totalWords', 'en', 'de', 9, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Legal translation', 0, 7);
+
+-- Customer 8 (Entity 10, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('FR-EN Services', 0.12, 'word', 'totalWords', 'fr', 'en', 10, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Contracts', 2, 8),
+('Business letters', 1, 8),
+('Internal docs', 3, 8);
+
+-- Customer 9 (Entity 11, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Multilingual ES', 0.09, 'word', 'totalWords', 'es', 'fr', 11, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Marketing material', 5, 9);
+
+-- Customer 10 (Entity 12, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Special DE-FR', 0.14, 'word', 'totalWords', 'de', 'fr', 12, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Technical sheets', 4, 10),
+('Product labels', 2, 10);
+
+-- **********************
+-- Providers
+-- **********************
+
+-- Providers for Entity 1
+-- Entities
+INSERT INTO Entities (vatNumber, comName, legalName, email, web, idOwnerEntity) VALUES
+('ESPV1111111', 'Proveedor Uno S.L.', 'Proveedor Uno Sociedad Limitada', 'info@proveedor1.com', 'https://proveedor1.com', 1),
+('ESPV2222222', 'Proveedor Dos S.A.', 'Proveedor Dos Sociedad Anónima', 'info@proveedor2.com', 'https://proveedor2.com', 1),
+('ESPV3333333', 'Proveedor Tres S.L.', 'Proveedor Tres Sociedad Limitada', 'info@proveedor3.com', 'https://proveedor3.com', 1);
 
 -- Addresses
 INSERT INTO Addresses (street, stNumber, apt, cp, city, state, country, idEntity) VALUES
-('Calle Mayor', '10', '3B', '28001', 'Madrid', 'Madrid', 'España', 1),
-('Avenida Central', '45', NULL, '08002', 'Barcelona', 'Cataluña', 'España', 2);
+('Calle Servicios', '101', NULL, '28010', 'Madrid', 'Madrid', 'España', 13),
+('Avda. Proveedores', '22', '2ºB', '08010', 'Barcelona', 'Cataluña', 'España', 14),
+('Camino Industrial', '7', NULL, '41010', 'Sevilla', 'Andalucía', 'España', 15);
 
 -- Phones
 INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
-('600123456', 'móvil', 1),
-('912345678', 'fijo', 2);
+('+34913000013', 'fijo', 13),
+('+34610000113', 'móvil', 13),
+('+34913000014', 'fijo', 14),
+('+34610000114', 'móvil', 14),
+('+34913000015', 'fijo', 15),
+('+34610000115', 'móvil', 15);
 
--- Contact Persons
+-- Contacts
 INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
-('Luis', 'Fernando', 'Gómez', 'Gerente', 'luis.gomez@alfa.com', 1),
-('Ana', 'Martínez', NULL, 'Responsable', 'ana.martinez@beta.com', 2);
+('Pedro', 'López', 'Hernandez', 'Comercial', 'pedro.lopez@proveedor1.com', 13),
+('Sara', 'Martín', '', 'Gestora', 'sara.martin@proveedor2.com', 14),
+('Alberto', 'Gómez', 'Serrano', 'Jefe de Proyectos', 'alberto.gomez@proveedor3.com', 15);
 
 -- Bank Accounts
 INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
-('ES9121000418450200051332', 'BBVAESMMXXX', 'Compañía Alfa SL', 'Madrid Centro', 1),
-('ES9820385778983000760236', 'CAIXESBBXXX', 'Beta Traducciones SA', 'Barcelona Diagonal', 2);
-
--- Companies
-INSERT INTO Companies (idEntity) VALUES (1), (2);
-
--- Users
-INSERT INTO Users (userName, passwd, email, idCompany, idRole, idPlan) VALUES
-('adminAlfa', 'hashed_password_admin', 'admin@alfa.com', 1, 1, 2),
-('accountingBeta', 'hashed_password_acc', 'accounting@beta.com', 2, 2, 1),
-('userBeta', 'hashed_password_user', 'user@beta.com', 2, 3, 1);
-
--- Customer entities (idEntity 3 a 7)
-INSERT INTO Entities (vatNumber, comName, legalName, email, web) VALUES
-('D12345678', 'Cliente Uno SL', 'Cliente Uno SL', 'contacto@cliente1.com', 'www.cliente1.com'),
-('E87654321', 'Cliente Dos SA', 'Cliente Dos SA', 'contacto@cliente2.com', 'www.cliente2.com'),
-('F23456789', 'Cliente Tres SL', 'Cliente Tres SL', 'contacto@cliente3.com', 'www.cliente3.com'),
-('G98765432', 'Cliente Cuatro SL', 'Cliente Cuatro SL', 'contacto@cliente4.com', 'www.cliente4.com'),
-('H12349876', 'Cliente Cinco SA', 'Cliente Cinco SA', 'contacto@cliente5.com', 'www.cliente5.com');
-
--- Customers
-INSERT INTO Customers (invoicingMethod, duedate, payMethod, defaultLanguage, defaultVAT, defaultWithholding, europe, enabled, idEntity) VALUES
-('Email', 30, 'Transferencia', 'es', 0.21, 0.15, 1, 1, 3),
-('Email', 45, 'Cheque', 'en', 0.21, 0.15, 1, 1, 4),
-('Email', 15, 'Paypal', 'es', 0.21, 0.15, 1, 1, 5),
-('Postal', 30, 'Transferencia', 'es', 0.21, 0.15, 1, 1, 6),
-('Email', 60, 'Transferencia', 'en', 0.21, 0.15, 1, 1, 7);
-
--- Contacts Customers
-INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
-('Laura', 'Pérez', NULL, 'Manager', 'laura.perez@cliente1.com', 3),
-('Miguel', 'A.', 'Ruiz', 'Asistente', 'miguel.ruiz@cliente1.com', 3),
-('Sofía', 'García', NULL, 'Directora', 'sofia.garcia@cliente2.com', 4),
-('Carlos', 'M.', 'López', 'Jefe', 'carlos.lopez@cliente3.com', 5),
-('Elena', 'Torres', NULL, 'Asistente', 'elena.torres@cliente3.com', 5),
-('David', 'Fernández', NULL, 'Coordinador', 'david.fernandez@cliente3.com', 5),
-('Ana', 'Martínez', NULL, 'Manager', 'ana.martinez@cliente4.com', 6),
-('Jorge', 'L.', 'Sánchez', 'Director', 'jorge.sanchez@cliente5.com', 7),
-('Lucía', 'Reyes', NULL, 'Administrativa', 'lucia.reyes@cliente5.com', 7);
-
--- Phone Customers
-INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
-('600111223', 'móvil', 3),
-('910111223', 'fijo', 3),
-('600222334', 'móvil', 4),
-('600333445', 'móvil', 5),
-('910333445', 'fijo', 5),
-('912333445', 'fax', 5),
-('600444556', 'móvil', 6),
-('600555667', 'móvil', 7),
-('910555667', 'fijo', 7);
-
--- Bank Account Customers
-INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
-('ES0012345678901234567890', 'BBVAESMMXXX', 'Cliente Uno SL', 'Sucursal Madrid', 3),
-('ES0023456789012345678901', 'CAIXESBBXXX', 'Cliente Dos SA', 'Sucursal Barcelona', 4),
-('ES0034567890123456789012', 'SABRESBBXXX', 'Cliente Tres SL', 'Sucursal Sevilla', 5),
-('ES0045678901234567890123', 'BBVAESMMXXX', 'Cliente Cuatro SL', 'Sucursal Valencia', 6),
-('ES0056789012345678901234', 'CAIXESBBXXX', 'Cliente Cinco SA', 'Sucursal Bilbao', 7);
-
--- Provider Entities (idEntity 8 a 12)
-INSERT INTO Entities (vatNumber, comName, legalName, email, web) VALUES
-('I12345678', 'Proveedor Uno SL', 'Proveedor Uno SL', 'contacto@proveedor1.com', 'www.proveedor1.com'),
-('J87654321', 'Proveedor Dos SA', 'Proveedor Dos SA', 'contacto@proveedor2.com', 'www.proveedor2.com'),
-('K23456789', 'Proveedor Tres SL', 'Proveedor Tres SL', 'contacto@proveedor3.com', 'www.proveedor3.com'),
-('L98765432', 'Proveedor Cuatro SL', 'Proveedor Cuatro SL', 'contacto@proveedor4.com', 'www.proveedor4.com'),
-('M12349876', 'Proveedor Cinco SA', 'Proveedor Cinco SA', 'contacto@proveedor5.com', 'www.proveedor5.com');
+('ES8821000000000000011111', 'CAIXESBBXXX', 'Proveedor Uno S.L.', 'Madrid Central', 13),
+('ES8821000000000000022222', 'BBVAESMMXXX', 'Proveedor Dos S.A.', 'Barcelona Centro', 14),
+('ES8821000000000000033333', 'BSCHESMMXXX', 'Proveedor Tres S.L.', 'Sevilla Industrial', 15);
 
 -- Providers
-INSERT INTO Providers (defaultLanguage, defaultVAT, defaultWithholding, europe, enabled, idEntity) VALUES
-('es', 0.21, 0.15, 1, 1, 8),
-('en', 0.21, 0.15, 1, 1, 9),
-('es', 0.21, 0.15, 1, 1, 10),
-('en', 0.21, 0.15, 1, 1, 11),
-('es', 0.21, 0.15, 1, 1, 12);
+INSERT INTO Providers (defaultLanguage, defaultVAT, defaultWithholding, europe, enabled, idEntity, idOwnerEntity) VALUES
+('es', 0.21, 0.15, 1, 1, 13, 1),
+('es', 0.21, 0.10, 1, 1, 14, 1),
+('en', 0.21, 0.00, 1, 1, 15, 1);
 
--- Contacts Providers
-INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
-('Pablo', 'Santos', NULL, 'Director', 'pablo.santos@proveedor1.com', 8),
-('María', 'Núñez', NULL, 'Asistente', 'maria.nunez@proveedor1.com', 8),
-('Fernando', 'J.', 'Cruz', 'Gerente', 'fernando.cruz@proveedor2.com', 9),
-('Isabel', 'Mora', NULL, 'Coordinadora', 'isabel.mora@proveedor3.com', 10),
-('Luis', 'Vega', NULL, 'Contable', 'luis.vega@proveedor3.com', 10),
-('Elena', 'Ramírez', NULL, 'Directora', 'elena.ramirez@proveedor4.com', 11),
-('Javier', 'M.', 'Lopez', 'Manager', 'javier.lopez@proveedor5.com', 12),
-('Ana', 'Martín', NULL, 'Administrativa', 'ana.martin@proveedor5.com', 12),
-('Carmen', 'Ortiz', NULL, 'Asistente', 'carmen.ortiz@proveedor5.com', 12);
+-- Providers for Entity 2
+-- Entities
+INSERT INTO Entities (vatNumber, comName, legalName, email, web, idOwnerEntity) VALUES
+('ESPV4444444', 'Proveedor Cuatro S.A.', 'Proveedor Cuatro Sociedad Anónima', 'info@proveedor4.com', 'https://proveedor4.com', 2),
+('ESPV5555555', 'Proveedor Cinco S.L.', 'Proveedor Cinco Sociedad Limitada', 'info@proveedor5.com', 'https://proveedor5.com', 2),
+('ESPV6666666', 'Proveedor Seis S.A.', 'Proveedor Seis Sociedad Anónima', 'info@proveedor6.com', 'https://proveedor6.com', 2);
 
--- Phone Providers
+-- Addresses
+INSERT INTO Addresses (street, stNumber, apt, cp, city, state, country, idEntity) VALUES
+('Avda. del Proveedor', '50', '4ºC', '03003', 'Alicante', 'Comunidad Valenciana', 'España', 16),
+('Calle Mayoristas', '18', NULL, '29001', 'Málaga', 'Andalucía', 'España', 17),
+('Paseo del Sur', '77', NULL, '35001', 'Las Palmas', 'Canarias', 'España', 18);
+
+-- Phones
 INSERT INTO Phones (phoneNumber, kind, idEntity) VALUES
-('611123456', 'móvil', 8),
-('911123456', 'fijo', 8),
-('611223456', 'móvil', 9),
-('611323456', 'móvil', 10),
-('911323456', 'fijo', 10),
-('912323456', 'fax', 10),
-('611423456', 'móvil', 11),
-('611523456', 'móvil', 12),
-('911523456', 'fijo', 12);
+('+34914000016', 'fijo', 16),
+('+34620000116', 'móvil', 16),
+('+34914000017', 'fijo', 17),
+('+34620000117', 'móvil', 17),
+('+34914000018', 'fijo', 18),
+('+34620000118', 'móvil', 18);
 
--- Bnk Account Providers
+-- Contacts
+INSERT INTO ContactPersons (firstname, middlename, lastname, role, email, idEntity) VALUES
+('Marina', 'Navarro', 'Diaz', 'Gestora', 'marina.navarro@proveedor4.com', 16),
+('Fernando', 'Ortega', '', 'Jefe Técnico', 'fernando.ortega@proveedor5.com', 17),
+('Isabel', 'Ramírez', '', 'Responsable Comercial', 'isabel.ramirez@proveedor6.com', 18);
+
+-- Bank Accounts
 INSERT INTO BankAccounts (iban, swift, holder, branch, idEntity) VALUES
-('ES0067890123456789012345', 'BBVAESMMXXX', 'Proveedor Uno SL', 'Sucursal Madrid', 8),
-('ES0078901234567890123456', 'CAIXESBBXXX', 'Proveedor Dos SA', 'Sucursal Barcelona', 9),
-('ES0089012345678901234567', 'SABRESBBXXX', 'Proveedor Tres SL', 'Sucursal Sevilla', 10),
-('ES0090123456789012345678', 'BBVAESMMXXX', 'Proveedor Cuatro SL', 'Sucursal Valencia', 11),
-('ES0101234567890123456789', 'CAIXESBBXXX', 'Proveedor Cinco SA', 'Sucursal Bilbao', 12);
+('ES8921000000000000044444', 'CAIXESBBXXX', 'Proveedor Cuatro S.A.', 'Alicante Centro', 16),
+('ES8921000000000000055555', 'BBVAESMMXXX', 'Proveedor Cinco S.L.', 'Málaga Puerto', 17),
+('ES8921000000000000066666', 'BSCHESMMXXX', 'Proveedor Seis S.A.', 'Las Palmas Triana', 18);
 
--- Scheme Customers (2 per customers, exept for customer 7)
-INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage) VALUES
-('Traducción general cliente 3', 0.10, 'palabra', 'totalWords', 'es', 'en'),
-('Revisión cliente 3', 0.05, 'palabra', 'totalWords', 'en', 'es'),
-('Traducción general cliente 4', 0.11, 'palabra', 'totalWords', 'es', 'en'),
-('Revisión cliente 4', 0.06, 'palabra', 'totalWords', 'en', 'es'),
-('Traducción general cliente 5', 0.09, 'palabra', 'totalWords', 'es', 'en'),
-('Revisión cliente 5', 0.04, 'palabra', 'totalWords', 'en', 'es'),
-('Traducción general cliente 6', 0.12, 'palabra', 'totalWords', 'es', 'en'),
-('Revisión cliente 6', 0.07, 'palabra', 'totalWords', 'en', 'es');
+-- Providers
+INSERT INTO Providers (defaultLanguage, defaultVAT, defaultWithholding, duedate, europe, enabled, idEntity, idOwnerEntity) VALUES
+('es', 0.21, 0.10, 30, 1, 1, 16, 2),
+('en', 0.21, 0.15, 45, 1, 1, 17, 2),
+('de', 0.10, 0.00, 60, 1, 1, 18, 2);
 
--- Scheme providers (1 per provider, exept for some providers)
-INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage) VALUES
-('Traducción general proveedor 8', 0.10, 'palabra', 'totalWords', 'es', 'en'),
-('Traducción general proveedor 9', 0.11, 'palabra', 'totalWords', 'es', 'en'),
-('Traducción general proveedor 10', 0.09, 'palabra', 'totalWords', 'es', 'en'),
-('Traducción general proveedor 11', 0.12, 'palabra', 'totalWords', 'es', 'en');
+-- Price Schemes for Providers (Entities 13 to 18)
+-- Provider 1 (Entity 13, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Translation ES>EN', 0.07, 'word', 'totalWords', 'es', 'en', 13, 1);
 
--- Relation between Schemes and Entities (SchemeEntity)
-INSERT INTO SchemeEntities (idScheme, idEntity) VALUES
-(1, 3), (2, 3),
-(3, 4), (4, 4),
-(5, 5), (6, 5),
-(7, 6), (8, 6),
-(9, 8),
-(10, 9),
-(11, 10),
-(12, 11);
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Urgent jobs', 10, 11),
+('Standard delivery', 0, 11);
 
--- 1. Change Rate
+-- Provider 2 (Entity 14, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Proofreading EN', 0.05, 'word', 'totalWords', 'en', 'en', 14, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Quick review', 0, 12),
+('Detailed check', 5, 12),
+('With comments', 3, 12);
+
+-- Provider 3 (Entity 15, Owner 1)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('FR>ES Technical', 0.09, 'word', 'totalWords', 'fr', 'es', 15, 1);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Manuals', 2, 13);
+
+-- Provider 4 (Entity 16, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('DE>EN Services', 0.11, 'word', 'totalWords', 'de', 'en', 16, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Contracts', 4, 14),
+('Reports', 0, 14);
+
+-- Provider 5 (Entity 17, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Review IT>EN', 0.06, 'word', 'totalWords', 'it', 'en', 17, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Fast review', 1, 15);
+
+-- Provider 6 (Entity 18, Owner 2)
+INSERT INTO Schemes (schemeName, price, units, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('ES>FR Marketing', 0.08, 'word', 'totalWords', 'es', 'fr', 18, 2);
+
+INSERT INTO SchemeLines (descrip, discount, idScheme) VALUES
+('Email copy', 0, 16),
+('Landing pages', 2, 16),
+('Ad texts', 3, 16);
+
+-- **********************
+-- Invoices
+-- **********************
+
+-- 1. Insert exchange rates
 INSERT INTO ChangeRates (currency1, currency2, rate) VALUES
-('€', '€', 1.0),
-('€', '$', 1.08),
-('€', '£', 0.86);
+('€', '€', 1.00),
+('€', '$', 1.12),
+('€', '£', 0.88);
 
--- 2. Documents for customers (3-7) and providers (8-12)
--- Customers (Invoices and quotes)
-INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount) VALUES
--- Customer 3 (2 invoices and 3 quotes)
-('FAC-2023-001', '2023-01-15', 'INV_CUST', 'PAID', 'es', 0.21, '€', 'Enviar por email', 'Transferencia en 30 días', '2023-02-14', 3, 1, 1),
-('FAC-2023-002', '2023-03-20', 'INV_CUST', 'PENDING', 'es', 0.21, '€', 'Enviar por email', 'Transferencia en 30 días', '2023-04-19', 3, 1, 1),
-('PRES-2023-001', '2023-01-05', 'QUOTE', 'ACCEPTED', 'es', 0.21, '€', NULL, NULL, '2023-02-04', 3, 1, NULL),
-('PRES-2023-002', '2023-02-10', 'QUOTE', 'REJECTED', 'es', 0.21, '€', NULL, NULL, '2023-03-12', 3, 1, NULL),
-('PRES-2023-003', '2023-04-01', 'QUOTE', 'PENDING', 'es', 0.21, '€', NULL, NULL, '2023-04-30', 3, 1, NULL),
+-- Invoice 1
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity) VALUES
+('FAC-2025-001', '2025-02-15', 'INV_CUST', 'PENDING', 'es', 0.21, 0.15, 62.70, 13.17, 75.86, 9.40, 66.46, '€', NULL, 'Pago por transferencia a 30 días', '2025-03-17', 3, 1, 1, NULL, 1);
 
--- customer 4 (3 invoices and 2 quotes)
-('FAC-2023-003', '2023-02-10', 'INV_CUST', 'PAID', 'en', 0.21, '$', 'Email to accounting', 'Paypal payment', '2023-03-27', 4, 2, 2),
-('FAC-2023-004', '2023-03-15', 'INV_CUST', 'PENDING', 'en', 0.21, '$', 'Email to manager', 'Paypal payment', '2023-04-29', 4, 2, 2),
-('FAC-2023-005', '2023-05-01', 'INV_CUST', 'PENDING', 'en', 0.21, '€', 'Standard delivery', 'Bank transfer', '2023-06-30', 4, 1, 2),
-('PRES-2023-004', '2023-01-20', 'QUOTE', 'ACCEPTED', 'en', 0.21, '$', NULL, NULL, '2023-02-19', 4, 2, NULL),
-('PRES-2023-005', '2023-03-01', 'QUOTE', 'ACCEPTED', 'en', 0.21, '€', NULL, NULL, '2023-03-31', 4, 1, NULL),
+-- Orders linked to FAC-2025-001
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Pedido 1', '2025-02-15', 0.08, 'línea', 25.37, 1, 'Industry', 'es', 'fr', 3, 1),
+('Pedido 2', '2025-02-15', 0.12, 'línea', 17.28, 1, 'Medical', 'en', 'fr', 3, 1),
+('Pedido 3', '2025-02-15', 0.09, 'palabra', 20.04, 1, 'Legal', 'it', 'fr', 3, 1);
 
--- Customer 5 (2 invoices and 3 quotes)
-('FAC-2023-006', '2023-01-25', 'INV_CUST', 'PAID', 'es', 0.21, '€', 'Enviar a oficina central', 'Transferencia en 15 días', '2023-02-09', 5, 1, 3),
-('FAC-2023-007', '2023-04-10', 'INV_CUST', 'PENDING', 'es', 0.21, '€', 'Enviar a delegación', 'Transferencia en 15 días', '2023-04-25', 5, 1, 3),
-('PRES-2023-006', '2023-02-15', 'QUOTE', 'REJECTED', 'es', 0.21, '€', NULL, NULL, '2023-03-02', 5, 1, NULL),
-('PRES-2023-007', '2023-03-20', 'QUOTE', 'ACCEPTED', 'es', 0.21, '€', NULL, NULL, '2023-04-04', 5, 1, NULL),
-('PRES-2023-008', '2023-05-05', 'QUOTE', 'PENDING', 'es', 0.21, '€', NULL, NULL, '2023-05-20', 5, 1, NULL),
+-- Order Items
+INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
+('Línea Pedido 1', 341, 0.07, 25.37, 1),
+('Línea Pedido 2', 150, 0.04, 17.28, 2),
+('Línea Pedido 3', 256, 0.13, 20.04, 3);
 
--- Documents for providers (invoices and POs)
--- Provider 8 (3 invoices and 2 POs)
-('FAC-PROV-001', '2023-01-10', 'INV_PROV', 'PAID', 'es', 0.21, '€', NULL, 'Pagado por transferencia', '2023-02-09', 8, 1, 4),
-('FAC-PROV-002', '2023-02-15', 'INV_PROV', 'PAID', 'es', 0.21, '€', NULL, 'Pagado por transferencia', '2023-03-17', 8, 1, 4),
-('FAC-PROV-003', '2023-04-01', 'INV_PROV', 'PENDING', 'es', 0.21, '€', NULL, 'Pendiente de pago', '2023-04-30', 8, 1, 4),
-('OC-2023-001', '2023-01-05', 'PO', 'ACCEPTED', 'es', 0.21, '€', 'Urgente', NULL, '2023-01-20', 8, 1, NULL),
-('OC-2023-002', '2023-03-12', 'PO', 'ACCEPTED', 'es', 0.21, '€', 'Entrega parcial permitida', NULL, '2023-03-27', 8, 1, NULL),
-
--- Provider 9 (2 invoices and 3 POs)
-('FAC-PROV-004', '2023-02-20', 'INV_PROV', 'PAID', 'en', 0.21, '£', NULL, 'Paid by bank transfer', '2023-03-22', 9, 3, 5),
-('FAC-PROV-005', '2023-04-05', 'INV_PROV', 'PENDING', 'en', 0.21, '£', NULL, 'Pending payment', '2023-05-05', 9, 3, 5),
-('OC-2023-003', '2023-01-15', 'PO', 'ACCEPTED', 'en', 0.21, '£', 'High priority', NULL, '2023-01-30', 9, 3, NULL),
-('OC-2023-004', '2023-02-10', 'PO', 'REJECTED', 'en', 0.21, '£', 'Standard delivery', NULL, '2023-02-25', 9, 3, NULL),
-('OC-2023-005', '2023-04-01', 'PO', 'ACCEPTED', 'en', 0.21, '£', 'Check quality before payment', NULL, '2023-04-16', 9, 3, NULL);
-
--- 3. Insertamos pedidos para cada documento (entre 1 y 5 por documento)
--- Orders for customers
-INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity) VALUES
--- Orders for FAC-2023-001 (Customer 3)
-('Traducción manual técnico', '2023-01-10', 0.10, 'palabra', 0, 1, 'totalWords', 'es', 'en', 3),
-('Revisión informe anual', '2023-01-12', 0.05, 'palabra', 0, 1, 'totalWords', 'en', 'es', 3),
-
--- Orders for FAC-2023-002 (Customer 3)
-('Traducción folletos promocionales', '2023-03-15', 0.10, 'palabra', 0, 1, 'totalWords', 'es', 'en', 3),
-
--- Orders for PRES-2023-001 (Customer 3)
-('Traducción contrato', '2023-01-03', 0.10, 'palabra', 0, 0, 'totalWords', 'es', 'en', 3),
-('Revisión presentación', '2023-01-04', 0.05, 'palabra', 0, 0, 'totalWords', 'en', 'es', 3),
-
--- Orders for FAC-2023-003 (Customer 4)
-('Website translation', '2023-02-05', 0.11, 'palabra', 0, 1, 'totalWords', 'es', 'en', 4),
-('Product descriptions', '2023-02-07', 0.11, 'palabra', 0, 1, 'totalWords', 'es', 'en', 4),
-('Review marketing materials', '2023-02-08', 0.06, 'palabra', 0, 1, 'totalWords', 'en', 'es', 4),
-
--- Orders for OC-2023-001 (Provider 8)
-('Servicio de traducción urgente', '2023-01-03', 0.10, 'palabra', 0, 1, 'totalWords', 'es', 'en', 8),
-('Corrección estilo', '2023-01-04', 0.07, 'palabra', 0, 1, 'totalWords', 'es', 'es', 8),
-
--- Orders for OC-2023-003 (Provider 9)
-('Technical translation', '2023-01-12', 0.11, 'palabra', 0, 1, 'totalWords', 'es', 'en', 9),
-('Proofreading service', '2023-01-13', 0.08, 'palabra', 0, 1, 'totalWords', 'en', 'en', 9);
-
--- 4. Relation between orders and documents
-SET @first_order_id = 1;
-
+-- Linking Orders to Document FAC-2024-004
 INSERT INTO DocumentOrders (idDocument, idOrders) VALUES
--- FAC-2023-001
-(1, @first_order_id), (1, @first_order_id + 1),
--- FAC-2023-002
-(2, @first_order_id + 2),
--- PRES-2023-001
-(3, @first_order_id + 3), (3, @first_order_id + 4),
--- FAC-2023-003
-(4, @first_order_id + 5), (4, @first_order_id + 6), (4, @first_order_id + 7),
--- OC-2023-001
-(16, @first_order_id + 8), (16, @first_order_id + 9),
--- OC-2023-003
-(18, @first_order_id + 10), (18, @first_order_id + 11);
+(1, 1),
+(1, 2),
+(1, 3);
 
--- 5. Relation between ítems for each order (between 1 and 5 per order)
--- Items for Order 1 (@first_order_id)
+-- Invoice 2
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity) VALUES
+('FAC-2025-002', '2025-03-05', 'INV_CUST', 'PENDING', 'es', 0.21, 0.15, 38.5, 8.09, 46.59, 5.78, 40.81, '€', NULL, 'Transferencia 30 días', '2025-04-05', 3, 1, 1, NULL, 1);
+
+-- Orders
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Pedido 4', '2025-03-01', 0.10, 'línea', 25.00, 1, 'Finance', 'es', 'en', 3, 1),
+('Pedido 5', '2025-03-01', 0.15, 'palabra', 15.00, 1, 'Legal', 'fr', 'en', 3, 1);
+
+-- Items
 INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Capítulos 1-3', 1500, 0.05, 0, @first_order_id),
-('Capítulos 4-6', 2000, 0.00, 0, @first_order_id),
-('Anexos', 500, 0.10, 0, @first_order_id);
+('Línea Pedido 4', 250, 0.00, 25.00, 4),
+('Línea Pedido 5', 100, 0.10, 13.50, 5);
 
--- Items for Order 2 (@first_order_id + 1)
+-- DocumentOrders
+INSERT INTO DocumentOrders (idDocument, idOrders) VALUES
+(2, 4),
+(2, 5);
+
+-- Invoice 3
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity) VALUES
+('FAC-2025-003', '2025-04-01', 'INV_CUST', 'PAID', 'es', 0.21, 0.15, 60.00, 12.60, 72.60, 9.00, 63.60, '€', NULL, 'Pago realizado', '2025-05-01', 3, 1, 1, NULL, 1);
+
+-- Orders
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Pedido 6', '2025-03-25', 0.20, 'línea', 60.00, 1, 'Marketing', 'es', 'de', 3, 1);
+
+-- Items
 INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Informe completo', 3000, 0.00, 0, @first_order_id + 1);
+('Línea Pedido 6', 300, 0.00, 60.00, 6);
 
--- Items for Order 3 (@first_order_id + 2)
+-- DocumentOrders
+INSERT INTO DocumentOrders (idDocument, idOrders) VALUES
+(3, 6);
+
+-- Invoice 4
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity) VALUES
+('FAC-2025-004', '2025-05-10', 'INV_CUST', 'PENDING', 'es', 0.21, 0.15, 50.65, 10.64, 61.29, 7.60, 53.69, '€', NULL, 'Pago 15 días', '2025-05-25', 3, 1, 1, NULL, 1);
+
+-- Orders
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity) VALUES
+('Pedido 7', '2025-05-08', 0.25, 'palabra', 25.00, 1, 'Medical', 'it', 'es', 3, 1),
+('Pedido 8', '2025-05-08', 0.18, 'palabra', 25.65, 1, 'Tech', 'en', 'es', 3, 1);
+
+-- Items
 INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Folletos principal', 2500, 0.00, 0, @first_order_id + 2),
-('Folletos secundarios', 1500, 0.05, 0, @first_order_id + 2);
+('Línea Pedido 7', 100, 0.00, 25.00, 7),
+('Línea Pedido 8', 150, 0.05, 25.65, 8);
 
--- Items for Order 4 (@first_order_id + 3)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('DataSheet', 3230, 0.25, 0, @first_order_id + 3);
+-- DocumentOrders
+INSERT INTO DocumentOrders (idDocument, idOrders) VALUES
+(4, 7),
+(4, 8);
 
--- Items for Order 5 (@first_order_id + 4)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('No Match', 2500, 0.00, 0, @first_order_id + 4),
-('50-74%', 1500, 0.15, 0, @first_order_id + 4);
 
--- Items for Order 6 (@first_order_id + 5)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Homepage', 800, 0.00, 0, @first_order_id + 5),
-('Product pages', 1200, 0.05, 0, @first_order_id + 5),
-('About us', 500, 0.00, 0, @first_order_id + 5);
+-- **********************
+-- Quotes
+-- **********************
 
--- Items for Order 7 (@first_order_id + 6)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('No Match', 800, 0.00, 0, @first_order_id + 6),
-('50-74%', 1200, 0.15, 0, @first_order_id + 6),
-('75-84%', 500, 0.30, 0, @first_order_id + 6);
+-- QUOTE 1 - PENDING
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity)
+VALUES ('PRE-2025-001', '2025-06-01', 'QUOTE', 'PENDING', 'es', 0.21, 0.15, 40.00, 8.40, 48.40, 6.00, 42.40, '€', NULL, 'Condiciones a confirmar', '2025-06-15', 4, 1, 1, NULL, 1);
 
--- Items for Order 8 (@first_order_id + 7)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('No Match', 3000, 0.00, 0, @first_order_id + 7),
-('95-99%', 1500, 0.75, 0, @first_order_id + 7);
+-- Orders
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity)
+VALUES ('Presupuesto Pedido 1', '2025-06-01', 0.10, 'línea', 40.00, 0, 'Marketing', 'es', 'en', 4, 1);
 
--- Items for Order 9 (@first_order_id + 8)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Documento principal', 3400, 0.10, 0, @first_order_id + 8),
-('Anexos técnicos', 1900, 0.00, 0, @first_order_id + 8);
+-- Items
+INSERT INTO Items (descrip, qty, discount, total, idOrders)
+VALUES ('Línea Presupuesto 1', 400, 0.00, 40.00, 9);
 
--- Items for Order 10 (@first_order_id + 9)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Revisión', 1900, 0.00, 0, @first_order_id + 9);
+-- DocumentOrders
+INSERT INTO DocumentOrders (idDocument, idOrders)
+VALUES (5, 9);
 
--- Items for Order 11 (@first_order_id + 10)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('MTPE', 43000, 0.10, 0, @first_order_id + 10);
+-- QUOTE 2 - ACCEPTED
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity)
+VALUES ('PRE-2025-002', '2025-06-03', 'QUOTE', 'ACCEPTED', 'es', 0.21, 0.10, 60.00, 12.60, 72.60, 6.00, 66.60, '€', NULL, 'Aceptado por cliente', '2025-06-20', 4, 1, 1, NULL, 1);
 
--- Items for Order 12 (@first_order_id + 11)
-INSERT INTO Items (descrip, qty, discount, total, idOrders) VALUES
-('Documento técnico', 12000, 0.00, 0, @first_order_id + 11),
-('Anexos técnicos', 15000, 0.10, 0, @first_order_id + 11);
+-- Orders
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity)
+VALUES ('Presupuesto Pedido 2', '2025-06-03', 0.15, 'palabra', 60.00, 0, 'Legal', 'fr', 'de', 4, 1);
 
--- 6. Update totals of Items (sintaxis MySQL)
-UPDATE Items i
-JOIN Orders o ON i.idOrders = o.idOrders
-SET i.total = i.qty * o.pricePerUnit * (1 - i.discount)
-WHERE i.total = 0;
+-- Items
+INSERT INTO Items (descrip, qty, discount, total, idOrders)
+VALUES ('Línea Presupuesto 2', 400, 0.00, 60.00, 10);
 
--- 7. Update totals of Orders (sintaxis MySQL)
-UPDATE Orders o
-JOIN (
-  SELECT idOrders, SUM(total) as sum_total
-  FROM Items
-  GROUP BY idOrders
-) i ON o.idOrders = i.idOrders
-SET o.total = i.sum_total
-WHERE o.total = 0;
+-- DocumentOrders
+INSERT INTO DocumentOrders (idDocument, idOrders)
+VALUES (6, 10);
 
--- 8. Update totals for Documents (sintaxis MySQL)
-UPDATE Documents d
-JOIN (
-  SELECT do.idDocument, SUM(o.total) as sumTotal
-  FROM DocumentOrders do
-  JOIN Orders o ON do.idOrders = o.idOrders
-  GROUP BY do.idDocument
-) docTotals ON d.idDocument = docTotals.idDocument
-SET 
-  d.totalNet = docTotals.sumTotal,
-  d.vat = d.vatRate,
-  d.totalVat = d.totalNet * d.vatRate,
-  d.totalGross = d.totalNet + (d.totalNet * d.vatRate);
+-- QUOTE 3 - REJECTED
+INSERT INTO Documents (docNumber, docDate, docType, status, language, vatRate, withholding, totalNet, totalVat, totalGross, totalWithholding, totalToPay, currency, noteDelivery, notePayment, deadline, idEntity, idChangeRate, idBankAccount, idDocumentParent, idOwnerEntity)
+VALUES ('PRE-2025-003', '2025-06-05', 'QUOTE', 'REJECTED', 'es', 0.21, 0.15, 30.00, 6.30, 36.30, 4.50, 31.80, '€', NULL, 'Rechazado por cliente', '2025-06-10', 4, 1, 1, NULL, 1);
 
--- 9. Insert document details (withholding and total to pay) - sintaxis MySQL
-INSERT INTO DocumentDetails (idDocument, withholding, totalWithholding, totalToPay, paid)
-SELECT 
-  d.idDocument,
-  CASE 
-    WHEN d.docType = 'INV_CUST' THEN c.defaultWithholding
-    WHEN d.docType = 'INV_PROV' THEN 0
-    ELSE 0
-  END as withholding,
-  CASE 
-    WHEN d.docType = 'INV_CUST' THEN d.totalNet * c.defaultWithholding
-    ELSE 0
-  END as totalWithholding,
-  CASE
-    WHEN d.docType = 'INV_CUST' THEN d.totalGross - (d.totalNet * c.defaultWithholding)
-    ELSE d.totalGross
-  END as totalToPay,
-  CASE 
-    WHEN d.status = 'PAID' THEN 1
-    ELSE 0
-  END as paid
-FROM Documents d
-LEFT JOIN Customers c ON d.idEntity = c.idEntity
-WHERE d.docType IN ('INV_CUST', 'INV_PROV');
+-- Orders
+INSERT INTO Orders (descrip, dateOrder, pricePerUnit, units, total, billed, fieldName, sourceLanguage, targetLanguage, idEntity, idOwnerEntity)
+VALUES ('Presupuesto Pedido 3', '2025-06-05', 0.20, 'línea', 30.00, 0, 'Technical', 'en', 'es', 4, 1);
+
+-- Items
+INSERT INTO Items (descrip, qty, discount, total, idOrders)
+VALUES ('Línea Presupuesto 3', 150, 0.00, 30.00, 11);
+
+-- DocumentOrders
+INSERT INTO DocumentOrders (idDocument, idOrders)
+VALUES (7, 11);
+
