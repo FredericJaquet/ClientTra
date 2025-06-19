@@ -1,37 +1,37 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS DocumentOrders;
-DROP TABLE IF EXISTS Items;
-DROP TABLE IF EXISTS Orders;
-DROP TABLE IF EXISTS DocumentDetails;
-DROP TABLE IF EXISTS Documents;
-DROP TABLE IF EXISTS SchemeLines;
+DROP TABLE IF EXISTS document_orders;
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS document_details;
+DROP TABLE IF EXISTS document;
+DROP TABLE IF EXISTS scheme_lines;
 DROP TABLE IF EXISTS Schemes;
-DROP TABLE IF EXISTS Providers;
-DROP TABLE IF EXISTS Customers;
-DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS Plans;
-DROP TABLE IF EXISTS Roles;
-DROP TABLE IF EXISTS BankAccounts;
-DROP TABLE IF EXISTS ContactPersons;
-DROP TABLE IF EXISTS Phones;
-DROP TABLE IF EXISTS Addresses;
-DROP TABLE IF EXISTS ChangeRates;
-DROP TABLE IF EXISTS Entities;
+DROP TABLE IF EXISTS providers;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS plans;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS bank_accounts;
+DROP TABLE IF EXISTS contact_persons;
+DROP TABLE IF EXISTS phones;
+DROP TABLE IF EXISTS addresses;
+DROP TABLE IF EXISTS change_rates;
+DROP TABLE IF EXISTS companies;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-CREATE TABLE IF NOT EXISTS Entities(
-  idEntity  	INT(10)		AUTO_INCREMENT,
-  vatNumber 	VARCHAR(25)	NOT NULL UNIQUE,
-  comName   	VARCHAR(100),
-  legalName 	VARCHAR(100)	NOT NULL UNIQUE,
-  email     	VARCHAR(100),
-  web      	VARCHAR(100),
-  logoPath 	VARCHAR(255),
-  idOwnerEntity INT(10),
-  PRIMARY KEY 	(idEntity),
-  FOREIGN KEY 	(idOwnerEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+CREATE TABLE IF NOT EXISTS Companies(
+  idCompany  		INT(10)		AUTO_INCREMENT,
+  vatNumber 		VARCHAR(25)	NOT NULL UNIQUE,
+  comName   		VARCHAR(100),
+  legalName 		VARCHAR(100)	NOT NULL UNIQUE,
+  email     		VARCHAR(100),
+  web      		VARCHAR(100),
+  logoPath 		VARCHAR(255),
+  idOwnerCompany	INT(10),
+  PRIMARY KEY 	(idCompany),
+  FOREIGN KEY 	(idOwnerCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Addresses(
@@ -43,17 +43,17 @@ CREATE TABLE IF NOT EXISTS Addresses(
   city		VARCHAR(40) 	NOT NULL,
   state		VARCHAR(40),
   country	VARCHAR(40) 	NOT NULL,
-  idEntity	INT(10),
+  idCompany	INT(10),
   PRIMARY KEY	(idAddress),
-  FOREIGN KEY	(idEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY	(idCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Phones(
   phoneNumber	VARCHAR(25) 	NOT NULL UNIQUE,
   kind		VARCHAR(25),
-  idEntity	INT(10) 	NOT NULL,
+  idCompany	INT(10) 	NOT NULL,
   PRIMARY KEY 	(phoneNumber),
-  FOREIGN KEY 	(idEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 	(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ContactPersons(
@@ -63,9 +63,9 @@ CREATE TABLE IF NOT EXISTS ContactPersons(
   lastname		VARCHAR(40),
   role			VARCHAR(40),
   email			VARCHAR(100),
-  idEntity		INT(10) 	NOT NULL,
+  idCompany		INT(10) 	NOT NULL,
   PRIMARY KEY		(idContactPerson),
-  FOREIGN KEY 		(idEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 		(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS BankAccounts(
@@ -74,9 +74,9 @@ CREATE TABLE IF NOT EXISTS BankAccounts(
   swift		VARCHAR(15),
   holder	VARCHAR(40),
   branch	VARCHAR(40),
-  idEntity	INT(10) 	NOT NULL,
+  idCompany	INT(10) 	NOT NULL,
   PRIMARY KEY	(idBankAccount),
-  FOREIGN KEY 	(idEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 	(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Roles(
@@ -94,13 +94,13 @@ CREATE TABLE IF NOT EXISTS Plans(
 CREATE TABLE IF NOT EXISTS Users(
   idUser	INT(10) 	AUTO_INCREMENT,
   userName	VARCHAR(100) 	NOT NULL UNIQUE,
-  passwd	VARCHAR(150) 	NOT NULL,
+  passwd	VARCHAR(255) 	NOT NULL,
   email		VARCHAR(100),
-  idEntity	INT(10) 	NOT NULL,
+  idCompany	INT(10) 	NOT NULL,
   idRole	INT(10) 	NOT NULL,
   idPlan	INT(10) 	NOT NULL,
   PRIMARY KEY 	(idUser),
-  FOREIGN KEY 	(idEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE,
+  FOREIGN KEY 	(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
   FOREIGN KEY 	(idRole) 	REFERENCES Roles(idRole) ON UPDATE CASCADE,
   FOREIGN KEY 	(idPlan) 	REFERENCES Plans(idPlan) ON UPDATE CASCADE
 );
@@ -115,11 +115,11 @@ CREATE TABLE IF NOT EXISTS Customers(
   defaultWithholding	DOUBLE 		NOT NULL DEFAULT 0.15,
   europe		BOOLEAN 	NOT NULL DEFAULT 1,
   enabled		BOOLEAN 	NOT NULL DEFAULT 1,
-  idEntity		INT(10) 	NOT NULL,
-  idOwnerEntity		INT(10) 	NOT NULL,
+  idCompany		INT(10) 	NOT NULL,
+  idOwnerCompany	INT(10) 	NOT NULL,
   PRIMARY KEY 		(idCustomer),
-  FOREIGN KEY 		(idEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE,
-  FOREIGN KEY 		(idOwnerEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 		(idCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idOwnerCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Providers(
@@ -130,11 +130,11 @@ CREATE TABLE IF NOT EXISTS Providers(
   duedate 		INT(3),
   europe		BOOLEAN 	NOT NULL DEFAULT 1,
   enabled		BOOLEAN 	NOT NULL DEFAULT 1,
-  idEntity		INT(10) 	NOT NULL,
-  idOwnerEntity		INT(10) 	NOT NULL,
+  idCompany		INT(10) 	NOT NULL,
+  idOwnerCompany	INT(10) 	NOT NULL,
   PRIMARY KEY 		(idProvider),
-  FOREIGN KEY 		(idEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE,
-  FOREIGN KEY 		(idOwnerEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 		(idCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idOwnerCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Schemes(
@@ -145,11 +145,11 @@ CREATE TABLE IF NOT EXISTS Schemes(
   fieldName		VARCHAR(15),
   sourceLanguage	VARCHAR(15),
   targetLanguage	VARCHAR(15),
-  idEntity		INT(10) 	NOT NULL,
-  idOwnerEntity		INT(10) 	NOT NULL,
+  idCompany		INT(10) 	NOT NULL,
+  idOwnerCompany	INT(10) 	NOT NULL,
   PRIMARY KEY 		(idScheme),
-  FOREIGN KEY 		(idEntity)	REFERENCES Entities(idEntity) ON UPDATE CASCADE,
-  FOREIGN KEY 		(idOwnerEntity) REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 		(idCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idOwnerCompany) REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS SchemeLines(
@@ -187,17 +187,17 @@ CREATE TABLE IF NOT EXISTS Documents(
   noteDelivery		VARCHAR(100),
   notePayment		VARCHAR(100),
   deadline		DATE,
-  idEntity		INT(10),
+  idCompany		INT(10),
   idChangeRate 		INT(10)		NOT NULL DEFAULT 1,
   idBankAccount		INT(10),
   idDocumentParent 	INT NULL,
-  idOwnerEntity		INT(10) 	NOT NULL,
+  idOwnerCompany	INT(10) 	NOT NULL,
   PRIMARY KEY 		(idDocument),
-  FOREIGN KEY 		(idEntity)		REFERENCES Entities(idEntity) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idCompany)		REFERENCES Companies(idCompany) ON UPDATE CASCADE,
   FOREIGN KEY 		(idChangeRate)		REFERENCES ChangeRates(idChangeRate) ON UPDATE CASCADE,
   FOREIGN KEY 		(idBankAccount)		REFERENCES BankAccounts(idBankAccount) ON UPDATE CASCADE,
   FOREIGN KEY 		(idDocumentParent)	REFERENCES Documents(idDocument) ON UPDATE CASCADE,
-  FOREIGN KEY 		(idOwnerEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 		(idOwnerCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Orders(
@@ -211,11 +211,11 @@ CREATE TABLE IF NOT EXISTS Orders(
   fieldName		VARCHAR(25),
   sourceLanguage	VARCHAR(25),
   targetLanguage	VARCHAR(25),		
-  idEntity		INT(10),
-  idOwnerEntity		INT(10) 	NOT NULL,
+  idCompany		INT(10),
+  idOwnerCompany	INT(10) 	NOT NULL,
   PRIMARY KEY		(idOrders),
-  FOREIGN KEY 		(idEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE,
-  FOREIGN KEY 		(idOwnerEntity) 	REFERENCES Entities(idEntity) ON UPDATE CASCADE
+  FOREIGN KEY 		(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idOwnerCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS DocumentOrders(
