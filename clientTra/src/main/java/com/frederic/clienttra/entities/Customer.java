@@ -14,6 +14,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_customer")
     private Integer idCustomer;
 
     @Column(length = 50)
@@ -41,11 +42,11 @@ public class Customer {
     private Boolean enabled;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 
     // This relationship points to the entity that owns the customer.
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOwnerCompany", nullable = false)
+    @JoinColumn(name = "id_owner_company", nullable = false)
     private Company ownerCompany;
 }

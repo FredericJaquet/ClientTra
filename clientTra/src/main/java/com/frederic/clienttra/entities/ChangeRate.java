@@ -14,6 +14,7 @@ public class ChangeRate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_change_rate")
     private Integer idChangeRate;
 
     @Column(length = 10, nullable = false)

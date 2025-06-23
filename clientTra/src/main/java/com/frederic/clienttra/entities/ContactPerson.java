@@ -14,6 +14,7 @@ public class ContactPerson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_contact_person")
     private Integer idContactPerson;
 
     @Column(nullable = false, length = 50)
@@ -32,6 +33,6 @@ public class ContactPerson {
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 }

@@ -14,6 +14,7 @@ public class BankAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_bank_account")
     private Integer idBankAccount;
 
     @Column(nullable = false, length = 34, unique = true)
@@ -29,7 +30,7 @@ public class BankAccount {
     private String holderName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 }
 

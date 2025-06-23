@@ -6,7 +6,11 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Companies")
+@Table(name = "Companies",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"vat_number", "id_owner_company"}),
+        @UniqueConstraint(columnNames = {"legal_name", "id_owner_company"})
+    })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,9 +20,10 @@ public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_company")
     private Integer idCompany;
 
-    @Column(length = 25, nullable = false, unique = true)
+    @Column(length = 25, nullable = false)
     private String vatNumber;
 
     @Column(length = 100)
@@ -38,7 +43,7 @@ public class Company {
 
     // Auto-relación (entidad propietaria)
     @ManyToOne
-    @JoinColumn(name = "idOwnerCompany", referencedColumnName = "idCompany")
+    @JoinColumn(name = "id_owner_company", referencedColumnName = "id_company")
     private Company ownerCompany;
 
     // Relaciones inversas
