@@ -13,6 +13,7 @@ public class SchemeLine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_scheme_line")
     private Integer idSchemeLine;
 
     @Column(length = 255)
@@ -22,6 +23,6 @@ public class SchemeLine {
     private Double discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idScheme", nullable = false)
+    @JoinColumn(name = "id_scheme", nullable = false)
     private Scheme scheme;
 }

@@ -15,6 +15,7 @@ public class Scheme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_scheme")
     private Integer idScheme;
 
     @Column(nullable = false, length = 50)
@@ -36,11 +37,11 @@ public class Scheme {
     private String targetLanguage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOwnerCompany", nullable = false)
+    @JoinColumn(name = "id_owner_company", nullable = false)
     private Company ownerCompany;
 
     @OneToMany(mappedBy = "scheme", cascade = CascadeType.ALL, orphanRemoval = true)

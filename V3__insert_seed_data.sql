@@ -17,13 +17,13 @@ INSERT INTO addresses (street, st_number, apt, cp, city, state, country, id_comp
 ('Avenida del Sol', '25', '2ºB', '08029', 'Barcelona', 'Cataluña', 'España', 2);
 
 -- Phones
-INSERT INTO phones (phone_number, kind, id_company) VALUES
-('+34910000001', 'fijo', 1),
-('+34600000001', 'móvil', 1);
+INSERT INTO phones (phone_number, kind, id_company, id_owner_company) VALUES
+('+34910000001', 'fijo', 1, 1),
+('+34600000001', 'móvil', 1, 1);
 
-INSERT INTO phones (phone_number, kind, id_company) VALUES
-('+34910000002', 'fijo', 2),
-('+34600000002', 'móvil', 2);
+INSERT INTO phones (phone_number, kind, id_company, id_owner_company) VALUES
+('+34910000002', 'fijo', 2,2),
+('+34600000002', 'móvil', 2,2);
 
 -- Contact Persons
 INSERT INTO contact_persons (firstname, middlename, lastname, role, email, id_company) VALUES
@@ -69,17 +69,17 @@ INSERT INTO addresses (street, st_number, apt, cp, city, state, country, id_comp
 ('Paseo del Parque', '20', NULL, '48001', 'Bilbao', 'País Vasco', 'España', 7);
 
 -- Phones for Customers of Company 1
-INSERT INTO phones (phone_number, kind, id_company) VALUES
-('+34911000011', 'fijo', 3),
-('+34600000111', 'móvil', 3),
-('+34911000022', 'fijo', 4),
-('+34600000222', 'móvil', 4),
-('+34911000033', 'fijo', 5),
-('+34600000333', 'móvil', 5),
-('+34911000044', 'fijo', 6),
-('+34600000444', 'móvil', 6),
-('+34911000055', 'fijo', 7),
-('+34600000555', 'móvil', 7);
+INSERT INTO phones (phone_number, kind, id_company, id_owner_company) VALUES
+('+34911000011', 'fijo', 3, 1),
+('+34600000111', 'móvil', 3, 1),
+('+34911000022', 'fijo', 4, 1),
+('+34600000222', 'móvil', 4, 1),
+('+34911000033', 'fijo', 5, 1),
+('+34600000333', 'móvil', 5, 1),
+('+34911000044', 'fijo', 6, 1),
+('+34600000444', 'móvil', 6, 1),
+('+34911000055', 'fijo', 7, 1),
+('+34600000555', 'móvil', 7, 1);
 
 -- Contacts for Customers of Company 1
 INSERT INTO contact_persons (firstname, middlename, lastname, role, email, id_company) VALUES
@@ -122,17 +122,17 @@ INSERT INTO addresses (street, st_number, apt, cp, city, state, country, id_comp
 ('Gran Vía', '50', '5ºB', '28013', 'Madrid', 'Madrid', 'España', 12);
 
 -- Phones for Customers of Company 2
-INSERT INTO phones (phone_number, kind, id_company) VALUES
-('+34912000066', 'fijo', 8),
-('+34600000666', 'móvil', 8),
-('+34912000077', 'fijo', 9),
-('+34600000777', 'móvil', 9),
-('+34912000088', 'fijo', 10),
-('+34600000888', 'móvil', 10),
-('+34912000099', 'fijo', 11),
-('+34600000999', 'móvil', 11),
-('+34912000101', 'fijo', 12),
-('+34600001010', 'móvil', 12);
+INSERT INTO phones (phone_number, kind, id_company, id_owner_company) VALUES
+('+34912000066', 'fijo', 8, 2),
+('+34600000666', 'móvil', 8, 2),
+('+34912000077', 'fijo', 9, 2),
+('+34600000777', 'móvil', 9, 2),
+('+34912000088', 'fijo', 10, 2),
+('+34600000888', 'móvil', 10, 2),
+('+34912000099', 'fijo', 11, 2),
+('+34600000999', 'móvil', 11, 2),
+('+34912000101', 'fijo', 12, 2),
+('+34600001010', 'móvil', 12, 2);
 
 -- Contacts for Customers of Company 2
 INSERT INTO contact_persons (firstname, middlename, lastname, role, email, id_company) VALUES
@@ -255,13 +255,13 @@ INSERT INTO addresses (street, st_number, apt, cp, city, state, country, id_comp
 ('Camino Industrial', '7', NULL, '41010', 'Sevilla', 'Andalucía', 'España', 15);
 
 -- Phones
-INSERT INTO phones (phone_number, kind, id_company) VALUES
-('+34913000013', 'fijo', 13),
-('+34610000113', 'móvil', 13),
-('+34913000014', 'fijo', 14),
-('+34610000114', 'móvil', 14),
-('+34913000015', 'fijo', 15),
-('+34610000115', 'móvil', 15);
+INSERT INTO phones (phone_number, kind, id_company, id_owner_company) VALUES
+('+34913000013', 'fijo', 13, 1),
+('+34610000113', 'móvil', 13, 1),
+('+34913000014', 'fijo', 14, 1),
+('+34610000114', 'móvil', 14, 1),
+('+34913000015', 'fijo', 15, 1),
+('+34610000115', 'móvil', 15, 1);
 
 -- Contacts
 INSERT INTO contact_persons (firstname, middlename, lastname, role, email, id_company) VALUES
@@ -295,13 +295,13 @@ INSERT INTO addresses (street, st_number, apt, cp, city, state, country, id_comp
 ('Paseo del Sur', '77', NULL, '35001', 'Las Palmas', 'Canarias', 'España', 18);
 
 -- Phones
-INSERT INTO phones (phone_number, kind, id_company) VALUES
-('+34914000016', 'fijo', 16),
-('+34620000116', 'móvil', 16),
-('+34914000017', 'fijo', 17),
-('+34620000117', 'móvil', 17),
-('+34914000018', 'fijo', 18),
-('+34620000118', 'móvil', 18);
+INSERT INTO phones (phone_number, kind, id_company, id_owner_company) VALUES
+('+34914000016', 'fijo', 16, 2),
+('+34620000116', 'móvil', 16, 2),
+('+34914000017', 'fijo', 17, 2),
+('+34620000117', 'móvil', 17, 2),
+('+34914000018', 'fijo', 18, 2),
+('+34620000118', 'móvil', 18, 2);
 
 -- Contacts
 INSERT INTO contact_persons (firstname, middlename, lastname, role, email, id_company) VALUES

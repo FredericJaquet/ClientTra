@@ -1,12 +1,14 @@
 CREATE TABLE IF NOT EXISTS companies (
   id_company           INT AUTO_INCREMENT PRIMARY KEY,
-  vat_number           VARCHAR(25) NOT NULL UNIQUE,
+  vat_number           VARCHAR(25) NOT NULL,
   com_name             VARCHAR(100),
-  legal_name           VARCHAR(100) NOT NULL UNIQUE,
+  legal_name           VARCHAR(100) NOT NULL,
   email                VARCHAR(100),
   web                  VARCHAR(100),
   logo_path            VARCHAR(255),
   id_owner_company     INT,
+  CONSTRAINT uq_companies_vat_owner	 UNIQUE(vat_number, id_owner_company),
+  CONSTRAINT uq_companies__legal_owner	 UNIQUE(legal_name, id_owner_company),
   FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
 );
 
@@ -23,12 +25,14 @@ CREATE TABLE IF NOT EXISTS addresses (
   FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS phones (
-  phone_number         VARCHAR(25) PRIMARY KEY,
-  kind                 VARCHAR(25),
-  id_company           INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+CREATE TABLE phones (
+  id_phone 		INT 		AUTO_INCREMENT PRIMARY KEY,
+  phone_number 		VARCHAR(25) 	NOT NULL,
+  kind 			VARCHAR(25),
+  id_company 		INT 		NOT NULL,
+  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS contact_persons (
   id_contact_person    INT AUTO_INCREMENT PRIMARY KEY,
@@ -66,28 +70,31 @@ CREATE TABLE IF NOT EXISTS users (
   user_name            VARCHAR(100) NOT NULL UNIQUE,
   passwd               VARCHAR(255) NOT NULL,
   email                VARCHAR(100),
+  preferred_language   VARCHAR(10) DEFAULT 'es',
+  preferred_theme      VARCHAR(20) DEFAULT 'red',
+  dark_mode	       BOOLEAN DEFAULT FALSE,
   id_company           INT NOT NULL,
   id_role              INT NOT NULL,
   id_plan              INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_role) REFERENCES roles(id_role) ON UPDATE CASCADE,
-  FOREIGN KEY (id_plan) REFERENCES plans(id_plan) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) 	REFERENCES companies(id_company) ON UPDATE CASCADE,
+  FOREIGN KEY (id_role) 	REFERENCES roles(id_role) ON UPDATE CASCADE,
+  FOREIGN KEY (id_plan) 	REFERENCES plans(id_plan) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS customers (
-  id_customer          INT AUTO_INCREMENT PRIMARY KEY,
+  id_customer          INT 		AUTO_INCREMENT PRIMARY KEY,
   invoicing_method     VARCHAR(100),
   duedate              INT,
   pay_method           VARCHAR(40),
   default_language     VARCHAR(10),
-  default_vat          DOUBLE NOT NULL DEFAULT 0.21,
-  default_withholding  DOUBLE NOT NULL DEFAULT 0.15,
-  europe               BOOLEAN NOT NULL DEFAULT 1,
-  enabled              BOOLEAN NOT NULL DEFAULT 1,
-  id_company           INT NOT NULL,
-  id_owner_company     INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  default_vat          DOUBLE 		NOT NULL DEFAULT 0.21,
+  default_withholding  DOUBLE 		NOT NULL DEFAULT 0.15,
+  europe               BOOLEAN 		NOT NULL DEFAULT 1,
+  enabled              BOOLEAN		NOT NULL DEFAULT 1,
+  id_company           INT 		NOT NULL,
+  id_owner_company     INT 		NOT NULL,
+  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) 	REFERENCES companies(id_company) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS providers (
@@ -119,11 +126,11 @@ CREATE TABLE IF NOT EXISTS schemes (
 );
 
 CREATE TABLE IF NOT EXISTS scheme_lines (
-  id_scheme_line       INT AUTO_INCREMENT PRIMARY KEY,
-  descrip              VARCHAR(255) NOT NULL,
-  discount             DOUBLE NOT NULL DEFAULT 0,
-  id_scheme            INT NOT NULL,
-  FOREIGN KEY (id_scheme) REFERENCES schemes(id_scheme) ON UPDATE CASCADE
+  id_scheme_line       INT 		AUTO_INCREMENT PRIMARY KEY,
+  descrip              VARCHAR(255) 	NOT NULL,
+  discount             DOUBLE 		NOT NULL DEFAULT 0,
+  id_scheme            INT 		NOT NULL,
+  FOREIGN KEY (id_scheme) 		REFERENCES schemes(id_scheme) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS change_rates (
@@ -164,20 +171,20 @@ CREATE TABLE IF NOT EXISTS documents (
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-  id_order             INT AUTO_INCREMENT PRIMARY KEY,
-  descrip              VARCHAR(100) NOT NULL,
-  date_order           DATE NOT NULL,
-  price_per_unit       DOUBLE NOT NULL,
+  id_order             INT 		AUTO_INCREMENT PRIMARY KEY,
+  descrip              VARCHAR(100) 	NOT NULL,
+  date_order           DATE 		NOT NULL,
+  price_per_unit       DOUBLE 		NOT NULL,
   units                VARCHAR(15),
-  total                DOUBLE NOT NULL DEFAULT 0,
-  billed               BOOLEAN NOT NULL DEFAULT 0,
+  total                DOUBLE 		NOT NULL DEFAULT 0,
+  billed               BOOLEAN 		NOT NULL DEFAULT 0,
   field_name           VARCHAR(25),
   source_language      VARCHAR(25),
   target_language      VARCHAR(25),
   id_company           INT,
-  id_owner_company     INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  id_owner_company     INT 		NOT NULL,
+  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) 	REFERENCES companies(id_company) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS document_orders (
@@ -199,5 +206,5 @@ CREATE TABLE IF NOT EXISTS items (
 );
 
 -- Datos iniciales
-INSERT INTO roles (role_name) VALUES ('ADMIN'), ('ACCOUNTING'), ('USER');
+INSERT INTO roles (role_name) VALUES ('ROLE_ADMIN'), ('ROLE_ACCOUNTING'), ('ROLE_USER');
 INSERT INTO plans (plan_name) VALUES ('FREEMIUM'), ('PREMIUM');

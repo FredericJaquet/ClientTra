@@ -17,7 +17,8 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idOrders;
+    @Column(name = "id_order")
+    private Integer idOrder;
 
     @Column(nullable = false, length = 100)
     private String descrip;
@@ -47,11 +48,11 @@ public class Order {
     private String targetLanguage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOwnerCompany", nullable = false)
+    @JoinColumn(name = "id_owner_company", nullable = false)
     private Company ownerCompany;
 
     @ManyToMany(mappedBy = "orders")

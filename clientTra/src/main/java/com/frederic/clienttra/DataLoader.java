@@ -4,6 +4,7 @@ package com.frederic.clienttra;
 import com.frederic.clienttra.entities.User;
 import com.frederic.clienttra.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -20,13 +21,9 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        // Buscar usuario por nombre
-        Optional<User> result = userRepository.findByUserName("admin1");
-
-        if (result.isPresent()) {
-            System.out.println("✅ Usuario encontrado: " + result.get().getEmail());
-        } else {
-            System.out.println("❌ Usuario no encontrado.");
-        }
+/*        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String rawPassword = "user2pass";
+        String encodedPassword = encoder.encode(rawPassword);
+        System.out.println(encodedPassword);*/
     }
 }

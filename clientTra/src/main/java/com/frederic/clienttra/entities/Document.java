@@ -17,6 +17,7 @@ public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_document")
     private Integer idDocument;
 
     @Column(nullable = false, length = 50)
@@ -68,30 +69,30 @@ public class Document {
     private LocalDate deadline;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idChangeRate")
+    @JoinColumn(name = "id_change_rate")
     private ChangeRate changeRate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idBankAccount")
+    @JoinColumn(name = "id_bank_account")
     private BankAccount bankAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idDocumentParent")
+    @JoinColumn(name = "id_document_parent")
     private Document documentParent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOwnerCompany", nullable = false)
+    @JoinColumn(name = "id_owner_company", nullable = false)
     private Company ownerCompany;
 
     @ManyToMany
     @JoinTable(
-            name = "DocumentOrders",
-            joinColumns = @JoinColumn(name = "idDocument"),
-            inverseJoinColumns = @JoinColumn(name = "idOrders")
+            name = "document_orders",
+            joinColumns = @JoinColumn(name = "id_document"),
+            inverseJoinColumns = @JoinColumn(name = "id_order")
     )
     private Set<Order> orders = new HashSet<>();
 }

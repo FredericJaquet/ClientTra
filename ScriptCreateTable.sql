@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS document_orders;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS document_details;
-DROP TABLE IF EXISTS document;
+DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS scheme_lines;
 DROP TABLE IF EXISTS Schemes;
 DROP TABLE IF EXISTS providers;

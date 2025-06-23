@@ -14,6 +14,7 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_item")
     private Integer idItem;
 
     @Column(length = 255)
@@ -29,6 +30,6 @@ public class Item {
     private Double total;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrders", nullable = false)
+    @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 }

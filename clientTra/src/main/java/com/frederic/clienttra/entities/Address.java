@@ -14,6 +14,7 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_address")
     private Integer idAddress;
 
     @Column(nullable = false, length = 100)
@@ -38,6 +39,6 @@ public class Address {
     private String country;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCompany", nullable = false)
+    @JoinColumn(name = "id_company", nullable = false)
     private Company company;
 }

@@ -14,6 +14,7 @@ public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_plan")
     private Integer idPlan;
 
     @Column(nullable = false, unique = true, length = 100)
