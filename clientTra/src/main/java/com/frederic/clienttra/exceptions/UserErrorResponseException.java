@@ -5,8 +5,9 @@ public class UserErrorResponseException extends RuntimeException{
         super(message, cause);
     }
 
-    public UserErrorResponseException(String message) {
-        super(message);
+    public UserErrorResponseException() {
+
+        super("error.resource_not_found");
     }
 
 }

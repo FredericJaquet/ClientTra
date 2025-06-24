@@ -41,14 +41,14 @@ INSERT INTO bank_accounts (iban, swift, holder, branch, id_company) VALUES
 
 -- Users
 INSERT INTO users (user_name, passwd, email, id_company, id_role, id_plan) VALUES
-('admin1',      '$2a$10$CMo9X.9spkAPlsCkGl/E3OT/U7o.kOV.YmK94Fz9vPGMJqGWzST/y', 'admin1@example.com',      1, 1, 1),
-('accounting1', '$2a$10$chOc95TWlCVF1RCIGFeg7uAwBfOOPcE34w9Z9PR/BINgOZBvSkq1W', 'accounting1@example.com', 1, 2, 1),
-('user1',       '$2a$10$dLTPQeS8FbQcoHChNExnme3zAxkTuZimKFnUjEMe1jz.kj6He.uxK', 'user1@example.com',       1, 3, 1);
+('admin1',      '$10$F2NpHQBFhVrwbCH0mW3mo.1wJD4eQx.fsneEgXfLlWfOc0Q3O2fWO', 'admin1@example.com',      1, 1, 1),
+('accounting1', '$10$chOc95TWlCVF1RCIGFeg7uAwBfOOPcE34w9Z9PR/BINgOZBvSkq1W', 'accounting1@example.com', 1, 2, 1),
+('user1',       '$10$n0c11E/Ng/rKClk3sKGI5..AHsvl72WtG4tUP2bjkIAB3O6yKRGUy', 'user1@example.com',       1, 3, 1);
 
 INSERT INTO users (user_name, passwd, email, id_company, id_role, id_plan) VALUES
-('admin2',      '$2a$10$SNgZ8Zjozom14rdM.1FjD.np7ZJda7Th1xSncsivNDy.owQkEYgVW', 'admin2@example.com',      2, 1, 1),
-('accounting2', '$2a$10$duKUVX.lPfqFmbiK4zZju.AU0k3byEqM9ERvnLPuCJZfFCciMK.Ru', 'accounting2@example.com', 2, 2, 1),
-('user2',       '$2a$10$bdFkoGZVRVRI6hMLptO0d.KbHV2PFfOTpEXG7QzDEWp0aOJe9D0Oa', 'user2@example.com',       2, 3, 1);
+('admin2',      '$10$SY8QEWZh9Va5nOGtfXBAxu3cdgf/fRoG50EmW4nftOu3L.dFrGRX.', 'admin2@example.com',      2, 1, 1),
+('accounting2', '$10$LKjF4sv6XrD7y5l0P5.Bj.iYHKaAWPYtj/3jlMj2n.g.3zwcvYfLG', 'accounting2@example.com', 2, 2, 1),
+('user2',       '$10$.0NqH77yhqmna1wIluV9su3HtW7BSJEEfDEqcKzWdnoredrVSRsZC', 'user2@example.com',       2, 3, 1);
 
 -- Customers
 

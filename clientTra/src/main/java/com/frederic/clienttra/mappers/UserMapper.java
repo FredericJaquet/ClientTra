@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-    public UserForAdminDTO toDTO(User user) {
+    public UserForAdminDTO toAdminDTO(User user) {
         return UserForAdminDTO.builder()
                 .idUser(user.getIdUser())
                 .userName(user.getUserName())

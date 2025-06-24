@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUserName(String userName);
     List<User> findAllByCompany_IdCompany(int idCompany);
     Optional<User> findByIdUserAndCompany_IdCompany(int idUser, int idCompany);
+    int countByCompany_IdCompanyAndRole_RoleName(int idCompany, String roleName);
+
 }

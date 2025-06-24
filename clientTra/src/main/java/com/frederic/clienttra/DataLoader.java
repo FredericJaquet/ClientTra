@@ -21,8 +21,8 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-/*        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String rawPassword = "user2pass";
+        /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String rawPassword = "accounting1pass";
         String encodedPassword = encoder.encode(rawPassword);
         System.out.println(encodedPassword);*/
     }

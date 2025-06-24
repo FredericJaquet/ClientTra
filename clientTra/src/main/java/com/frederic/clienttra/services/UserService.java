@@ -1,30 +1,46 @@
 package com.frederic.clienttra.services;
 
+import com.frederic.clienttra.dto.CreateUserRequestDTO;
 import com.frederic.clienttra.dto.UserForAdminDTO;
 import com.frederic.clienttra.dto.UserSelfDTO;
+import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.entities.Plan;
+import com.frederic.clienttra.entities.Role;
 import com.frederic.clienttra.entities.User;
-import com.frederic.clienttra.exceptions.UserErrorResponseException;
+import com.frederic.clienttra.exceptions.*;
 import com.frederic.clienttra.mappers.UserMapper;
+import com.frederic.clienttra.repositories.PlanRepository;
+import com.frederic.clienttra.repositories.RoleRepository;
 import com.frederic.clienttra.repositories.UserRepository;
+import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
 import com.frederic.clienttra.utils.MessageResolver;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PlanRepository planRepository;
+    private final CompanyService companyService;
     private final UserMapper userMapper;
     private final MessageResolver messageResolver;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, MessageResolver messageResolver) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PlanRepository planRepository, CompanyService companyService, UserMapper userMapper, MessageResolver messageResolver, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository=roleRepository;
+        this.planRepository=planRepository;
+        this.companyService = companyService;
         this.userMapper=userMapper;
         this.messageResolver=messageResolver;
+        this.passwordEncoder=passwordEncoder;
+
     }
 
     public List<UserForAdminDTO> getAllUsers() {
@@ -32,20 +48,66 @@ public class UserService {
 
         return userRepository.findAllByCompany_IdCompany(idCompany)
                 .stream()
-                .map(userMapper::toDTO)
+                .map(userMapper::toAdminDTO)
                 .toList();
     }
 
     public UserSelfDTO getCurrentUserDetails() {
         int idUser = SecurityUtils.getCurrentUserId();
+
         User user = userRepository.findById(idUser)
-                .orElseThrow(() -> new UserErrorResponseException(URLEncoder.encode(messageResolver.getMessage("error.user.not_found"), StandardCharsets.UTF_8)));
+                .orElseThrow(UserErrorResponseException::new);
+
         return userMapper.toSelfDTO(user);
     }
 
     public Optional<UserForAdminDTO> getUserById(Integer id) {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
+
         return userRepository.findByIdUserAndCompany_IdCompany(id, idCompany)
-                .map(userMapper::toDTO);
+                .map(userMapper::toAdminDTO);
     }
+
+    public void deleteUserById(int id) {
+        User userToDelete = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int ownerCompanyId = currentUser.getIdCompany();
+
+        if (userToDelete.getCompany().getIdCompany() != ownerCompanyId) {
+            throw new AccessDeniedException();
+        }else{
+            if(id == currentUser.getIdUser()){
+                int adminCount = userRepository.countByCompany_IdCompanyAndRole_RoleName(ownerCompanyId, "ADMIN");
+                if (adminCount <= 1) {
+                    throw new CantDeleteSelfException();
+                }
+            }
+        }
+
+        userRepository.deleteById(id);
+    }
+
+    public UserForAdminDTO createUser(CreateUserRequestDTO dto) {
+        Company currentCompany = companyService.getCurrentCompany()
+                .orElseThrow(UserNotAuthenticatedException::new);
+        Role role = roleRepository.findById(dto.getIdRole())
+                .orElseThrow(ResourceNotFoundException::new);
+        Plan plan = planRepository.findById(dto.getIdPlan())
+                .orElseThrow(ResourceNotFoundException::new);
+
+        User user = new User();
+        user.setUserName(dto.getUsername());
+        user.setPasswd(passwordEncoder.encode(dto.getPassword()));
+        user.setEmail(dto.getEmail());
+        user.setCompany(currentCompany);
+        user.setRole(role);
+        user.setPlan(plan);
+
+        userRepository.save(user);
+
+        return userMapper.toAdminDTO(user);
+    }
+
 }

@@ -1,15 +1,20 @@
 package com.frederic.clienttra.controllers;
 
-import com.frederic.clienttra.dto.UserForAdminDTO;
-import com.frederic.clienttra.dto.UserSelfDTO;
+import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.exceptions.ErrorResponse;
 import com.frederic.clienttra.exceptions.UserErrorResponse;
 import com.frederic.clienttra.exceptions.UserErrorResponseException;
+import com.frederic.clienttra.exceptions.UserNotFoundException;
 import com.frederic.clienttra.services.UserService;
+import com.frederic.clienttra.utils.MessageResolver;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,9 +22,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final MessageResolver messageResolver;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MessageResolver messageResolver) {
         this.userService = userService;
+        this.messageResolver = messageResolver;
     }
 
     @GetMapping
@@ -33,7 +40,7 @@ public class UserController {
     public ResponseEntity<UserForAdminDTO> getUserById(@PathVariable int id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new UserErrorResponseException("Empleado con id=" + id + " no encontrado."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @GetMapping("/me")
@@ -41,15 +48,38 @@ public class UserController {
         return userService.getCurrentUserDetails();
     }
 
-    @ExceptionHandler
-    public ResponseEntity<UserErrorResponse> exceptionHandler(UserErrorResponseException e){
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<GenericResponseDTO> createUser(
+            @Valid @RequestBody CreateUserRequestDTO dto) {
+        userService.createUser(dto);
+        String message = messageResolver.getMessage("user.created.success", "Usuario creado con éxito");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new GenericResponseDTO(message));
+    }
 
-        UserErrorResponse error=new UserErrorResponse();
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<GenericResponseDTO> deleteUser(@PathVariable int id) {
+        userService.deleteUserById(id);
+        String msg = messageResolver.getMessage("user.deleted.success", "Usuario eliminado correctamente");
+        return ResponseEntity.ok(new GenericResponseDTO(msg));
+    }
 
-        error.setState(HttpStatus.NOT_FOUND.value());
-        error.setMessage(e.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Usuario no encontrado", request.getRequestURI());
+    }
 
-        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String code, String fallbackMessage, String path) {
+        String localizedMsg = messageResolver.getMessage(code);
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                localizedMsg != null ? localizedMsg : fallbackMessage,
+                path
+        );
+        return new ResponseEntity<>(error, status);
     }
 }
