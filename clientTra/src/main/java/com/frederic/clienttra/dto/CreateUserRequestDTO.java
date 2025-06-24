@@ -14,16 +14,12 @@ import lombok.*;
 public class CreateUserRequestDTO {
     @NotBlank(message = "validation.username.required")
     private String username;
-
     @NotBlank(message = "validation.password.required")
     private String password;
-
     @Email(message = "validation.email.invalid")
     private String email;
-
     @NotNull(message = "validation.role_id.required")
     private Integer idRole;
-
     @NotNull(message = "validation.plan_id.required")
     private Integer idPlan;
 }

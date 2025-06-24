@@ -1,6 +1,7 @@
 package com.frederic.clienttra.services;
 
 import com.frederic.clienttra.dto.CreateUserRequestDTO;
+import com.frederic.clienttra.dto.UpdateSelfRequestDTO;
 import com.frederic.clienttra.dto.UserForAdminDTO;
 import com.frederic.clienttra.dto.UserSelfDTO;
 import com.frederic.clienttra.entities.Company;
@@ -15,6 +16,7 @@ import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
 import com.frederic.clienttra.utils.MessageResolver;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,16 +31,14 @@ public class UserService {
     private final PlanRepository planRepository;
     private final CompanyService companyService;
     private final UserMapper userMapper;
-    private final MessageResolver messageResolver;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PlanRepository planRepository, CompanyService companyService, UserMapper userMapper, MessageResolver messageResolver, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PlanRepository planRepository, CompanyService companyService, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository=roleRepository;
         this.planRepository=planRepository;
         this.companyService = companyService;
         this.userMapper=userMapper;
-        this.messageResolver=messageResolver;
         this.passwordEncoder=passwordEncoder;
 
     }
@@ -108,6 +108,30 @@ public class UserService {
         userRepository.save(user);
 
         return userMapper.toAdminDTO(user);
+    }
+
+    @Transactional
+    public void updateCurrentUser(UpdateSelfRequestDTO dto) {
+        CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+
+        User user = userRepository.findById(currentUser.getIdUser())
+                .orElseThrow(() -> new UserNotFoundException());
+
+        if (dto.getEmail() != null) {
+            user.setEmail(dto.getEmail());
+        }
+        if (dto.getPreferredLanguage() != null){
+            user.setPreferredLanguage(dto.getPreferredLanguage());
+        }
+        if (dto.getPreferredTheme() != null){
+            user.setPreferredTheme(dto.getPreferredTheme());
+        }
+        if (dto.getDarkMode() != null){
+            user.setDarkMode(dto.getDarkMode());
+        }
+
+        userRepository.save(user);
     }
 
 }

@@ -58,6 +58,12 @@ public class UserController {
                 .body(new GenericResponseDTO(message));
     }
 
+    @PatchMapping("/me")
+    public ResponseEntity<UserSelfDTO> updateSelf(@RequestBody @Valid UpdateSelfRequestDTO dto) {
+        userService.updateCurrentUser(dto);
+        return ResponseEntity.ok(userService.getCurrentUserDetails());
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GenericResponseDTO> deleteUser(@PathVariable int id) {
