@@ -46,9 +46,8 @@ public class Company {
     @JoinColumn(name = "id_owner_company", referencedColumnName = "id_company")
     private Company ownerCompany;
 
-    // Relaciones inversas
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Company> childCompanies;//Usar Set en vez de List?
+    private List<Company> childCompanies;
 
     @OneToMany(mappedBy = "company")
     private List<Address> addresses;
