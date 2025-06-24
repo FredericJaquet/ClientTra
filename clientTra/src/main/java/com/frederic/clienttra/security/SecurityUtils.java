@@ -2,32 +2,33 @@ package com.frederic.clienttra.security;
 
 import com.frederic.clienttra.exceptions.UserNotAuthenticatedException;
 import com.frederic.clienttra.utils.MessageResolver;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 public class SecurityUtils {
 
-    public static int getCurrentUserCompanyId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
-            throw new UserNotAuthenticatedException("No hay usuario autenticado");
-        }
+    @Setter
+    private static MessageResolver messageResolver;
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    public static int getCurrentUserCompanyId() {
+        CustomUserDetails userDetails = getAuthenticatedUser();
         return userDetails.getIdCompany();
     }
 
     public static int getCurrentUserId() {
+        CustomUserDetails userDetails = getAuthenticatedUser();
+        return userDetails.getIdUser();
+    }
+
+    private static CustomUserDetails getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
-            throw new UserNotAuthenticatedException("No hay usuario autenticado");
+           throw new UserNotAuthenticatedException();
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userDetails.getIdUser();
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 }
 

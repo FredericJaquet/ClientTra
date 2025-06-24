@@ -20,9 +20,8 @@ public class CustomUserDetailsService implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("error.user.not_found"));
 
-        // Convertir roles de tu entidad a GrantedAuthority
         List<SimpleGrantedAuthority> authorities = List.of(
                 new SimpleGrantedAuthority(user.getRole().getRoleName())
         );

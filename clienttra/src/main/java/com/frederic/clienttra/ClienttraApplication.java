@@ -9,5 +9,4 @@ public class ClienttraApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ClienttraApplication.class, args);
 	}
-
 }
