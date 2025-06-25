@@ -6,6 +6,7 @@ import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Phone;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
+import com.frederic.clienttra.exceptions.LogoNotLoadedException;
 import com.frederic.clienttra.mappers.AddressMapper;
 import com.frederic.clienttra.mappers.BankAccountMapper;
 import com.frederic.clienttra.mappers.CompanyMapper;
@@ -16,7 +17,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -86,6 +93,31 @@ public class CompanyServiceImpl implements CompanyService {
         checkAddresses(dto, company);
 
         companyRepository.save(company);
+    }
+
+    @Override
+    public void uploadCompanyLogo(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Archivo vacío");
+        }
+
+        Company company = getCurrentCompanyOrThrow();
+
+        try {
+            String filename = "logo_" + company.getIdCompany() + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path destinationPath = Paths.get("uploads/logos", filename).toAbsolutePath().normalize();
+
+            Files.createDirectories(destinationPath.getParent());
+
+            Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Guardar solo el path relativo
+            company.setLogoPath("uploads/logos/" + filename);
+            companyRepository.save(company);
+
+        } catch (IOException e) {
+            throw new LogoNotLoadedException();
+        }
     }
 
     private void checkPhones(UpdateCompanyOwnerDTO dto, Company company){
@@ -168,7 +200,6 @@ public class CompanyServiceImpl implements CompanyService {
                 }
             }
         }
-
     }
 
 }
