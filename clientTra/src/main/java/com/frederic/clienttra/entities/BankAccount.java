@@ -21,13 +21,13 @@ public class BankAccount {
     private String iban;
 
     @Column(length = 15)
-    private String bic;
+    private String swift;
 
     @Column(length = 100)
-    private String bankName;
+    private String branch;
 
     @Column(length = 100)
-    private String holderName;
+    private String holder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)

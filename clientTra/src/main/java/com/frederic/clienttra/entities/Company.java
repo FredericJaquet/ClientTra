@@ -3,6 +3,7 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,51 +48,51 @@ public class Company {
     private Company ownerCompany;
 
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Company> childCompanies;
+    private List<Company> childCompanies=new ArrayList<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses=new ArrayList<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Phone> phones=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<Address> addresses;
+    private List<ContactPerson> contactPersons=new ArrayList<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BankAccount> bankAccounts=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<Phone> phones;
+    private List<User> users=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<ContactPerson> contactPersons;
-
-    @OneToMany(mappedBy = "company")
-    private List<BankAccount> bankAccounts;
-
-    @OneToMany(mappedBy = "company")
-    private List<User> users;
-
-    @OneToMany(mappedBy = "company")
-    private List<Customer> customers;
+    private List<Customer> customers=new ArrayList<>();
 
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Customer> ownedCustomers;
+    private List<Customer> ownedCustomers=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<Provider> providers;
+    private List<Provider> providers=new ArrayList<>();
 
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Provider> ownedProviders;
+    private List<Provider> ownedProviders=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<Scheme> schemes;
+    private List<Scheme> schemes=new ArrayList<>();
 
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Scheme> ownedSchemes;
+    private List<Scheme> ownedSchemes=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<Document> documents;
+    private List<Document> documents=new ArrayList<>();
 
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Document> ownedDocuments;
+    private List<Document> ownedDocuments=new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<Order> orders;
+    private List<Order> orders=new ArrayList<>();
 
     @OneToMany(mappedBy = "ownerCompany")
-    private List<Order> ownedOrders;
+    private List<Order> ownedOrders=new ArrayList<>();
 }
 
