@@ -2,13 +2,12 @@ package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.*;
 import com.frederic.clienttra.exceptions.ErrorResponse;
-import com.frederic.clienttra.exceptions.UserErrorResponse;
-import com.frederic.clienttra.exceptions.UserErrorResponseException;
 import com.frederic.clienttra.exceptions.UserNotFoundException;
 import com.frederic.clienttra.services.UserService;
 import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final MessageResolver messageResolver;
-
-    public UserController(UserService userService, MessageResolver messageResolver) {
-        this.userService = userService;
-        this.messageResolver = messageResolver;
-    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -72,20 +67,12 @@ public class UserController {
         return ResponseEntity.ok(new GenericResponseDTO(msg));
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Usuario no encontrado", request.getRequestURI());
+    @PatchMapping("/me/password")
+    public ResponseEntity<GenericResponseDTO> changePassword(
+            @Valid @RequestBody ChangePasswordRequestDTO dto) {
+        userService.changePassword(dto);
+        String message = messageResolver.getMessage("user.password.changed", "Contraseña modificada correctamente");
+        return ResponseEntity.ok(new GenericResponseDTO(message));
     }
 
-    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String code, String fallbackMessage, String path) {
-        String localizedMsg = messageResolver.getMessage(code);
-        ErrorResponse error = new ErrorResponse(
-                LocalDateTime.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                localizedMsg != null ? localizedMsg : fallbackMessage,
-                path
-        );
-        return new ResponseEntity<>(error, status);
-    }
 }

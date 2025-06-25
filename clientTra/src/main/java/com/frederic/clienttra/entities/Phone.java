@@ -23,7 +23,7 @@ public class Phone {
     private String phoneNumber;
 
     @Column(length = 20)
-    private String phoneType;
+    private String kind;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)

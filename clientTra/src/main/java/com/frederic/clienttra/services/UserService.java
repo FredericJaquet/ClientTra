@@ -1,9 +1,6 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.CreateUserRequestDTO;
-import com.frederic.clienttra.dto.UpdateSelfRequestDTO;
-import com.frederic.clienttra.dto.UserForAdminDTO;
-import com.frederic.clienttra.dto.UserSelfDTO;
+import com.frederic.clienttra.dto.*;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Plan;
 import com.frederic.clienttra.entities.Role;
@@ -17,6 +14,7 @@ import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
 import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -32,16 +31,6 @@ public class UserService {
     private final CompanyService companyService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PlanRepository planRepository, CompanyService companyService, UserMapper userMapper, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository=roleRepository;
-        this.planRepository=planRepository;
-        this.companyService = companyService;
-        this.userMapper=userMapper;
-        this.passwordEncoder=passwordEncoder;
-
-    }
 
     public List<UserForAdminDTO> getAllUsers() {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
@@ -56,7 +45,7 @@ public class UserService {
         int idUser = SecurityUtils.getCurrentUserId();
 
         User user = userRepository.findById(idUser)
-                .orElseThrow(UserErrorResponseException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         return userMapper.toSelfDTO(user);
     }
@@ -116,7 +105,7 @@ public class UserService {
                 .getContext().getAuthentication().getPrincipal();
 
         User user = userRepository.findById(currentUser.getIdUser())
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(UserNotFoundException::new);
 
         if (dto.getEmail() != null) {
             user.setEmail(dto.getEmail());
@@ -133,5 +122,19 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    public void changePassword(ChangePasswordRequestDTO dto) {
+        int userId = SecurityUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotAuthenticatedException::new);
+
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPasswd())) {
+            throw new InvalidPasswordException();
+        }
+
+        user.setPasswd(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+    }
+
 
 }
