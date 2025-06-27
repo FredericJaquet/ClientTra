@@ -1,5 +1,6 @@
 package com.frederic.clienttra.dto;
 
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class CompanyOwnerDTO {
     private String logoPath;
     private List<AddressDTO> addresses;
     private List<PhoneDTO> phones;
+    @Valid
     private List<BankAccountDTO> bankAccounts;
     private List<UserForAdminDTO> users;
 

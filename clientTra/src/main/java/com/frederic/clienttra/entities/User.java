@@ -35,6 +35,9 @@ public class User {
     @Column
     private boolean darkMode;
 
+    @Column(nullable = false)
+    private boolean enabled = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)
     private Company company;

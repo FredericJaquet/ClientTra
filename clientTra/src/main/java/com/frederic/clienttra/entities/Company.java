@@ -56,7 +56,7 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Phone> phones=new ArrayList<>();
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ContactPerson> contactPersons=new ArrayList<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -94,5 +94,39 @@ public class Company {
 
     @OneToMany(mappedBy = "ownerCompany")
     private List<Order> ownedOrders=new ArrayList<>();
+
+    public void addAddress(Address address) {
+        if (addresses == null) {
+            addresses = new ArrayList<>();
+        }
+        addresses.add(address);
+        address.setCompany(this);
+    }
+
+    public void addPhone(Phone phone) {
+        if (phones == null) {
+            phones = new ArrayList<>();
+        }
+        phones.add(phone);
+        phone.setCompany(this);
+    }
+
+    public void addBankAccount(BankAccount bankAccount) {
+        if (bankAccounts == null) {
+            bankAccounts = new ArrayList<>();
+        }
+        bankAccounts.add(bankAccount);
+        bankAccount.setCompany(this);
+    }
+
+    public void addContactPerson(ContactPerson contact){
+        if(contactPersons == null){
+            contactPersons = new ArrayList<>();
+        }
+        contactPersons.add(contact);
+        contact.setCompany(this);
+    }
+
+
 }
 

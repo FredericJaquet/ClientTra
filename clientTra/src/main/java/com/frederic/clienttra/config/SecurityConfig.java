@@ -2,6 +2,7 @@ package com.frederic.clienttra.config;
 
 import com.frederic.clienttra.security.CustomAccessDeniedHandler;
 import com.frederic.clienttra.security.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +17,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
-
-    public SecurityConfig(CustomUserDetailsService uds) {
-        this.userDetailsService = uds;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,7 +39,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF fuera hasta tener frontend
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout", "/css/**", "/js/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/login", "/logout", "/css/**", "/js/**", "/favicon.ico", "/api/register/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())

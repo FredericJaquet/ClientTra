@@ -20,7 +20,7 @@ public class BankAccountMapper {
 
     public BankAccount toEntity(BankAccountDTO dto) {
         return BankAccount.builder()
-                .idBankAccount(dto.getIdBankAccount() != null ? dto.getIdBankAccount() : 0)
+                .idBankAccount(dto.getIdBankAccount())
                 .iban(dto.getIban())
                 .swift(dto.getSwift())
                 .holder(dto.getHolder())

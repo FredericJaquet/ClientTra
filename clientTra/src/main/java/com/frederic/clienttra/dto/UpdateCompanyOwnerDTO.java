@@ -1,5 +1,6 @@
 package com.frederic.clienttra.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -20,5 +21,6 @@ public class UpdateCompanyOwnerDTO {
     private String logoPath;
     private List<AddressDTO> addresses;
     private List<PhoneDTO> phones;
+    @Valid
     private List<BankAccountDTO> bankAccounts;
 }

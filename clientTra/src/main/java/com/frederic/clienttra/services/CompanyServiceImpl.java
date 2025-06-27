@@ -6,6 +6,7 @@ import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Phone;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
+import com.frederic.clienttra.exceptions.InvalidIbanException;
 import com.frederic.clienttra.exceptions.LogoNotLoadedException;
 import com.frederic.clienttra.mappers.AddressMapper;
 import com.frederic.clienttra.mappers.BankAccountMapper;
@@ -13,6 +14,7 @@ import com.frederic.clienttra.mappers.CompanyMapper;
 import com.frederic.clienttra.mappers.PhoneMapper;
 import com.frederic.clienttra.repositories.CompanyRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
+import com.frederic.clienttra.utils.validators.IbanValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,6 +52,11 @@ public class CompanyServiceImpl implements CompanyService {
         return Optional.empty();
     }
 
+    @Override
+    public Company getCurrentCompanyOrThrow() {
+        return getCurrentCompany().orElseThrow(CompanyNotFoundForUserException::new);
+    }
+
     public Optional<CompanyOwnerDTO> getCompanyOwner(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -59,11 +66,6 @@ public class CompanyServiceImpl implements CompanyService {
                     .map(companyMapper::toCompanyOwnerDTO);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Company getCurrentCompanyOrThrow() {
-        return getCurrentCompany().orElseThrow(CompanyNotFoundForUserException::new);
     }
 
     @Override
@@ -88,9 +90,9 @@ public class CompanyServiceImpl implements CompanyService {
             company.setLogoPath(dto.getLogoPath());
         }
 
-        checkPhones(dto, company);
-        checkBankAccounts(dto, company);
-        checkAddresses(dto, company);
+        updatePhones(dto, company);
+        updateBankAccounts(dto, company);
+        updateAddresses(dto, company);
 
         companyRepository.save(company);
     }
@@ -120,7 +122,7 @@ public class CompanyServiceImpl implements CompanyService {
         }
     }
 
-    private void checkPhones(UpdateCompanyOwnerDTO dto, Company company){
+    private void updatePhones(UpdateCompanyOwnerDTO dto, Company company){
         if (dto.getPhones() != null) {
             List<Phone> currentPhones = company.getPhones();
 
@@ -134,8 +136,7 @@ public class CompanyServiceImpl implements CompanyService {
                 if (phoneDTO.getIdPhone() == null) {
                     // Nuevo phone
                     Phone newPhone = phoneMapper.toEntity(phoneDTO);
-                    newPhone.setCompany(company);
-                    currentPhones.add(newPhone);
+                    company.addPhone(newPhone);
                 } else {
                     // Actualizar existente
                     currentPhones.stream()
@@ -146,7 +147,7 @@ public class CompanyServiceImpl implements CompanyService {
         }
     }
 
-    private void checkBankAccounts(UpdateCompanyOwnerDTO dto, Company company){
+    private void updateBankAccounts(UpdateCompanyOwnerDTO dto, Company company){
         if (dto.getBankAccounts() != null) {
             List<BankAccount> currentAccounts = company.getBankAccounts();
 
@@ -158,11 +159,13 @@ public class CompanyServiceImpl implements CompanyService {
             );
 
             for (BankAccountDTO accountDTO : dto.getBankAccounts()) {
+                if (!IbanValidator.isValidIban(accountDTO.getIban())) {
+                    throw new InvalidIbanException();
+                }
                 if (accountDTO.getIdBankAccount() == null) {
                     // Nueva cuenta
                     BankAccount newAccount = bankAccountMapper.toEntity(accountDTO);
-                    newAccount.setCompany(company);
-                    currentAccounts.add(newAccount);
+                    company.addBankAccount(newAccount);
                 } else {
                     // Actualizar existente
                     currentAccounts.stream()
@@ -173,7 +176,7 @@ public class CompanyServiceImpl implements CompanyService {
         }
     }
 
-    private void checkAddresses(UpdateCompanyOwnerDTO dto, Company company){
+    private void updateAddresses(UpdateCompanyOwnerDTO dto, Company company){
         if (dto.getAddresses() != null) {
             List<Address> currentAddresses = company.getAddresses();
             List<Integer> incomingIds = dto.getAddresses().stream()
@@ -189,8 +192,7 @@ public class CompanyServiceImpl implements CompanyService {
                 if (addressDTO.getIdAddress() == null) {
                     // Nueva dirección
                     Address newAddress = addressMapper.toEntity(addressDTO);
-                    newAddress.setCompany(company);
-                    currentAddresses.add(newAddress);
+                    company.addAddress(newAddress);
                 } else {
                     // Actualizar existente
                     currentAddresses.stream()

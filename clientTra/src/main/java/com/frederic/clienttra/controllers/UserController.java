@@ -1,11 +1,9 @@
 package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.*;
-import com.frederic.clienttra.exceptions.ErrorResponse;
 import com.frederic.clienttra.exceptions.UserNotFoundException;
 import com.frederic.clienttra.services.UserService;
 import com.frederic.clienttra.utils.MessageResolver;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -48,9 +45,9 @@ public class UserController {
     public ResponseEntity<GenericResponseDTO> createUser(
             @Valid @RequestBody CreateUserRequestDTO dto) {
         userService.createUser(dto);
-        String message = messageResolver.getMessage("user.created.success", "Usuario creado con éxito");
+        String msg = messageResolver.getMessage("user.created.success", "Usuario creado con éxito");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new GenericResponseDTO(message));
+                .body(new GenericResponseDTO(msg));
     }
 
     @PatchMapping("/me")
@@ -67,12 +64,20 @@ public class UserController {
         return ResponseEntity.ok(new GenericResponseDTO(msg));
     }
 
+    @PatchMapping("/reactivate/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<GenericResponseDTO> reactivateUser(@PathVariable int id) {
+        userService.reactivateUserById(id);
+        String msg = messageResolver.getMessage("user.reactivate.success", "EL usuario ha sido restablecido correctamente.");
+        return ResponseEntity.ok(new GenericResponseDTO(msg));
+    }
+
     @PatchMapping("/me/password")
     public ResponseEntity<GenericResponseDTO> changePassword(
             @Valid @RequestBody ChangePasswordRequestDTO dto) {
         userService.changePassword(dto);
-        String message = messageResolver.getMessage("user.password.changed", "Contraseña modificada correctamente");
-        return ResponseEntity.ok(new GenericResponseDTO(message));
+        String msg = messageResolver.getMessage("user.password.changed", "Contraseña modificada correctamente");
+        return ResponseEntity.ok(new GenericResponseDTO(msg));
     }
 
 }
