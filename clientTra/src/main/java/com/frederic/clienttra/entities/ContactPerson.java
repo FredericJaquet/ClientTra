@@ -17,20 +17,20 @@ public class ContactPerson {
     @Column(name = "id_contact_person")
     private Integer idContactPerson;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+    @Column(nullable = false, length = 40)
+    private String firstname;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 40)
     private String middlename;
 
-    @Column(length = 50)
-    private String surname;
+    @Column(length = 40)
+    private String lastname;
+
+    @Column(length = 40)
+    private String role;
 
     @Column(length = 100)
     private String email;
-
-    @Column(length = 20)
-    private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)

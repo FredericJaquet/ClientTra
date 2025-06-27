@@ -30,7 +30,7 @@ public class Customer {
     private String defaultLanguage;
 
     @Column
-    private Double defaultVAT;
+    private Double defaultVat;
 
     @Column
     private Double defaultWithholding;

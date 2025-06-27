@@ -4,6 +4,7 @@ import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -14,14 +15,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
     private final MessageResolver messageResolver;
-
-    public CustomAccessDeniedHandler(MessageResolver messageResolver) {
-        this.messageResolver = messageResolver;
-    }
 
     @Override
     public void handle(HttpServletRequest request,
@@ -32,8 +30,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json;charset=UTF-8");
 
         String message;
+        System.out.println("HOla");
         try {
             message = messageResolver.getMessage("error.access_denied");
+            System.out.println(message);
         } catch (Exception e) {
             message = "Acceso denegado (mensaje no disponible)";
         }

@@ -22,7 +22,7 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
 
         /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String rawPassword = "accounting1pass";
+        String rawPassword = "user2pass";
         String encodedPassword = encoder.encode(rawPassword);
         System.out.println(encodedPassword);*/
     }

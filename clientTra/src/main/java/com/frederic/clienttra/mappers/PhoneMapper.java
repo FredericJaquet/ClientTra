@@ -17,7 +17,7 @@ public class PhoneMapper {
 
     public Phone toEntity(PhoneDTO dto) {
         return Phone.builder()
-                .idPhone(dto.getIdPhone() != null ? dto.getIdPhone() : 0)  // 0 o null según convenga para JPA
+                .idPhone(dto.getIdPhone())
                 .phoneNumber(dto.getPhoneNumber())
                 .kind(dto.getKind())
                 .build();

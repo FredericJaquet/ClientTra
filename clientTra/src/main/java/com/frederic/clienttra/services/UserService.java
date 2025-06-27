@@ -75,7 +75,23 @@ public class UserService {
             }
         }
 
-        userRepository.deleteById(id);
+        userToDelete.setEnabled(false);
+        userRepository.save(userToDelete);
+    }
+
+    public void reactivateUserById(int id){
+        User userToReactivate = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int ownerCompanyId = currentUser.getIdCompany();
+
+        if (userToReactivate.getCompany().getIdCompany() != ownerCompanyId) {
+            throw new AccessDeniedException();
+        }
+
+        userToReactivate.setEnabled(true);
+        userRepository.save(userToReactivate);
     }
 
     public UserForAdminDTO createUser(CreateUserRequestDTO dto) {

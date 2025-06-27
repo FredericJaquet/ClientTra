@@ -13,5 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByCompany_IdCompany(int idCompany);
     Optional<User> findByIdUserAndCompany_IdCompany(int idUser, int idCompany);
     int countByCompany_IdCompanyAndRole_RoleName(int idCompany, String roleName);
+    List<User> findAllByCompany_IdCompanyAndEnabledTrue(int idCompany);
 
 }

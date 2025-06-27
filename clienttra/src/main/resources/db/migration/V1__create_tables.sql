@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS users (
   preferred_language   VARCHAR(10) DEFAULT 'es',
   preferred_theme      VARCHAR(20) DEFAULT 'red',
   dark_mode	       BOOLEAN DEFAULT FALSE,
+  enabled	       BOOLEAN NOT NULL DEFAULT TRUE,
   id_company           INT NOT NULL,
   id_role              INT NOT NULL,
   id_plan              INT NOT NULL,

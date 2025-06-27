@@ -1,0 +1,54 @@
+package com.frederic.clienttra.mappers;
+
+import com.frederic.clienttra.dto.ContactPersonDTO;
+import com.frederic.clienttra.entities.ContactPerson;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ContactPersonMapper {
+
+    public ContactPersonDTO toContactPersonDTO(ContactPerson contact){
+        return ContactPersonDTO.builder()
+                    .idContactPerson(contact.getIdContactPerson())
+                    .firstname(contact.getFirstname())
+                    .middlename(contact.getMiddlename())
+                    .lastname(contact.getLastname())
+                    .role(contact.getRole())
+                    .email(contact.getEmail())
+                .build();
+    }
+
+    public ContactPerson toEntity(ContactPersonDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        return ContactPerson.builder()
+                .idContactPerson(dto.getIdContactPerson())
+                .firstname(dto.getFirstname())
+                .middlename(dto.getMiddlename())
+                .lastname(dto.getLastname())
+                .role(dto.getRole())
+                .email(dto.getEmail())
+                .build();
+    }
+
+    public void updateEntity(ContactPerson entity, ContactPersonDTO dto) {
+        if (dto == null || entity == null) return;
+
+        if (dto.getFirstname() != null) {
+            entity.setFirstname(dto.getFirstname());
+        }
+        if (dto.getMiddlename() != null) {
+            entity.setMiddlename(dto.getMiddlename());
+        }
+        if (dto.getLastname() != null) {
+            entity.setLastname(dto.getLastname());
+        }
+        if (dto.getRole() != null) {
+            entity.setRole(dto.getRole());
+        }
+        if (dto.getEmail() != null) {
+            entity.setEmail(dto.getEmail());
+        }
+    }
+}

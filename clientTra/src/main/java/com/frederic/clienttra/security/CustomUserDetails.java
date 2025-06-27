@@ -14,6 +14,7 @@ public class CustomUserDetails implements UserDetails {
     private final int idUser;
     private final String username;
     private final String password;
+    private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
     private final int idCompany;
     private final String preferredLanguage;
@@ -35,7 +36,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
 
