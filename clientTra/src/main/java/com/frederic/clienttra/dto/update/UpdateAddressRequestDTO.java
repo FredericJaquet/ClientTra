@@ -1,11 +1,11 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.update;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class AddressDTO {
+public class UpdateAddressRequestDTO {
     private Integer idAddress;
     private String street;
     private String stNumber;

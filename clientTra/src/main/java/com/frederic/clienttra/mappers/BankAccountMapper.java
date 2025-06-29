@@ -1,6 +1,8 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.BankAccountDTO;
+import com.frederic.clienttra.dto.create.CreateBankAccountRequestDTO;
+import com.frederic.clienttra.dto.read.BankAccountDTO;
+import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
 import com.frederic.clienttra.entities.BankAccount;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +20,7 @@ public class BankAccountMapper {
                 .build();
     }
 
-    public BankAccount toEntity(BankAccountDTO dto) {
+    public BankAccount toEntity(CreateBankAccountRequestDTO dto) {
         return BankAccount.builder()
                 .idBankAccount(dto.getIdBankAccount())
                 .iban(dto.getIban())
@@ -28,7 +30,17 @@ public class BankAccountMapper {
                 .build();
     }
 
-    public void updateEntity(BankAccount entity, BankAccountDTO dto) {
+    public BankAccount toEntity(UpdateBankAccountRequestDTO dto) {
+        return BankAccount.builder()
+                .idBankAccount(dto.getIdBankAccount())
+                .iban(dto.getIban())
+                .swift(dto.getSwift())
+                .holder(dto.getHolder())
+                .branch(dto.getBranch())
+                .build();
+    }
+
+    public void updateEntity(BankAccount entity, UpdateBankAccountRequestDTO dto) {
         entity.setIban(dto.getIban());
         entity.setSwift(dto.getSwift());
         entity.setHolder(dto.getHolder());

@@ -1,15 +1,16 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.CreateCustomerRequestDTO;
-import com.frederic.clienttra.dto.CustomerDetailsDTO;
-import com.frederic.clienttra.dto.CustomersForListDTO;
-import com.frederic.clienttra.dto.UpdateCustomerDTO;
+import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
+import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
+import com.frederic.clienttra.dto.read.CustomersForListDTO;
+import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.entities.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
@@ -19,17 +20,6 @@ public class CustomerMapper {
     private final PhoneMapper phoneMapper;
     private final BankAccountMapper bankAccountMapper;
     private final ContactPersonMapper contactPersonMapper;
-
-    public CustomersForListDTO toCustomersForListDTO(Customer customer) {
-        return CustomersForListDTO.builder()
-                .idCustomer(customer.getIdCustomer())
-                .comName(customer.getCompany().getComName())
-                .vatNumber(customer.getCompany().getVatNumber())
-                .email(customer.getCompany().getEmail())
-                .web(customer.getCompany().getWeb())
-                .enabled(customer.getEnabled())
-                .build();
-    }
 
     public CustomerDetailsDTO toCustomerDetailsDTO(Customer customer) {
         return CustomerDetailsDTO.builder()
@@ -83,7 +73,7 @@ public class CustomerMapper {
                 .build();
     }
 
-    public void updateEntity(Customer customer, UpdateCustomerDTO dto) {
+    public void updateEntity(Customer customer, UpdateCustomerRequestDTO dto) {
         if (dto.getInvoicingMethod() != null) {
             customer.setInvoicingMethod(dto.getInvoicingMethod());
         }
@@ -108,6 +98,14 @@ public class CustomerMapper {
         if (dto.getEnabled() != null) {
             customer.setEnabled(dto.getEnabled());
         }
+    }
+
+    private <T, R> List<R> safeMapToDTO(List<T> list, Function<T, R> mapper) {
+        return list == null ? List.of() :
+                list.stream()
+                        .filter(Objects::nonNull)
+                        .map(mapper)
+                        .toList();
     }
 
 }

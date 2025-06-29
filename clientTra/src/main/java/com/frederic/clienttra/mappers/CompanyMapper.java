@@ -1,7 +1,7 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.BaseCompanyRequestDTO;
-import com.frederic.clienttra.dto.CompanyOwnerDTO;
+import com.frederic.clienttra.dto.create.CreateBaseCompanyRequestDTO;
+import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.entities.Company;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class CompanyMapper {
                 .build();
     }
 
-    public Company toEntity(BaseCompanyRequestDTO dto) {
+    public Company toEntity(CreateBaseCompanyRequestDTO dto) {
         Company company = new Company();
 
         company.setVatNumber(dto.getVatNumber());

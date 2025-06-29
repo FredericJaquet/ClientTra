@@ -1,7 +1,5 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.read;
 
-import com.frederic.clienttra.entities.ContactPerson;
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,25 +10,29 @@ import java.util.List;
 public class CustomerDetailsDTO {
 
     private Integer idCustomer;
+    private String vatNumber;
     private String comName;
     private String legaName;
-    private String web;
     private String email;
+    private String web;
+    private List<PhoneDTO> phones;
+    private List<AddressDTO> addresses;
+    private List<BankAccountDTO> bankAccounts;
+    private List<ContactPersonDTO> contactPersons;
+
     private String invoicingMethod;
+    private Integer duedate;
     private String payMethod;
     private String defaultLanguage;
-    private String vatNumber;
     private double defaultVat;
     private double defaultWithholding;
-    private Integer duedate;
     private Boolean europe;
     private Boolean enabled;
 
-    private List<AddressDTO> addresses;
-    private List<ContactPersonDTO> contactPersons;
-    private List<PhoneDTO> phones;
-    @Valid
-    private List<BankAccountDTO> bankAccounts;
+
+
+
+
 
 
 }

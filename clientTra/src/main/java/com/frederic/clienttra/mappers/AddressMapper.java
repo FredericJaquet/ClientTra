@@ -1,7 +1,8 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.AddressDTO;
-import com.frederic.clienttra.dto.NewAddressDTO;
+import com.frederic.clienttra.dto.read.AddressDTO;
+import com.frederic.clienttra.dto.create.CreateAddressRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateAddressRequestDTO;
 import com.frederic.clienttra.entities.Address;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public class AddressMapper {
                 .build();
     }
 
-    public Address toEntity(NewAddressDTO dto) {
+    public Address toEntity(CreateAddressRequestDTO dto) {
         return Address.builder()
                 .street(dto.getStreet())
                 .stNumber(dto.getStNumber())
@@ -46,7 +47,19 @@ public class AddressMapper {
                 .build();
     }
 
-    public void updateEntity(Address entity, AddressDTO dto) {
+    public Address toEntity(UpdateAddressRequestDTO dto) {
+        return Address.builder()
+                .street(dto.getStreet())
+                .stNumber(dto.getStNumber())
+                .apt(dto.getApt())
+                .cp(dto.getCp())
+                .city(dto.getCity())
+                .state(dto.getState())
+                .country(dto.getCountry())
+                .build();
+    }
+
+    public void updateEntity(Address entity, UpdateAddressRequestDTO dto) {
         entity.setStreet(dto.getStreet());
         entity.setStNumber(dto.getStNumber());
         entity.setApt(dto.getApt());

@@ -1,6 +1,14 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.create.CreatePhoneRequestDTO;
+import com.frederic.clienttra.dto.read.AddressDTO;
+import com.frederic.clienttra.dto.read.BankAccountDTO;
+import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
+import com.frederic.clienttra.dto.read.PhoneDTO;
+import com.frederic.clienttra.dto.update.UpdateAddressRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateCompanyOwnerDTO;
+import com.frederic.clienttra.dto.update.UpdatePhoneRequestDTO;
 import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.Company;
@@ -132,15 +140,16 @@ public class CompanyServiceImpl implements CompanyService {
                             .noneMatch(dtoPhone -> dtoPhone.getIdPhone() != null && dtoPhone.getIdPhone().equals(phone.getIdPhone()))
             );
 
-            for (PhoneDTO phoneDTO : dto.getPhones()) {
+            for (UpdatePhoneRequestDTO phoneDTO : dto.getPhones()) {
                 if (phoneDTO.getIdPhone() == null) {
-                    // Nuevo phone
-                    Phone newPhone = phoneMapper.toEntity(phoneDTO);
+                    // Nuevo phone - Validar primero
+                    CreatePhoneRequestDTO createPhoneDTO = phoneMapper.toCreatePhoneRequestDTO(phoneDTO);
+                    Phone newPhone = phoneMapper.toEntity(createPhoneDTO);
                     company.addPhone(newPhone);
                 } else {
                     // Actualizar existente
                     currentPhones.stream()
-                            .filter(p -> p.getIdPhone() == phoneDTO.getIdPhone())
+                            .filter(p -> Objects.equals(p.getIdPhone(), phoneDTO.getIdPhone()))
                             .findFirst().ifPresent(existingPhone -> phoneMapper.updateEntity(existingPhone, phoneDTO));
                 }
             }
@@ -158,7 +167,7 @@ public class CompanyServiceImpl implements CompanyService {
                                     dtoAccount.getIdBankAccount().equals(account.getIdBankAccount()))
             );
 
-            for (BankAccountDTO accountDTO : dto.getBankAccounts()) {
+            for (UpdateBankAccountRequestDTO accountDTO : dto.getBankAccounts()) {
                 if (!IbanValidator.isValidIban(accountDTO.getIban())) {
                     throw new InvalidIbanException();
                 }
@@ -180,7 +189,7 @@ public class CompanyServiceImpl implements CompanyService {
         if (dto.getAddresses() != null) {
             List<Address> currentAddresses = company.getAddresses();
             List<Integer> incomingIds = dto.getAddresses().stream()
-                    .map(AddressDTO::getIdAddress)
+                    .map(UpdateAddressRequestDTO::getIdAddress)
                     .filter(Objects::nonNull)
                     .toList();
 
@@ -188,7 +197,7 @@ public class CompanyServiceImpl implements CompanyService {
             currentAddresses.removeIf(address ->
                     address.getIdAddress() != null && !incomingIds.contains(address.getIdAddress()));
 
-            for (AddressDTO addressDTO : dto.getAddresses()) {
+            for (UpdateAddressRequestDTO addressDTO : dto.getAddresses()) {
                 if (addressDTO.getIdAddress() == null) {
                     // Nueva dirección
                     Address newAddress = addressMapper.toEntity(addressDTO);

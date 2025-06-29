@@ -1,4 +1,4 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.create;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
-public class CreateCustomerRequestDTO extends BaseCompanyRequestDTO {
+public class CreateCustomerRequestDTO extends CreateBaseCompanyRequestDTO {//TODO validation message (see CreateUserRequestDTO)
 
     private String defaultLanguage="es";
     private Double defaultVAT=0.21;
@@ -17,5 +17,4 @@ public class CreateCustomerRequestDTO extends BaseCompanyRequestDTO {
     private String payMethod;
     private Integer duedate;
     private Boolean europe=true;
-
 }

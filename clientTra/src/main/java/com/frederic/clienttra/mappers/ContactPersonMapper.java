@@ -1,6 +1,8 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.ContactPersonDTO;
+import com.frederic.clienttra.dto.create.CreateContactPersonRequestDTO;
+import com.frederic.clienttra.dto.read.ContactPersonDTO;
+import com.frederic.clienttra.dto.update.UpdateContactPersonRequestDTO;
 import com.frederic.clienttra.entities.ContactPerson;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +20,7 @@ public class ContactPersonMapper {
                 .build();
     }
 
-    public ContactPerson toEntity(ContactPersonDTO dto) {
+    public ContactPerson toEntity(CreateContactPersonRequestDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -32,7 +34,21 @@ public class ContactPersonMapper {
                 .build();
     }
 
-    public void updateEntity(ContactPerson entity, ContactPersonDTO dto) {
+    public ContactPerson toEntity(UpdateContactPersonRequestDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        return ContactPerson.builder()
+                .idContactPerson(dto.getIdContactPerson())
+                .firstname(dto.getFirstname())
+                .middlename(dto.getMiddlename())
+                .lastname(dto.getLastname())
+                .role(dto.getRole())
+                .email(dto.getEmail())
+                .build();
+    }
+
+    public void updateEntity(ContactPerson entity, UpdateContactPersonRequestDTO dto) {
         if (dto == null || entity == null) return;
 
         if (dto.getFirstname() != null) {

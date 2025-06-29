@@ -1,6 +1,10 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.create.CreateUserRequestDTO;
+import com.frederic.clienttra.dto.read.UserForAdminDTO;
+import com.frederic.clienttra.dto.read.UserSelfDTO;
+import com.frederic.clienttra.dto.update.UpdatePasswordRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateSelfRequestDTO;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Plan;
 import com.frederic.clienttra.entities.Role;
@@ -12,7 +16,6 @@ import com.frederic.clienttra.repositories.RoleRepository;
 import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
-import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -139,7 +142,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void changePassword(ChangePasswordRequestDTO dto) {
+    public void changePassword(UpdatePasswordRequestDTO dto) {
         int userId = SecurityUtils.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotAuthenticatedException::new);

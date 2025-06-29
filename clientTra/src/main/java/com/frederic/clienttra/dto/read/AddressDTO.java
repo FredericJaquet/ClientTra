@@ -1,30 +1,17 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.read;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class NewAddressDTO {
-
-    @NonNull
+public class AddressDTO {
+    private Integer idAddress;
     private String street;
-
-    @NonNull
     private String stNumber;
-
     private String apt;
-
-    @NonNull
     private String cp;
-
-    @NonNull
     private String city;
-
     private String state;
-
-    @NonNull
     private String country;
 }
-

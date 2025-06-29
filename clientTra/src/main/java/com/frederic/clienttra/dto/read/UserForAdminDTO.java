@@ -1,4 +1,4 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.read;
 
 import lombok.Builder;
 import lombok.Data;

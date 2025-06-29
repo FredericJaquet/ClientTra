@@ -1,21 +1,16 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.update;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class ContactPersonDTO {
+public class UpdateContactPersonRequestDTO {
     private Integer idContactPerson;
-    @NotBlank
     private String firstname;
-    @NotBlank
     private String middlename;
     private String lastname;
     private String role;
-    @Email
     private String email;
 
 }
