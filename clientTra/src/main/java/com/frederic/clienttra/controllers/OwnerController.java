@@ -1,6 +1,8 @@
 package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
+import com.frederic.clienttra.dto.update.UpdateCompanyOwnerDTO;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
 import com.frederic.clienttra.services.CompanyServiceImpl;
 import com.frederic.clienttra.utils.MessageResolver;

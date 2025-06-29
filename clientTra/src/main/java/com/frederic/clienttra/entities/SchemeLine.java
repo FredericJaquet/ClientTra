@@ -22,7 +22,7 @@ public class SchemeLine {
     @Column
     private Double discount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_scheme", nullable = false)
     private Scheme scheme;
 }

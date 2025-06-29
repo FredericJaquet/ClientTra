@@ -1,7 +1,7 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.UserForAdminDTO;
-import com.frederic.clienttra.dto.UserSelfDTO;
+import com.frederic.clienttra.dto.read.UserForAdminDTO;
+import com.frederic.clienttra.dto.read.UserSelfDTO;
 import com.frederic.clienttra.entities.User;
 import org.springframework.stereotype.Component;
 

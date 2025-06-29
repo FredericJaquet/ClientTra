@@ -1,6 +1,8 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
+import com.frederic.clienttra.dto.read.*;
+import com.frederic.clienttra.dto.update.*;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CustomerNotFoundException;
 import com.frederic.clienttra.exceptions.InvalidIbanException;
@@ -52,20 +54,11 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
     }
 
     @Override
-    public void createCustomer(CreateCustomerRequestDTO dto) {
+    public void createCustomer(CreateCustomerRequestDTO dto) {//TODO Definir NewXXXDTO y comprobar validaciones en UpdateXXXDTO
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         Company customerCompany = companyMapper.toEntity(dto);
         customerCompany.setOwnerCompany(owner);
-
-        // Validar IBANs antes de guardar
-        if (customerCompany.getBankAccounts() != null) {
-            customerCompany.getBankAccounts().forEach(ba -> {
-                if (!IbanValidator.isValidIban(ba.getIban())) {
-                    throw new InvalidIbanException();
-                }
-            });
-        }
 
         Company savedCompany = companyRepository.save(customerCompany);
 
@@ -78,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
     }
 
     @Override
-    public void updateCustomer(int id, UpdateCustomerDTO dto) {
+    public void updateCustomer(int id, UpdateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Customer customer = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
                 .orElseThrow(CustomerNotFoundException::new);
@@ -92,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
         if (dto.getWeb() != null) company.setWeb(dto.getWeb());
 
         if (dto.getBankAccounts() != null) {
-            for (BankAccountDTO baDto : dto.getBankAccounts()) {
+            for (UpdateBankAccountRequestDTO baDto : dto.getBankAccounts()) {
                 if (!IbanValidator.isValidIban(baDto.getIban())) {
                     throw new InvalidIbanException();
                 }
@@ -135,7 +128,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 .toList();
     }
 
-    private void updatePhones(List<PhoneDTO> dtos, Company company) {
+    private void updatePhones(List<UpdatePhoneRequestDTO> dtos, Company company) {
         updateCollection(
                 dtos,
                 company.getPhones(),
@@ -147,7 +140,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
         );
     }
 
-    private void updateAddresses(List<AddressDTO> dtos, Company company) {
+    private void updateAddresses(List<UpdateAddressRequestDTO> dtos, Company company) {
         updateCollection(
                 dtos,
                 company.getAddresses(),
@@ -159,7 +152,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
         );
     }
 
-    private void updateBankAccounts(List<BankAccountDTO> dtos, Company company) {
+    private void updateBankAccounts(List<UpdateBankAccountRequestDTO> dtos, Company company) {
         updateCollection(
                 dtos,
                 company.getBankAccounts(),
@@ -171,7 +164,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
         );
     }
 
-    private void updateContactPersons(List<ContactPersonDTO> dtos, Company company) {
+    private void updateContactPersons(List<UpdateContactPersonRequestDTO> dtos, Company company) {
         updateCollection(
                 dtos,
                 company.getContactPersons(),

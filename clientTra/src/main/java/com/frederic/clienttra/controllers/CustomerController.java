@@ -1,6 +1,10 @@
 package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
+import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
+import com.frederic.clienttra.dto.read.CustomersForListDTO;
+import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +28,7 @@ public class CustomerController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createCustomer(
-            @Valid @RequestBody CreateCustomerRequestDTO dto) {
+    public ResponseEntity<GenericResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
         customerService.createCustomer(dto);
         return ResponseEntity.ok(new GenericResponseDTO("customer.created.success"));
     }
@@ -38,7 +41,7 @@ public class CustomerController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")//TODO ERROR, el error que lanza para ccess denied no es el correcto, es el generico.
-    public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int id, @Valid @RequestBody UpdateCustomerDTO dto) {
+    public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int id, @Valid @RequestBody UpdateCustomerRequestDTO dto) {
         customerService.updateCustomer(id, dto);
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }

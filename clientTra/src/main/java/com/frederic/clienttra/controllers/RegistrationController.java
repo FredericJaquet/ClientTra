@@ -1,6 +1,6 @@
 package com.frederic.clienttra.controllers;
 
-import com.frederic.clienttra.dto.RegistrationRequestDTO;
+import com.frederic.clienttra.dto.create.RegistrationRequestDTO;
 import com.frederic.clienttra.services.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

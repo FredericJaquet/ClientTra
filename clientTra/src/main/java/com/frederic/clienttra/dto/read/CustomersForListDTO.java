@@ -1,4 +1,4 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.read;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,14 +8,9 @@ import lombok.Data;
 public class CustomersForListDTO {
 
     private Integer idCustomer;
-
     private String comName;
-
     private String vatNumber;
-
     private String email;
-
     private String web;
-
     private Boolean enabled;
 }

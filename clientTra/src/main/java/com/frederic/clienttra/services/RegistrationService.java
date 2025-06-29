@@ -1,6 +1,6 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.RegistrationRequestDTO;
+import com.frederic.clienttra.dto.create.RegistrationRequestDTO;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CompanyAlreadyExistsException;
 import com.frederic.clienttra.repositories.*;

@@ -1,6 +1,11 @@
 package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.create.CreateUserRequestDTO;
+import com.frederic.clienttra.dto.read.UserForAdminDTO;
+import com.frederic.clienttra.dto.read.UserSelfDTO;
+import com.frederic.clienttra.dto.update.UpdatePasswordRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateSelfRequestDTO;
 import com.frederic.clienttra.exceptions.UserNotFoundException;
 import com.frederic.clienttra.services.UserService;
 import com.frederic.clienttra.utils.MessageResolver;
@@ -74,7 +79,7 @@ public class UserController {
 
     @PatchMapping("/me/password")
     public ResponseEntity<GenericResponseDTO> changePassword(
-            @Valid @RequestBody ChangePasswordRequestDTO dto) {
+            @Valid @RequestBody UpdatePasswordRequestDTO dto) {
         userService.changePassword(dto);
         String msg = messageResolver.getMessage("user.password.changed", "Contraseña modificada correctamente");
         return ResponseEntity.ok(new GenericResponseDTO(msg));

@@ -1,22 +1,21 @@
-package com.frederic.clienttra.dto;
+package com.frederic.clienttra.dto.update;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
+import com.frederic.clienttra.dto.read.AddressDTO;
+import com.frederic.clienttra.dto.read.ContactPersonDTO;
+import com.frederic.clienttra.dto.read.PhoneDTO;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class BaseCompanyRequestDTO {
-    @NotBlank
+public class UpdateBaseCompanyRequestDTO {
     protected String vatNumber;
     protected String comName;
-    @NotBlank
     protected String legalName;
     protected String email;
     protected String web;
     private List<ContactPersonDTO> contactPersons;
     private List<PhoneDTO> phones;
     private List<AddressDTO> addresses;
-    private List<BankAccountDTO> bankAccounts;
+    private List<UpdateBankAccountRequestDTO> bankAccounts;
 }
