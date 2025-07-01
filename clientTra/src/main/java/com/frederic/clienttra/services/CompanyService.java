@@ -6,10 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-public interface CompanyOwnerService {
+public interface CompanyService {
     Optional<Company> getCurrentCompany();
     Company getCurrentCompanyOrThrow();
     void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto);
     void uploadCompanyLogo(MultipartFile file);
+    //Company findByIdCompany(Integer idCompany);
 
 }

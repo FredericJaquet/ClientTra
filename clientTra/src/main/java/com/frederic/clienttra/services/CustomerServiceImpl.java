@@ -4,10 +4,6 @@ import com.frederic.clienttra.dto.create.*;
 import com.frederic.clienttra.dto.read.*;
 import com.frederic.clienttra.dto.update.*;
 import com.frederic.clienttra.entities.*;
-import com.frederic.clienttra.exceptions.AddressNotFoundException;
-import com.frederic.clienttra.exceptions.PhoneNotFoundException;
-import com.frederic.clienttra.exceptions.BankAccountNotFoundException;
-import com.frederic.clienttra.exceptions.ContactPersonNotFoundException;
 import com.frederic.clienttra.exceptions.CustomerNotFoundException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.repositories.*;
@@ -16,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
     private final CustomerRepository customerRepository;
     private final CompanyRepository companyRepository;
     private final CustomerMapper customerMapper;
-    private final CompanyOwnerService companyService;
+    private final CompanyService companyService;
     private final CompanyMapper companyMapper;
     private final PhoneMapper phoneMapper;
     private final AddressMapper addressMapper;
@@ -65,10 +60,10 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
     public void createCustomer(CreateCustomerRequestDTO dto) {//TODO Definir NewXXXDTO y comprobar validaciones en UpdateXXXDTO
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        Company customerCompany = companyMapper.toEntity(dto);
-        customerCompany.setOwnerCompany(owner);
+        Company companyEntity = companyMapper.toEntity(dto);
+        companyEntity.setOwnerCompany(owner);
 
-        Company savedCompany = companyRepository.save(customerCompany);
+        Company savedCompany = companyRepository.save(companyEntity);
 
         Customer customer = customerMapper.toEntity(dto);
         customer.setCompany(savedCompany);
@@ -88,10 +83,10 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
 
         companyMapper.updateEntity(company,dto);
 
-        updatePhones(dto.getPhones(), company);
+        /*updatePhones(dto.getPhones(), company);
         updateAddresses(dto.getAddresses(), company);
         updateBankAccounts(dto.getBankAccounts(), company);
-        updateContactPersons(dto.getContactPersons(), company);
+        updateContactPersons(dto.getContactPersons(), company);*/
 
         customerMapper.updateEntity(customer, dto);
 
@@ -124,7 +119,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 .toList();
     }
 
-    private void updatePhones(List<UpdatePhoneRequestDTO> dtos, Company company) {
+    /*private void updatePhones(List<UpdatePhoneRequestDTO> dtos, Company company) {
         updateCollection(
                 dtos,
                 company.getPhones(),
@@ -228,7 +223,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 }
             }
         }
-    }
+    }*/
 
 }
 

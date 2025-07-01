@@ -4,7 +4,7 @@ import com.frederic.clienttra.dto.*;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
-import com.frederic.clienttra.services.CompanyOwnerServiceImpl;
+import com.frederic.clienttra.services.CompanyServiceImpl;
 import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OwnerController {
 
-    private final CompanyOwnerServiceImpl companyService;
+    private final CompanyServiceImpl companyService;
     private final MessageResolver messageResolver;
 
     @GetMapping
