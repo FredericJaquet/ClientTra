@@ -18,10 +18,10 @@ public class PhoneMapper {
                 .build();
     }
 
-    public CreatePhoneRequestDTO toCreatePhoneRequestDTO(UpdatePhoneRequestDTO phoneDTO){
+    public CreatePhoneRequestDTO toCreatePhoneRequestDTO(UpdatePhoneRequestDTO phoneDTO, Phone entity){
         return CreatePhoneRequestDTO.builder()
-                .phoneNumber(phoneDTO.getPhoneNumber())
-                .kind(phoneDTO.getKind())
+                .phoneNumber(phoneDTO.getPhoneNumber() != null ? phoneDTO.getPhoneNumber() : entity.getPhoneNumber())
+                .kind(phoneDTO.getKind() != null ? phoneDTO.getKind() : entity.getKind())
                 .build();
     }
 

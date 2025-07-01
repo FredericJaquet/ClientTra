@@ -1,6 +1,7 @@
 package com.frederic.clienttra.repositories;
 
 import com.frederic.clienttra.entities.Address;
+import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address, Integer> {
-    Optional<Address> findByIdAddressAndCompany(Integer id, Company company);
+public interface BankAccountRepository extends JpaRepository<BankAccount, Integer> {
+    Optional<BankAccount> findByIdBankAccountAndCompany(Integer id, Company company);
 }

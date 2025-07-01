@@ -23,12 +23,12 @@ public class BankAccountMapper {
                 .build();
     }
 
-    public CreateBankAccountRequestDTO toCreateBankAccountRequestDTO(UpdateBankAccountRequestDTO bankAccountDTO){
+    public CreateBankAccountRequestDTO toCreateBankAccountRequestDTO(UpdateBankAccountRequestDTO dto, BankAccount entity){
         return CreateBankAccountRequestDTO.builder()
-                .iban(bankAccountDTO.getIban())
-                .swift(bankAccountDTO.getSwift())
-                .branch(bankAccountDTO.getBranch())
-                .holder(bankAccountDTO.getHolder())
+                .iban(dto.getIban() != null ? dto.getIban() : entity.getIban())
+                .swift(dto.getSwift() != null ? dto.getSwift() : entity.getSwift())
+                .branch(dto.getBranch() != null ? dto.getBranch() : entity.getBranch())
+                .holder(dto.getHolder() != null ? dto.getHolder() : entity.getHolder())
                 .build();
     }
 

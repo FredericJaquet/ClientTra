@@ -101,9 +101,9 @@ public class UserService {
         Company currentCompany = companyService.getCurrentCompany()
                 .orElseThrow(UserNotAuthenticatedException::new);
         Role role = roleRepository.findById(dto.getIdRole())
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(RoleNotFoundException::new);
         Plan plan = planRepository.findById(dto.getIdPlan())
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(RoleNotFoundException::new);
 
         User user = new User();
         user.setUserName(dto.getUsername());
