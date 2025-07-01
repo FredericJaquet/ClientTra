@@ -21,13 +21,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotAuthenticatedException.class)
     public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(UserNotAuthenticatedException ex, HttpServletRequest request) {
-        //return buildErrorResponse(HttpStatus.UNAUTHORIZED, "error.not_authenticated", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), "No se pudo determinar la compañía del usuario autenticado.", request.getRequestURI());
     }
 
     @ExceptionHandler(org.springframework.security.authorization.AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDenied(org.springframework.security.authorization.AuthorizationDeniedException ex, HttpServletRequest request) {
-        //return buildErrorResponse(HttpStatus.FORBIDDEN, "error.access_denied", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), "Acceso denegado. No tienes permisos para realizar esta acción.", request.getRequestURI());
     }
 
@@ -38,13 +36,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CantDeleteSelfException.class)
     public ResponseEntity<ErrorResponse> handleCantDeleteSelf(CantDeleteSelfException ex, HttpServletRequest request) {
-        //return buildErrorResponse(HttpStatus.FORBIDDEN, "error.user.admin_cannot_delete_self", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), "No hemos podido encontrar el usuario.", request.getRequestURI());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
-        //return buildErrorResponse(HttpStatus.NOT_FOUND, "error.user.not_found", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "No hemos podido encontrar el usuario.", request.getRequestURI());
     }
 
@@ -55,14 +51,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
-        //return buildErrorResponse(HttpStatus.NOT_FOUND, "error.resource_not_found", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "El recurso solicitado no existe.", request.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
-        //return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error.internal", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), "Ha ocurrido un error inesperado.", request.getRequestURI());
+    }
+
+    @ExceptionHandler(ManualValidationException.class)
+    public ResponseEntity<ErrorResponse> handleManualValidationException(ManualValidationException ex, HttpServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        ex.getFieldErrors().forEach((field, msgKey) -> {
+            String message = messageResolver.getMessage(msgKey);
+            sb.append(field).append(": ").append(message).append("; ");
+        });
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                sb.toString().trim(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

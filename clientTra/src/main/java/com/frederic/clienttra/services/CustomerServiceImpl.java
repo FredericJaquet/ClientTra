@@ -5,11 +5,10 @@ import com.frederic.clienttra.dto.read.*;
 import com.frederic.clienttra.dto.update.*;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CustomerNotFoundException;
-import com.frederic.clienttra.exceptions.InvalidIbanException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.repositories.CompanyRepository;
 import com.frederic.clienttra.repositories.CustomerRepository;
-import com.frederic.clienttra.utils.validators.IbanValidator;
+import com.frederic.clienttra.utils.validators.DtoValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +21,13 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
     private final CustomerRepository customerRepository;
     private final CompanyRepository companyRepository;
     private final CustomerMapper customerMapper;
-    private final CompanyService companyService;
+    private final CompanyOwnerService companyService;
     private final CompanyMapper companyMapper;
     private final PhoneMapper phoneMapper;
     private final AddressMapper addressMapper;
     private final BankAccountMapper bankAccountMapper;
     private final ContactPersonMapper contactPersonMapper;
+    private final DtoValidator dtoValidator;
 
     @Override
     public List<CustomersForListDTO> getAllCustomers() {
@@ -78,19 +78,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
 
         Company company = customer.getCompany();
 
-        if (dto.getVatNumber() != null) company.setVatNumber(dto.getVatNumber());
-        if (dto.getComName() != null) company.setComName(dto.getComName());
-        if (dto.getLegalName() != null) company.setLegalName(dto.getLegalName());
-        if (dto.getEmail() != null) company.setEmail(dto.getEmail());
-        if (dto.getWeb() != null) company.setWeb(dto.getWeb());
-
-        if (dto.getBankAccounts() != null) {
-            for (UpdateBankAccountRequestDTO baDto : dto.getBankAccounts()) {
-                if (!IbanValidator.isValidIban(baDto.getIban())) {
-                    throw new InvalidIbanException();
-                }
-            }
-        }
+        companyMapper.updateEntity(company,dto);
 
         updatePhones(dto.getPhones(), company);
         updateAddresses(dto.getAddresses(), company);
@@ -136,7 +124,8 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 phoneMapper::updateEntity,
                 company::addPhone,
                 (entity, dto) -> entity.getIdPhone() != null && entity.getIdPhone().equals(dto.getIdPhone()),
-                dto -> dto.getIdPhone() != null
+                dto -> dto.getIdPhone() != null,
+                dto -> dtoValidator.validate(phoneMapper.toCreatePhoneRequestDTO(dto))
         );
     }
 
@@ -148,7 +137,8 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 addressMapper::updateEntity,
                 company::addAddress,
                 (entity, dto) -> entity.getIdAddress() != null && entity.getIdAddress().equals(dto.getIdAddress()),
-                dto -> dto.getIdAddress() != null
+                dto -> dto.getIdAddress() != null,
+                dto -> dtoValidator.validate(addressMapper.toCreateAddressRequestDTO(dto))
         );
     }
 
@@ -160,7 +150,8 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 bankAccountMapper::updateEntity,
                 company::addBankAccount,
                 (entity, dto) -> entity.getIdBankAccount() != null && entity.getIdBankAccount().equals(dto.getIdBankAccount()),
-                dto -> dto.getIdBankAccount() != null
+                dto -> dto.getIdBankAccount() != null,
+                dto -> dtoValidator.validate(bankAccountMapper.toCreateBankAccountRequestDTO(dto))
         );
     }
 
@@ -172,7 +163,8 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
                 contactPersonMapper::updateEntity,
                 company::addContactPerson,
                 (entity, dto) -> entity.getIdContactPerson() != null && entity.getIdContactPerson().equals(dto.getIdContactPerson()),
-                dto -> dto.getIdContactPerson() != null
+                dto -> dto.getIdContactPerson() != null,
+                dto -> dtoValidator.validate(contactPersonMapper.toCreateContactPersonRequestDTO(dto))
         );
     }
 
@@ -183,7 +175,8 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
             java.util.function.BiConsumer<E, D> updateEntityWithDto,
             java.util.function.Consumer<E> addEntityToParent,
             java.util.function.BiPredicate<E, D> entityMatchesDto,
-            java.util.function.Predicate<D> hasId
+            java.util.function.Predicate<D> hasId,
+            java.util.function.Consumer<D> validateDto
     ) {
         if (dtos != null) {
             currentEntities.removeIf(entity ->
@@ -192,6 +185,7 @@ public class CustomerServiceImpl implements CustomerService {//Me falta los esqu
 
             for (D dto : dtos) {
                 if (!hasId.test(dto)) {
+                    validateDto.accept(dto);
                     E newEntity = dtoToEntityMapper.apply(dto);
                     addEntityToParent.accept(newEntity);
                 } else {

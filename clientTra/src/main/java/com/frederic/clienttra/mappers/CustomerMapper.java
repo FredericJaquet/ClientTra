@@ -25,7 +25,7 @@ public class CustomerMapper {
         return CustomerDetailsDTO.builder()
                 .idCustomer(customer.getIdCustomer())
                 .comName(customer.getCompany().getComName())
-                .legaName(customer.getCompany().getLegalName())
+                .legalName(customer.getCompany().getLegalName())
                 .web(customer.getCompany().getWeb())
                 .email(customer.getCompany().getEmail())
                 .invoicingMethod(customer.getInvoicingMethod())
@@ -37,26 +37,10 @@ public class CustomerMapper {
                 .duedate(customer.getDuedate())
                 .europe(customer.getEurope())
                 .enabled(customer.getEnabled())
-                .addresses(customer.getCompany().getAddresses() == null ? List.of() :
-                        customer.getCompany().getAddresses().stream()
-                                .filter(Objects::nonNull)
-                                .map(addressMapper::toAddressDTO)
-                                .toList())
-                .contactPersons(customer.getCompany().getContactPersons() == null ? List.of() :
-                        customer.getCompany().getContactPersons().stream()
-                                .filter(Objects::nonNull)
-                                .map(contactPersonMapper::toContactPersonDTO)
-                                .toList())
-                .phones(customer.getCompany().getPhones() == null ? List.of() :
-                        customer.getCompany().getPhones().stream()
-                                .filter(Objects::nonNull)
-                                .map(phoneMapper::toPhoneDTO)
-                                .toList())
-                .bankAccounts(customer.getCompany().getBankAccounts() == null ? List.of() :
-                        customer.getCompany().getBankAccounts().stream()
-                                .filter(Objects::nonNull)
-                                .map(bankAccountMapper::toBankAccountDTO)
-                                .toList())
+                .addresses(safeMapToDTO(customer.getCompany().getAddresses(), addressMapper::toAddressDTO))
+                .phones(safeMapToDTO(customer.getCompany().getPhones(), phoneMapper::toPhoneDTO))
+                .bankAccounts(safeMapToDTO(customer.getCompany().getBankAccounts(), bankAccountMapper::toBankAccountDTO))
+                .contactPersons(safeMapToDTO(customer.getCompany().getContactPersons(), contactPersonMapper::toContactPersonDTO))
                 .build();
     }
 

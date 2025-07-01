@@ -1,4 +1,4 @@
-package com.frederic.clienttra.dto.read;
+package com.frederic.clienttra.dto.update;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -10,8 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class CompanyOwnerDTO extends BaseCompanyDTO{
-    private int idCompany;
+public class UpdateCompanyOwnerRequestDTO extends UpdateBaseCompanyRequestDTO {
     private String logoPath;
-    private List<UserForAdminDTO> users;
 }

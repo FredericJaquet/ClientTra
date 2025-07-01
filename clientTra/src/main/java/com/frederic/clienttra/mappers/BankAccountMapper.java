@@ -1,8 +1,11 @@
 package com.frederic.clienttra.mappers;
 
+import com.frederic.clienttra.dto.bases.BaseBankAccountDTO;
 import com.frederic.clienttra.dto.create.CreateBankAccountRequestDTO;
+import com.frederic.clienttra.dto.create.CreatePhoneRequestDTO;
 import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
+import com.frederic.clienttra.dto.update.UpdatePhoneRequestDTO;
 import com.frederic.clienttra.entities.BankAccount;
 import org.springframework.stereotype.Component;
 
@@ -20,19 +23,17 @@ public class BankAccountMapper {
                 .build();
     }
 
-    public BankAccount toEntity(CreateBankAccountRequestDTO dto) {
-        return BankAccount.builder()
-                .idBankAccount(dto.getIdBankAccount())
-                .iban(dto.getIban())
-                .swift(dto.getSwift())
-                .holder(dto.getHolder())
-                .branch(dto.getBranch())
+    public CreateBankAccountRequestDTO toCreateBankAccountRequestDTO(UpdateBankAccountRequestDTO bankAccountDTO){
+        return CreateBankAccountRequestDTO.builder()
+                .iban(bankAccountDTO.getIban())
+                .swift(bankAccountDTO.getSwift())
+                .branch(bankAccountDTO.getBranch())
+                .holder(bankAccountDTO.getHolder())
                 .build();
     }
 
-    public BankAccount toEntity(UpdateBankAccountRequestDTO dto) {
+    public BankAccount toEntity(BaseBankAccountDTO dto) {
         return BankAccount.builder()
-                .idBankAccount(dto.getIdBankAccount())
                 .iban(dto.getIban())
                 .swift(dto.getSwift())
                 .holder(dto.getHolder())
@@ -41,9 +42,17 @@ public class BankAccountMapper {
     }
 
     public void updateEntity(BankAccount entity, UpdateBankAccountRequestDTO dto) {
-        entity.setIban(dto.getIban());
-        entity.setSwift(dto.getSwift());
-        entity.setHolder(dto.getHolder());
-        entity.setBranch(dto.getBranch());
+        if(dto.getIban() != null){
+            entity.setIban(dto.getIban());
+        }
+        if(dto.getSwift() != null){
+            entity.setSwift(dto.getSwift());
+        }
+        if(dto.getHolder() != null){
+            entity.setHolder(dto.getHolder());
+        }
+        if(dto.getBranch() != null){
+            entity.setBranch(dto.getBranch());
+        }
     }
 }

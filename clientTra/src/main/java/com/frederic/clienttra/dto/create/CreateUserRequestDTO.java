@@ -7,12 +7,10 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateUserRequestDTO {//TODO validation message (see CreateUserRequestDTO)
+public class CreateUserRequestDTO {
     @NotBlank(message = "validation.username.required")
     private String username;
     @NotBlank(message = "validation.password.required")

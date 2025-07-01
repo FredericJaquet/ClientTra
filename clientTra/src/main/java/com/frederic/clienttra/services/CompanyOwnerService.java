@@ -1,15 +1,15 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.update.UpdateCompanyOwnerDTO;
+import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
 import com.frederic.clienttra.entities.Company;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-public interface CompanyService {
+public interface CompanyOwnerService {
     Optional<Company> getCurrentCompany();
     Company getCurrentCompanyOrThrow();
-    void updateCompanyOwner(UpdateCompanyOwnerDTO dto);
+    void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto);
     void uploadCompanyLogo(MultipartFile file);
 
 }

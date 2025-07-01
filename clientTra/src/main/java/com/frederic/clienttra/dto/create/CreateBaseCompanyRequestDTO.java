@@ -4,16 +4,22 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Data
-public class CreateBaseCompanyRequestDTO {//TODO validation message (see CreateUserRequestDTO)
-    @NotBlank
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+public class CreateBaseCompanyRequestDTO {
+    @NotBlank(message = "validation.company.vat_number_required")
     protected String vatNumber;
     protected String comName;
-    @NotBlank
+    @NotBlank(message = "validation.company.legal_name_required")
     protected String legalName;
     @Email(message = "validation.email.invalid")
     @Size(max = 100, message = "validation.email.too_long")
@@ -21,7 +27,7 @@ public class CreateBaseCompanyRequestDTO {//TODO validation message (see CreateU
     protected String web;
     private List<CreateContactPersonRequestDTO> contactPersons;
     private List<CreatePhoneRequestDTO> phones;
-    @NotNull
+    @NotNull(message = "validation.company.address_required")
     private List<CreateAddressRequestDTO> addresses;
     private List<CreateBankAccountRequestDTO> bankAccounts;
 }

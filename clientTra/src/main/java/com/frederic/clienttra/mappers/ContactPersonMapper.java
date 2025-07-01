@@ -1,5 +1,6 @@
 package com.frederic.clienttra.mappers;
 
+import com.frederic.clienttra.dto.bases.BaseContactPersonDTO;
 import com.frederic.clienttra.dto.create.CreateContactPersonRequestDTO;
 import com.frederic.clienttra.dto.read.ContactPersonDTO;
 import com.frederic.clienttra.dto.update.UpdateContactPersonRequestDTO;
@@ -20,26 +21,21 @@ public class ContactPersonMapper {
                 .build();
     }
 
-    public ContactPerson toEntity(CreateContactPersonRequestDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        return ContactPerson.builder()
-                .idContactPerson(dto.getIdContactPerson())
-                .firstname(dto.getFirstname())
-                .middlename(dto.getMiddlename())
-                .lastname(dto.getLastname())
-                .role(dto.getRole())
-                .email(dto.getEmail())
+    public CreateContactPersonRequestDTO toCreateContactPersonRequestDTO(UpdateContactPersonRequestDTO contactDTO){
+        return CreateContactPersonRequestDTO.builder()
+                .firstname(contactDTO.getFirstname())
+                .middlename(contactDTO.getMiddlename())
+                .lastname(contactDTO.getLastname())
+                .role(contactDTO.getRole())
+                .email(contactDTO.getEmail())
                 .build();
     }
 
-    public ContactPerson toEntity(UpdateContactPersonRequestDTO dto) {
+    public ContactPerson toEntity(BaseContactPersonDTO dto) {
         if (dto == null) {
             return null;
         }
         return ContactPerson.builder()
-                .idContactPerson(dto.getIdContactPerson())
                 .firstname(dto.getFirstname())
                 .middlename(dto.getMiddlename())
                 .lastname(dto.getLastname())
@@ -49,8 +45,9 @@ public class ContactPersonMapper {
     }
 
     public void updateEntity(ContactPerson entity, UpdateContactPersonRequestDTO dto) {
-        if (dto == null || entity == null) return;
-
+        if (dto == null || entity == null){
+            return;
+        }
         if (dto.getFirstname() != null) {
             entity.setFirstname(dto.getFirstname());
         }

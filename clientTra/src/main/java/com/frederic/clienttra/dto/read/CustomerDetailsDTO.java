@@ -1,25 +1,15 @@
 package com.frederic.clienttra.dto.read;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
-@Data
-@Builder
-public class CustomerDetailsDTO {
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class CustomerDetailsDTO extends BaseCompanyDTO {
 
     private Integer idCustomer;
-    private String vatNumber;
-    private String comName;
-    private String legaName;
-    private String email;
-    private String web;
-    private List<PhoneDTO> phones;
-    private List<AddressDTO> addresses;
-    private List<BankAccountDTO> bankAccounts;
-    private List<ContactPersonDTO> contactPersons;
-
     private String invoicingMethod;
     private Integer duedate;
     private String payMethod;

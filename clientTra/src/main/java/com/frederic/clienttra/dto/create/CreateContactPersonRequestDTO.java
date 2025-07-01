@@ -1,18 +1,22 @@
 package com.frederic.clienttra.dto.create;
 
+import com.frederic.clienttra.dto.bases.BaseContactPersonDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class CreateContactPersonRequestDTO {//TODO validation message (see CreateUserRequestDTO)
-    private Integer idContactPerson;
-    @NotBlank
+public class CreateContactPersonRequestDTO implements BaseContactPersonDTO {
+    @NotBlank(message = "validation.contact.firstname_required")
     private String firstname;
-    @NotBlank
+    @NotBlank(message = "validation.contact.middlename_required")
     private String middlename;
     private String lastname;
     private String role;
