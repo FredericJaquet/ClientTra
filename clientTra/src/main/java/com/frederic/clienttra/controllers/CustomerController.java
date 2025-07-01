@@ -41,7 +41,7 @@ public class CustomerController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")//TODO ERROR, el error que lanza para access denied no es el correcto, es el generico.
-    public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int id, @Valid @RequestBody UpdateCustomerRequestDTO dto) {
+    public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int id, @RequestBody UpdateCustomerRequestDTO dto) {
         customerService.updateCustomer(id, dto);
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }

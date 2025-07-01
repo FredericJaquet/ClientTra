@@ -1,16 +1,8 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.create.CreateAddressRequestDTO;
-import com.frederic.clienttra.dto.create.CreateBankAccountRequestDTO;
-import com.frederic.clienttra.dto.create.CreatePhoneRequestDTO;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
-import com.frederic.clienttra.dto.update.UpdateAddressRequestDTO;
-import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
-import com.frederic.clienttra.dto.update.UpdatePhoneRequestDTO;
-import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.Company;
-import com.frederic.clienttra.exceptions.AddressNotFoundException;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
 import com.frederic.clienttra.exceptions.LogoNotLoadedException;
 import com.frederic.clienttra.mappers.AddressMapper;
@@ -33,11 +25,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.function.*;
 
 @Service
 @RequiredArgsConstructor
-public class CompanyOwnerServiceImpl implements CompanyOwnerService {
+public class CompanyServiceImpl implements CompanyService {
 
     private final AddressRepository addressRepository;
     private final CompanyRepository companyRepository;
@@ -76,9 +67,9 @@ public class CompanyOwnerServiceImpl implements CompanyOwnerService {
 
         companyMapper.updateEntity(company,dto);
 
-        updatePhones(dto.getPhones(), company);
+        /*updatePhones(dto.getPhones(), company);
         updateAddresses(dto.getAddresses(), company);
-        updateBankAccounts(dto.getBankAccounts(), company);
+        updateBankAccounts(dto.getBankAccounts(), company);*/
 
         companyRepository.save(company);
     }
@@ -108,7 +99,7 @@ public class CompanyOwnerServiceImpl implements CompanyOwnerService {
         }
     }
 
-    private void updatePhones(List<UpdatePhoneRequestDTO> dtos, Company company) {
+    /*private void updatePhones(List<UpdatePhoneRequestDTO> dtos, Company company) {
         updateCollection(
                 dtos,
                 company.getPhones(),
@@ -187,6 +178,6 @@ public class CompanyOwnerServiceImpl implements CompanyOwnerService {
                 }
             }
         }
-    }
+    }*/
 
 }
