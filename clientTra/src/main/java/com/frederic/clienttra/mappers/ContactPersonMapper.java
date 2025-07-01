@@ -21,13 +21,13 @@ public class ContactPersonMapper {
                 .build();
     }
 
-    public CreateContactPersonRequestDTO toCreateContactPersonRequestDTO(UpdateContactPersonRequestDTO contactDTO){
+    public CreateContactPersonRequestDTO toCreateContactPersonRequestDTO(UpdateContactPersonRequestDTO dto, ContactPerson entity){
         return CreateContactPersonRequestDTO.builder()
-                .firstname(contactDTO.getFirstname())
-                .middlename(contactDTO.getMiddlename())
-                .lastname(contactDTO.getLastname())
-                .role(contactDTO.getRole())
-                .email(contactDTO.getEmail())
+                .firstname(dto.getFirstname() != null ? dto.getFirstname() : entity.getFirstname())
+                .middlename(dto.getMiddlename() != null ? dto.getMiddlename() : entity.getMiddlename())
+                .lastname(dto.getLastname() != null ? dto.getLastname() : entity.getLastname())
+                .role(dto.getRole() != null ? dto.getRole() : entity.getRole())
+                .email(dto.getEmail() != null ? dto.getEmail() : entity.getEmail())
                 .build();
     }
 

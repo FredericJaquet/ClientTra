@@ -9,7 +9,7 @@ public class ManualValidationException extends RuntimeException {
     private final Map<String, String> fieldErrors;
 
     public ManualValidationException(Map<String, String> fieldErrors) {
-        super("manual.validation.failed");
+        super("validation.manual.failed");
         this.fieldErrors = fieldErrors;
     }
 

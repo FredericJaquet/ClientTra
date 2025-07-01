@@ -29,15 +29,21 @@ public class AddressMapper {
                 .build();
     }
 
-    public CreateAddressRequestDTO toCreateAddressRequestDTO(UpdateAddressRequestDTO addressDTO){
+    public CreateAddressRequestDTO toCreateAddressRequestDTO(UpdateAddressRequestDTO dto, Address entity){
+        System.out.println("Entidad antes del merge: " + entity);
+        System.out.println("Street antes del merge: " + entity.getStreet());
+        System.out.println("Street Number antes del merge: " + entity.getStNumber());
+        System.out.println("CP antes del merge: " + entity.getCp());
+        System.out.println("City Number antes del merge: " + entity.getCity());
+        System.out.println("Country Number antes del merge: " + entity.getCountry());
         return CreateAddressRequestDTO.builder()
-                .street(addressDTO.getStreet())
-                .stNumber(addressDTO.getStNumber())
-                .apt(addressDTO.getApt())
-                .cp(addressDTO.getCp())
-                .city(addressDTO.getCity())
-                .state(addressDTO.getState())
-                .country(addressDTO.getCountry())
+                .street(dto.getStreet() != null ? dto.getStreet() : entity.getStreet())
+                .stNumber(dto.getStNumber() != null ? dto.getStNumber() : entity.getStNumber())
+                .apt(dto.getApt() != null ? dto.getApt() : entity.getApt())
+                .cp(dto.getCp() != null ? dto.getCp() : entity.getCp())
+                .city(dto.getCity() != null ? dto.getCity() : entity.getCity())
+                .state(dto.getState() != null ? dto.getState() : entity.getState())
+                .country(dto.getCountry() != null ? dto.getCountry() : entity.getCountry())
                 .build();
     }
 
