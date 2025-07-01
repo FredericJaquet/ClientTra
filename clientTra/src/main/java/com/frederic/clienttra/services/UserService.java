@@ -31,7 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PlanRepository planRepository;
-    private final CompanyService companyService;
+    private final CompanyOwnerService companyService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 

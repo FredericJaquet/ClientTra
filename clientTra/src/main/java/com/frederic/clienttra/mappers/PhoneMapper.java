@@ -1,5 +1,6 @@
 package com.frederic.clienttra.mappers;
 
+import com.frederic.clienttra.dto.bases.BasePhoneDTO;
 import com.frederic.clienttra.dto.create.CreatePhoneRequestDTO;
 import com.frederic.clienttra.dto.read.PhoneDTO;
 import com.frederic.clienttra.dto.update.UpdatePhoneRequestDTO;
@@ -19,30 +20,24 @@ public class PhoneMapper {
 
     public CreatePhoneRequestDTO toCreatePhoneRequestDTO(UpdatePhoneRequestDTO phoneDTO){
         return CreatePhoneRequestDTO.builder()
-                .idPhone(phoneDTO.getIdPhone())
                 .phoneNumber(phoneDTO.getPhoneNumber())
                 .kind(phoneDTO.getKind())
                 .build();
     }
 
-    public Phone toEntity(CreatePhoneRequestDTO dto) {
+    public Phone toEntity(BasePhoneDTO dto) {
         return Phone.builder()
-                .idPhone(dto.getIdPhone())
-                .phoneNumber(dto.getPhoneNumber())
-                .kind(dto.getKind())
-                .build();
-    }
-
-    public Phone toEntity(UpdatePhoneRequestDTO dto) {
-        return Phone.builder()
-                .idPhone(dto.getIdPhone())
                 .phoneNumber(dto.getPhoneNumber())
                 .kind(dto.getKind())
                 .build();
     }
 
     public void updateEntity(Phone entity, UpdatePhoneRequestDTO dto) {
-        entity.setPhoneNumber(dto.getPhoneNumber());
-        entity.setKind(dto.getKind());
+        if (dto.getPhoneNumber() != null) {
+            entity.setPhoneNumber(dto.getPhoneNumber());
+        }
+        if( dto.getKind() != null) {
+            entity.setKind(dto.getKind());
+        }
     }
 }

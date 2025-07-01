@@ -1,22 +1,19 @@
 package com.frederic.clienttra.dto.update;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Data
-public class UpdateCustomerRequestDTO {
-    //BaseCompany fields
-    private String vatNumber;
-    private String comName;
-    private String legalName;
-    private String email;
-    private String web;
-    private List<UpdatePhoneRequestDTO> phones;
-    private List<UpdateAddressRequestDTO> addresses;
-    private List<UpdateBankAccountRequestDTO> bankAccounts;
-    private List<UpdateContactPersonRequestDTO> contactPersons;
-    //Customer fields
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+public class UpdateCustomerRequestDTO extends UpdateBaseCompanyRequestDTO{
     private String invoicingMethod;
     private Integer duedate;
     private String payMethod;
@@ -24,6 +21,5 @@ public class UpdateCustomerRequestDTO {
     private Double defaultVAT;
     private Double defaultWithholding;
     private Boolean europe;
-
     private Boolean enabled;
 }

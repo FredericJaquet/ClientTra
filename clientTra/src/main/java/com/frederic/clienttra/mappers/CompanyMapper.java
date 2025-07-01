@@ -2,6 +2,8 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.create.CreateBaseCompanyRequestDTO;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
+import com.frederic.clienttra.dto.update.UpdateBaseCompanyRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
 import com.frederic.clienttra.entities.Company;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -57,6 +59,47 @@ public class CompanyMapper {
 
         return company;
     }
+
+    public void updateEntity(Company company, UpdateBaseCompanyRequestDTO dto){
+        if(dto.getVatNumber()!=null){
+            company.setVatNumber(dto.getVatNumber());
+        }
+        if(dto.getComName()!=null){
+            company.setComName(dto.getComName());
+        }
+        if(dto.getLegalName()!=null){
+            company.setLegalName(dto.getLegalName());
+        }
+        if(dto.getEmail()!=null){
+            company.setEmail(dto.getEmail());
+        }
+        if(dto.getWeb()!=null){
+            company.setWeb(dto.getWeb());
+        }
+    }
+
+    public void updateEntity(Company company, UpdateCompanyOwnerRequestDTO dto){
+        if(dto.getVatNumber()!=null){
+            company.setVatNumber(dto.getVatNumber());
+        }
+        if(dto.getComName()!=null){
+            company.setComName(dto.getComName());
+        }
+        if(dto.getLegalName()!=null){
+            company.setLegalName(dto.getLegalName());
+        }
+        if(dto.getEmail()!=null){
+            company.setEmail(dto.getEmail());
+        }
+        if(dto.getWeb()!=null){
+            company.setWeb(dto.getWeb());
+        }
+        if(dto.getLogoPath()!=null){
+            company.setLogoPath(dto.getLogoPath());
+        }
+    }
+
+
 
     private <T, R> List<R> safeMapToDTO(List<T> list, Function<T, R> mapper) {
         return list == null ? List.of() :

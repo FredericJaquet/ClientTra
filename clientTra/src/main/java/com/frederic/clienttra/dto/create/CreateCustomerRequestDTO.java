@@ -1,14 +1,15 @@
 package com.frederic.clienttra.dto.create;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-@Builder
-public class CreateCustomerRequestDTO extends CreateBaseCompanyRequestDTO {//TODO validation message (see CreateUserRequestDTO)
+public class CreateCustomerRequestDTO extends CreateBaseCompanyRequestDTO {
 
     private String defaultLanguage="es";
     private Double defaultVAT=0.21;
