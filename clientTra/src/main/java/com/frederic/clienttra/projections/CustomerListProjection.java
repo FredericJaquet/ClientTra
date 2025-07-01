@@ -7,5 +7,4 @@ public interface CustomerListProjection {
     String getEmail();
     String getWeb();
     Boolean getEnabled();
-
 }
