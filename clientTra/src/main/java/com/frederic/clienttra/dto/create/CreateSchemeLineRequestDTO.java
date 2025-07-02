@@ -1,4 +1,4 @@
-package com.frederic.clienttra.dto.read;
+package com.frederic.clienttra.dto.create;
 
 import com.frederic.clienttra.dto.bases.BaseSchemeLineDTO;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SchemeLineDTO implements BaseSchemeLineDTO {
+public class CreateSchemeLineRequestDTO implements BaseSchemeLineDTO {
     private String descrip;
     private Double discount;
 }
