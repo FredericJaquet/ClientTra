@@ -3,6 +3,7 @@ package com.frederic.clienttra.controllers;
 import com.frederic.clienttra.dto.*;
 import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
 import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
+import com.frederic.clienttra.dto.read.CustomerMinimalDTO;
 import com.frederic.clienttra.dto.read.CustomersForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.services.CustomerService;
@@ -46,7 +47,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
-    @DeleteMapping("/{id}")//TODO ERROR, el error que lanza para ccess denied no es el correcto, es el generico.
+    @DeleteMapping("/{id}")//TODO ERROR, el error que lanza para access denied no es el correcto, es el generico.
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> deleteCustomer(@PathVariable int id) {
         customerService.disableCustomer(id);
@@ -56,5 +57,10 @@ public class CustomerController {
     @GetMapping("/search")
     public List<CustomersForListDTO> searchCustomers(@RequestParam String query) {
         return customerService.searchByNameOrVat(query);
+    }
+
+    @GetMapping("/minimal-list")
+    public List<CustomerMinimalDTO> getMinimalCustomers() {
+        return customerService.getMinimalCustomerList();
     }
 }

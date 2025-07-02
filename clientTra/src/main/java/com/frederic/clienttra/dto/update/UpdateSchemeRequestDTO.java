@@ -1,4 +1,4 @@
-package com.frederic.clienttra.dto.read;
+package com.frederic.clienttra.dto.update;
 
 import com.frederic.clienttra.dto.bases.BaseSchemeDTO;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SchemeDTO implements BaseSchemeDTO {
+public class UpdateSchemeRequestDTO implements BaseSchemeDTO {
     private Integer idScheme;
     private String schemeName;
     private Double price;
@@ -20,5 +20,5 @@ public class SchemeDTO implements BaseSchemeDTO {
     private String fieldName;
     private String sourceLanguage;
     private String targetLanguage;
-    private List<SchemeLineDTO> schemeLines;
+    private List<UpdateSchemeLineRequestDTO> schemeLines;
 }

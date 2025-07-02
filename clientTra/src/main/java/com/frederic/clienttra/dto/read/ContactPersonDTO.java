@@ -1,5 +1,6 @@
 package com.frederic.clienttra.dto.read;
 
+import com.frederic.clienttra.dto.bases.BaseContactPersonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ContactPersonDTO {
+public class ContactPersonDTO implements BaseContactPersonDTO {
     private Integer idContactPerson;
     private String firstname;
     private String middlename;

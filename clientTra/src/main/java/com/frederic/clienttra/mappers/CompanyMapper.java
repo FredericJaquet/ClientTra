@@ -21,19 +21,19 @@ public class CompanyMapper {
     private final UserMapper userMapper;
     private final ContactPersonMapper contactPersonMapper;
 
-    public CompanyOwnerDTO toCompanyOwnerDTO(Company company) {
+    public CompanyOwnerDTO toCompanyOwnerDTO(Company entity) {
         return CompanyOwnerDTO.builder()
-                .idCompany(company.getIdCompany())
-                .vatNumber(company.getVatNumber())
-                .comName(company.getComName())
-                .legalName(company.getLegalName())
-                .email(company.getEmail())
-                .web(company.getWeb())
-                .logoPath(company.getLogoPath())
-                .addresses(safeMapToDTO(company.getAddresses(), addressMapper::toAddressDTO))
-                .phones(safeMapToDTO(company.getPhones(), phoneMapper::toPhoneDTO))
-                .bankAccounts(safeMapToDTO(company.getBankAccounts(), bankAccountMapper::toBankAccountDTO))
-                .users(safeMapToDTO(company.getUsers(), userMapper::toAdminDTO))
+                .idCompany(entity.getIdCompany())
+                .vatNumber(entity.getVatNumber())
+                .comName(entity.getComName())
+                .legalName(entity.getLegalName())
+                .email(entity.getEmail())
+                .web(entity.getWeb())
+                .logoPath(entity.getLogoPath())
+                .addresses(safeMapToDTO(entity.getAddresses(), addressMapper::toAddressDTO))
+                .phones(safeMapToDTO(entity.getPhones(), phoneMapper::toPhoneDTO))
+                .bankAccounts(safeMapToDTO(entity.getBankAccounts(), bankAccountMapper::toBankAccountDTO))
+                .users(safeMapToDTO(entity.getUsers(), userMapper::toAdminDTO))
                 .build();
     }
 
@@ -60,42 +60,42 @@ public class CompanyMapper {
         return company;
     }
 
-    public void updateEntity(Company company, UpdateBaseCompanyRequestDTO dto){
+    public void updateEntity(Company entity, UpdateBaseCompanyRequestDTO dto){
         if(dto.getVatNumber()!=null){
-            company.setVatNumber(dto.getVatNumber());
+            entity.setVatNumber(dto.getVatNumber());
         }
         if(dto.getComName()!=null){
-            company.setComName(dto.getComName());
+            entity.setComName(dto.getComName());
         }
         if(dto.getLegalName()!=null){
-            company.setLegalName(dto.getLegalName());
+            entity.setLegalName(dto.getLegalName());
         }
         if(dto.getEmail()!=null){
-            company.setEmail(dto.getEmail());
+            entity.setEmail(dto.getEmail());
         }
         if(dto.getWeb()!=null){
-            company.setWeb(dto.getWeb());
+            entity.setWeb(dto.getWeb());
         }
     }
 
-    public void updateEntity(Company company, UpdateCompanyOwnerRequestDTO dto){
+    public void updateEntity(Company entity, UpdateCompanyOwnerRequestDTO dto){
         if(dto.getVatNumber()!=null){
-            company.setVatNumber(dto.getVatNumber());
+            entity.setVatNumber(dto.getVatNumber());
         }
         if(dto.getComName()!=null){
-            company.setComName(dto.getComName());
+            entity.setComName(dto.getComName());
         }
         if(dto.getLegalName()!=null){
-            company.setLegalName(dto.getLegalName());
+            entity.setLegalName(dto.getLegalName());
         }
         if(dto.getEmail()!=null){
-            company.setEmail(dto.getEmail());
+            entity.setEmail(dto.getEmail());
         }
         if(dto.getWeb()!=null){
-            company.setWeb(dto.getWeb());
+            entity.setWeb(dto.getWeb());
         }
         if(dto.getLogoPath()!=null){
-            company.setLogoPath(dto.getLogoPath());
+            entity.setLogoPath(dto.getLogoPath());
         }
     }
 

@@ -11,6 +11,5 @@ public interface CompanyService {
     Company getCurrentCompanyOrThrow();
     void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto);
     void uploadCompanyLogo(MultipartFile file);
-    //Company findByIdCompany(Integer idCompany);
 
 }
