@@ -17,6 +17,8 @@ import com.frederic.clienttra.utils.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -32,7 +34,9 @@ public class AddressService {
     public List<AddressDTO> getAllAddresses(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
-        List<Address> entities=addressRepository.findByCompany_IdCompany(idCompany);
+        List<Address> entities = new ArrayList<>(addressRepository.findByCompany_IdCompany(idCompany));
+        List<AddressDTO> customers=addressMapper.toAddressDTOList(entities);
+        customers.sort(Comparator.comparing(AddressDTO::getCity, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         return addressMapper.toAddressDTOList(entities);
 
