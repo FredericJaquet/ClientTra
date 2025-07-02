@@ -5,12 +5,14 @@ import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
 import com.frederic.clienttra.dto.read.CustomersForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.entities.Customer;
+import com.frederic.clienttra.projections.CustomerListProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +22,19 @@ public class CustomerMapper {
     private final PhoneMapper phoneMapper;
     private final BankAccountMapper bankAccountMapper;
     private final ContactPersonMapper contactPersonMapper;
+
+    public List<CustomersForListDTO> customersForListDTOS(List<CustomerListProjection> entities){
+        return entities.stream()
+                .map(p -> CustomersForListDTO.builder()
+                        .idCustomer(p.getIdCustomer())
+                        .comName(p.getComName())
+                        .vatNumber(p.getVatNumber())
+                        .email(p.getEmail())
+                        .web(p.getWeb())
+                        .enabled(p.getEnabled())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     public CustomerDetailsDTO toCustomerDetailsDTO(Customer customer) {
         return CustomerDetailsDTO.builder()
@@ -89,7 +104,7 @@ public class CustomerMapper {
                 list.stream()
                         .filter(Objects::nonNull)
                         .map(mapper)
-                        .toList();
+                        .collect(Collectors.toList());
     }
 
 }

@@ -2,14 +2,31 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseBankAccountDTO;
 import com.frederic.clienttra.dto.create.CreateBankAccountRequestDTO;
+import com.frederic.clienttra.dto.read.AddressDTO;
 import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
+import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.BankAccount;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
 public class BankAccountMapper {
+
+    public List<BankAccountDTO> toBankAccountDTOList(List<BankAccount> entities){
+
+        return entities.stream()
+                .map(p -> BankAccountDTO.builder()
+                        .idBankAccount(p.getIdBankAccount())
+                        .iban(p.getIban())
+                        .swift(p.getSwift())
+                        .branch(p.getBranch())
+                        .holder(p.getHolder())
+                        .build())
+                .toList();
+    }
 
     public BankAccountDTO toBankAccountDTO(BankAccount bankAccount){
         return BankAccountDTO.builder()

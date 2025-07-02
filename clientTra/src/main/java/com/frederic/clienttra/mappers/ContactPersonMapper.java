@@ -2,13 +2,30 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseContactPersonDTO;
 import com.frederic.clienttra.dto.create.CreateContactPersonRequestDTO;
+import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.read.ContactPersonDTO;
 import com.frederic.clienttra.dto.update.UpdateContactPersonRequestDTO;
+import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.ContactPerson;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ContactPersonMapper {
+
+    public List<ContactPersonDTO> toContactPersonDTOList(List<ContactPerson> entities){
+        return entities.stream()
+                .map(p -> ContactPersonDTO.builder()
+                        .idContactPerson(p.getIdContactPerson())
+                        .firstname(p.getFirstname())
+                        .middlename(p.getMiddlename())
+                        .lastname(p.getLastname())
+                        .role(p.getRole())
+                        .email(p.getEmail())
+                        .build())
+                .toList();
+    }
 
     public ContactPersonDTO toContactPersonDTO(ContactPerson contact){
         return ContactPersonDTO.builder()

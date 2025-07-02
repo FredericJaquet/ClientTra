@@ -30,16 +30,9 @@ public class ContactPersonService {
     public List<ContactPersonDTO> getAllContactPersons(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
-        return contactPersonRepository.findByCompany_IdCompany(idCompany).stream()
-                .map(p -> ContactPersonDTO.builder()
-                        .idContactPerson(p.getIdContactPerson())
-                        .firstname(p.getFirstname())
-                        .middlename(p.getMiddlename())
-                        .lastname(p.getLastname())
-                        .role(p.getRole())
-                        .email(p.getEmail())
-                        .build())
-                .toList();
+        List<ContactPerson> entities=contactPersonRepository.findByCompany_IdCompany(idCompany);
+
+        return contactPersonMapper.toContactPersonDTOList(entities);
     }
 
     public ContactPersonDTO getContactPerson(Integer idCompany, Integer idContactPerson){

@@ -34,15 +34,9 @@ public class BankAccountService {
     public List<BankAccountDTO> getAllBankAccounts(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
-        return bankAccountRepository.findByCompany_IdCompany(idCompany).stream()
-                .map(p -> BankAccountDTO.builder()
-                        .idBankAccount(p.getIdBankAccount())
-                        .iban(p.getIban())
-                        .swift(p.getSwift())
-                        .branch(p.getBranch())
-                        .holder(p.getHolder())
-                        .build())
-                .toList();
+        List<BankAccount> entities=bankAccountRepository.findByCompany_IdCompany(idCompany);
+
+        return bankAccountMapper.toBankAccountDTOList(entities);
     }
 
     public BankAccountDTO getBankAccount(Integer idCompany, Integer idBankAccount){
