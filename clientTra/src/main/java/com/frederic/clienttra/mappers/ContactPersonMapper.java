@@ -32,9 +32,6 @@ public class ContactPersonMapper {
     }
 
     public ContactPerson toEntity(BaseContactPersonDTO dto) {
-        if (dto == null) {
-            return null;
-        }
         return ContactPerson.builder()
                 .firstname(dto.getFirstname())
                 .middlename(dto.getMiddlename())
@@ -45,10 +42,7 @@ public class ContactPersonMapper {
     }
 
     public void updateEntity(ContactPerson entity, UpdateContactPersonRequestDTO dto) {
-        if (dto == null || entity == null){
-            return;
-        }
-        if (dto.getFirstname() != null) {
+       if (dto.getFirstname() != null) {
             entity.setFirstname(dto.getFirstname());
         }
         if (dto.getMiddlename() != null) {
