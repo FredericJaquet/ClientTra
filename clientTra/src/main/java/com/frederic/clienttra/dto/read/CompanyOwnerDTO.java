@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class CompanyOwnerDTO extends BaseCompanyDTO{
+public class CompanyOwnerDTO extends BaseCompanyDTO {
     private int idCompany;
     private String logoPath;
     private List<UserForAdminDTO> users;
