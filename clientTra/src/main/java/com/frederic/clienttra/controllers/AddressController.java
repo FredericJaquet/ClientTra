@@ -30,7 +30,7 @@ public class AddressController {
         return addressService.getAddress(idCompany, idAddress);
     }
 
-    @DeleteMapping("/{idAddress}")//TODO Queda por comprobar si la empresa no se queda sin dirección, lo cual está prohibido.
+    @DeleteMapping("/{idAddress}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> deleteAddress(@PathVariable Integer idCompany, @PathVariable Integer idAddress) {
         addressService.deleteAddress(idCompany, idAddress);

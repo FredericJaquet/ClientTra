@@ -8,6 +8,7 @@ import com.frederic.clienttra.entities.Address;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -26,7 +27,7 @@ public class AddressMapper {
                         .state(p.getState())
                         .country(p.getCountry())
                         .build())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public AddressDTO toAddressDTO(Address address){
