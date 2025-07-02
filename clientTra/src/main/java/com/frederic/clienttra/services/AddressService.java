@@ -46,17 +46,17 @@ public class AddressService {
     public AddressDTO getAddress(Integer idCompany, Integer idAddress){
         ownerValidator.checkOwner(idCompany);
 
-        Address address = addressRepository.findByIdAddressAndCompany_idCompany(idAddress, idCompany)
+        Address entity = addressRepository.findByIdAddressAndCompany_idCompany(idAddress, idCompany)
                 .orElseThrow(AddressNotFoundException::new);
-        return addressMapper.toAddressDTO(address);
+        return addressMapper.toAddressDTO(entity);
     }
 
     public void deleteAddress(Integer idCompany, Integer idAddress){
         ownerValidator.checkOwner(idCompany);
 
-        Address address = addressRepository.findByIdAddressAndCompany_idCompany(idAddress, idCompany)
+        Address entity = addressRepository.findByIdAddressAndCompany_idCompany(idAddress, idCompany)
                 .orElseThrow(AddressNotFoundException::new);
-        addressRepository.delete(address);
+        addressRepository.delete(entity);
     }
 
     public void createAddress(Integer idCompany, CreateAddressRequestDTO dto){

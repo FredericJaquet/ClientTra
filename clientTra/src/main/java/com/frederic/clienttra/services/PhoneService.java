@@ -43,17 +43,17 @@ public class PhoneService {
     public PhoneDTO getPhone(Integer idCompany, Integer idPhone){
         ownerValidator.checkOwner(idCompany);
 
-        Phone phone = phoneRepository.findByIdPhoneAndCompany_idCompany(idPhone, idCompany)
+        Phone entity = phoneRepository.findByIdPhoneAndCompany_idCompany(idPhone, idCompany)
                 .orElseThrow(PhoneNotFoundException::new);
-        return phoneMapper.toPhoneDTO(phone);
+        return phoneMapper.toPhoneDTO(entity);
     }
 
     public void deletePhone(Integer idCompany, Integer idPhone){
         ownerValidator.checkOwner(idCompany);
 
-        Phone phone = phoneRepository.findByIdPhoneAndCompany_idCompany(idPhone, idCompany)
+        Phone entity = phoneRepository.findByIdPhoneAndCompany_idCompany(idPhone, idCompany)
                 .orElseThrow(AddressNotFoundException::new);
-        phoneRepository.delete(phone);
+        phoneRepository.delete(entity);
     }
 
     public void createPhone(Integer idCompany, CreatePhoneRequestDTO dto){

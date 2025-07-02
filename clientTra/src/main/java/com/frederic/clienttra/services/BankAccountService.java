@@ -48,9 +48,9 @@ public class BankAccountService {
     public BankAccountDTO getBankAccount(Integer idCompany, Integer idBankAccount){
         ownerValidator.checkOwner(idCompany);
 
-        BankAccount bankAccount = bankAccountRepository.findByIdBankAccountAndCompany_idCompany(idBankAccount, idCompany)
+        BankAccount entity = bankAccountRepository.findByIdBankAccountAndCompany_idCompany(idBankAccount, idCompany)
                 .orElseThrow(BankAccountNotFoundException::new);
-        return bankAccountMapper.toBankAccountDTO(bankAccount);
+        return bankAccountMapper.toBankAccountDTO(entity);
     }
 
     public void deleteBankAccount(Integer idCompany, Integer idBankAccount){
