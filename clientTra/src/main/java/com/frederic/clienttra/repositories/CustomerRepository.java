@@ -3,6 +3,7 @@ package com.frederic.clienttra.repositories;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Customer;
 import com.frederic.clienttra.projections.CustomerListProjection;
+import com.frederic.clienttra.projections.CustomerMinimalProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<Customer> findByOwnerCompanyIdCompanyAndEnabledTrue(Integer ownerId);
     List<Customer> findByOwnerCompanyAndEnabledTrue(Company ownerCompany);
     Optional<Customer> findByOwnerCompanyAndIdCustomer(Company ownerCompany, Integer id);
-
 
     @Query("""
         SELECT c.idCustomer AS idCustomer,
@@ -53,5 +53,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     WHERE c.ownerCompany = :owner AND c.idCustomer = :id
 """)
     Optional<Customer> findByOwnerCompanyAndIdCustomerWithDetails(Company owner, int id);
+
+    @Query("""
+    SELECT c.idCustomer AS idCustomer,
+           c.comName AS comName,
+           c.vatNumber AS vatNumber
+    FROM Customer c
+    WHERE c.ownerCompany = :owner
+""")
+    List<CustomerMinimalProjection> findMinimalListByOwnerCompany(Company owner);
+
 
 }

@@ -55,6 +55,8 @@ public class CompanyServiceImpl implements CompanyService {
     public void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto) {
         Company company = getCurrentCompanyOrThrow();
 
+        //TODO Convertir en CreateCustomerRequestDTO y pasar el DtoValidator
+
         companyMapper.updateEntity(company,dto);
 
         companyRepository.save(company);

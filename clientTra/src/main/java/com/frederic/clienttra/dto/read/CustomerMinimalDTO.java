@@ -1,6 +1,5 @@
 package com.frederic.clienttra.dto.read;
 
-import com.frederic.clienttra.dto.bases.BasePhoneDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PhoneDTO implements BasePhoneDTO {
-    private Integer idPhone;
-    private String phoneNumber;
-    private String kind;
+public class CustomerMinimalDTO {
+    private Integer idCustomer;
+    private String comName;
+    private String vatNumber;
+
 }

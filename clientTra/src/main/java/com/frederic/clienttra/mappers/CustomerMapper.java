@@ -2,10 +2,12 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
 import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
+import com.frederic.clienttra.dto.read.CustomerMinimalDTO;
 import com.frederic.clienttra.dto.read.CustomersForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.entities.Customer;
 import com.frederic.clienttra.projections.CustomerListProjection;
+import com.frederic.clienttra.projections.CustomerMinimalProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -97,6 +99,20 @@ public class CustomerMapper {
         if (dto.getEnabled() != null) {
             customer.setEnabled(dto.getEnabled());
         }
+    }
+
+    public CustomerMinimalDTO toMinimalDTO(CustomerMinimalProjection projection) {
+        return CustomerMinimalDTO.builder()
+                .idCustomer(projection.getIdCustomer())
+                .comName(projection.getComName())
+                .vatNumber(projection.getVatNumber())
+                .build();
+    }
+
+    public List<CustomerMinimalDTO> toMinimalDTOs(List<CustomerMinimalProjection> projections) {
+        return projections.stream()
+                .map(this::toMinimalDTO)
+                .toList();
     }
 
     private <T, R> List<R> safeMapToDTO(List<T> list, Function<T, R> mapper) {

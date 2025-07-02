@@ -7,6 +7,7 @@ import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CustomerNotFoundException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.projections.CustomerListProjection;
+import com.frederic.clienttra.projections.CustomerMinimalProjection;
 import com.frederic.clienttra.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -81,8 +82,9 @@ public class CustomerServiceImpl implements CustomerService {//TODO Me falta los
 
         Company company = customer.getCompany();
 
-        companyMapper.updateEntity(company,dto);
+        //TODO Convertir en CreateCustomerRequestDTO y pasar el DtoValidator
 
+        companyMapper.updateEntity(company,dto);
         customerMapper.updateEntity(customer, dto);
 
         companyRepository.save(company);
@@ -96,6 +98,13 @@ public class CustomerServiceImpl implements CustomerService {//TODO Me falta los
                 .orElseThrow(CustomerNotFoundException::new);
         customer.setEnabled(false);
         customerRepository.save(customer);
+    }
+
+    @Override
+    public List<CustomerMinimalDTO> getMinimalCustomerList() {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        List<CustomerMinimalProjection> projections = customerRepository.findMinimalListByOwnerCompany(owner);
+        return customerMapper.toMinimalDTOs(projections);
     }
 
 }

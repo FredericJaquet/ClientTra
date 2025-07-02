@@ -17,8 +17,4 @@ public class UpdateBaseCompanyRequestDTO {
     protected String legalName;
     protected String email;
     protected String web;
-    /*private List<UpdateContactPersonRequestDTO> contactPersons;
-    private List<UpdatePhoneRequestDTO> phones;
-    private List<UpdateAddressRequestDTO> addresses;
-    private List<UpdateBankAccountRequestDTO> bankAccounts;*/
 }

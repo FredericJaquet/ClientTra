@@ -2,6 +2,7 @@ package com.frederic.clienttra.services;
 
 import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
 import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
+import com.frederic.clienttra.dto.read.CustomerMinimalDTO;
 import com.frederic.clienttra.dto.read.CustomersForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 
@@ -14,4 +15,5 @@ public interface CustomerService {
     void updateCustomer(int id, UpdateCustomerRequestDTO dto);
     void disableCustomer(int id);
     List<CustomersForListDTO> searchByNameOrVat(String query);
+    List<CustomerMinimalDTO> getMinimalCustomerList();
 }

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateSchemeLineRequestDTO implements BaseSchemeLineDTO {
-
     private Integer idSchemeLine;
     private String descrip;
     private Double discount;

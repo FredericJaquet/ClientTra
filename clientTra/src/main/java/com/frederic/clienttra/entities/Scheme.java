@@ -2,7 +2,8 @@ package com.frederic.clienttra.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Schemes")
@@ -45,6 +46,6 @@ public class Scheme {
     private Company ownerCompany;
 
     @OneToMany(mappedBy = "scheme", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SchemeLine> schemeLines;
+    private List<SchemeLine> schemeLines;
 }
 
