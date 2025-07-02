@@ -31,13 +31,9 @@ public class PhoneService {
     public List<PhoneDTO> getAllPhones(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
-        return phoneRepository.findByCompany_IdCompany(idCompany).stream()
-                .map(p -> PhoneDTO.builder()
-                        .idPhone(p.getIdPhone())
-                        .phoneNumber(p.getPhoneNumber())
-                        .kind(p.getKind())
-                        .build())
-                .toList();
+        List<Phone> entities=phoneRepository.findByCompany_IdCompany(idCompany);
+
+        return phoneMapper.toPhoneDTOList(entities);
     }
 
     public PhoneDTO getPhone(Integer idCompany, Integer idPhone){

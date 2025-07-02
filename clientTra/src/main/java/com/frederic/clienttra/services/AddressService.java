@@ -7,9 +7,11 @@ import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.exceptions.AddressNotFoundException;
 import com.frederic.clienttra.exceptions.CompanyNotFoundException;
+import com.frederic.clienttra.exceptions.LastAddressException;
 import com.frederic.clienttra.mappers.AddressMapper;
 import com.frederic.clienttra.repositories.AddressRepository;
 import com.frederic.clienttra.repositories.CompanyRepository;
+import com.frederic.clienttra.utils.validators.AddressValidator;
 import com.frederic.clienttra.utils.validators.DtoValidator;
 import com.frederic.clienttra.utils.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
@@ -25,22 +27,15 @@ public class AddressService {
     private final OwnerValidator ownerValidator;
     private final CompanyRepository companyRepository;
     private final DtoValidator dtoValidator;
+    private final AddressValidator addressValidator;
 
     public List<AddressDTO> getAllAddresses(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
-        return addressRepository.findByCompany_IdCompany(idCompany).stream()
-                .map(p -> AddressDTO.builder()
-                        .idAddress(p.getIdAddress())
-                        .street(p.getStreet())
-                        .stNumber(p.getStNumber())
-                        .apt(p.getApt())
-                        .cp(p.getCp())
-                        .city(p.getCity())
-                        .state(p.getState())
-                        .country(p.getCountry())
-                        .build())
-                .toList();
+        List<Address> entities=addressRepository.findByCompany_IdCompany(idCompany);
+
+        return addressMapper.toAddressDTOList(entities);
+
     }
 
     public AddressDTO getAddress(Integer idCompany, Integer idAddress){
@@ -56,6 +51,11 @@ public class AddressService {
 
         Address entity = addressRepository.findByIdAddressAndCompany_idCompany(idAddress, idCompany)
                 .orElseThrow(AddressNotFoundException::new);
+
+        if(addressValidator.isLastAddress(idCompany)){
+            throw new LastAddressException();
+        }
+
         addressRepository.delete(entity);
     }
 

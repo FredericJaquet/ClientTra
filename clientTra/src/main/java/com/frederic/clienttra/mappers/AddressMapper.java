@@ -7,9 +7,27 @@ import com.frederic.clienttra.dto.update.UpdateAddressRequestDTO;
 import com.frederic.clienttra.entities.Address;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 public class AddressMapper {
+
+    public List<AddressDTO> toAddressDTOList(List<Address> entities){
+
+        return entities.stream()
+                .map(p -> AddressDTO.builder()
+                        .idAddress(p.getIdAddress())
+                        .street(p.getStreet())
+                        .stNumber(p.getStNumber())
+                        .apt(p.getApt())
+                        .cp(p.getCp())
+                        .city(p.getCity())
+                        .state(p.getState())
+                        .country(p.getCountry())
+                        .build())
+                .toList();
+    }
 
     public AddressDTO toAddressDTO(Address address){
         return AddressDTO.builder()
