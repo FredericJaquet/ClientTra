@@ -59,7 +59,7 @@ public class CustomerMapper {
                 .phones(safeMapToDTO(entity.getCompany().getPhones(), phoneMapper::toPhoneDTO))
                 .bankAccounts(safeMapToDTO(entity.getCompany().getBankAccounts(), bankAccountMapper::toBankAccountDTO))
                 .contactPersons(safeMapToDTO(entity.getCompany().getContactPersons(), contactPersonMapper::toContactPersonDTO))
-                .schemes(safeMapToDTO(entity.getCompany().getSchemes(), schemeMapper::toDTO))
+                .schemes(safeMapToDTO(entity.getCompany().getSchemes(), schemeMapper::toDto))
                 .build();
     }
 

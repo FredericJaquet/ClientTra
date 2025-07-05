@@ -12,6 +12,7 @@ import com.frederic.clienttra.mappers.SchemeMapper;
 import com.frederic.clienttra.repositories.SchemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,15 +26,16 @@ public class SchemeService {
     private final SchemeMapper schemeMapper;
     private final SchemeLineMapper schemeLineMapper;
 
-
+    @Transactional
     public List<SchemeDTO> getAllSchemes(Integer idCompany){
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         List<Scheme> entities=schemeRepository.findByOwnerCompanyAndCompany_idCompany(owner,idCompany);
 
-        return schemeMapper.toDTOs(entities);
+        return schemeMapper.toDtos(entities);
     }
 
+    @Transactional
     public SchemeDTO getScheme(Integer idCompany, Integer idScheme){
         Company owner = companyService.getCurrentCompanyOrThrow();
 
@@ -43,9 +45,10 @@ public class SchemeService {
             throw new SchemeNotFoundException();
         }
 
-        return schemeMapper.toDTO(entity);
+        return schemeMapper.toDto(entity);
     }
 
+    @Transactional
     public void createScheme(Integer idCompany, CreateSchemeRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Company company = companyService.getCompanyById(idCompany);
@@ -68,7 +71,7 @@ public class SchemeService {
         schemeRepository.save(entity);
     }
 
-
+    @Transactional
     public SchemeDTO updateScheme(Integer idCompany, Integer idScheme, UpdateSchemeRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Scheme entity = schemeRepository.findByOwnerCompanyAndIdScheme(owner, idScheme)
@@ -82,9 +85,10 @@ public class SchemeService {
 
         schemeRepository.save(entity);
 
-        return schemeMapper.toDTO(entity);
+        return schemeMapper.toDto(entity);
     }
 
+    @Transactional
     public void deleteScheme(Integer idCompany, Integer idScheme){
         Company owner = companyService.getCurrentCompanyOrThrow();
         Scheme entity = schemeRepository.findByOwnerCompanyAndIdScheme(owner, idScheme)

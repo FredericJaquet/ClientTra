@@ -3,8 +3,8 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Orders")
@@ -44,7 +44,7 @@ public class Order {
     @JoinColumn(name = "id_owner_company", nullable = false)
     private Company ownerCompany;
     @ManyToMany(mappedBy = "orders")
-    private Set<Document> documents = new HashSet<>();
+    private List<Document> documents = new ArrayList<>();
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Item> items = new HashSet<>();
+    private List<Item> items = new ArrayList<>();
 }

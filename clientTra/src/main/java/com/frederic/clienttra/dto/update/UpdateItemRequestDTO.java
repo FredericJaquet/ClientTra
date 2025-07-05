@@ -1,8 +1,6 @@
 package com.frederic.clienttra.dto.update;
 
 import com.frederic.clienttra.dto.bases.BaseItemDTO;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -16,13 +16,13 @@ import java.util.List;
 public class SchemeMapper {
     private final SchemeLineMapper schemeLineMapper;
 
-    public List<SchemeDTO> toDTOs(List<Scheme> entities) {
+    public List<SchemeDTO> toDtos(List<Scheme> entities) {
         return entities.stream()
-                .map(this::toDTO)
+                .map(this::toDto)
                 .toList();
     }
 
-    public SchemeDTO toDTO(Scheme entity){
+    public SchemeDTO toDto(Scheme entity){
         return SchemeDTO.builder()
                 .idScheme((entity.getIdScheme()))
                 .schemeName(entity.getSchemeName())
@@ -47,7 +47,7 @@ public class SchemeMapper {
                 .build();
     }
 
-    public List<Scheme> toEntities(List<? extends BaseSchemeDTO> dtos) {
+    public List<Scheme> toEntities(List<? extends BaseSchemeDTO> dtos) {//TODO Este probablemente nunca se use
         return dtos.stream()
                 .map(this::toEntity)
                 .toList();

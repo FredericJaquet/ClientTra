@@ -3,17 +3,16 @@ package com.frederic.clienttra.mappers;
 import com.frederic.clienttra.dto.bases.BaseItemDTO;
 import com.frederic.clienttra.dto.read.ItemDTO;
 import com.frederic.clienttra.dto.update.UpdateItemRequestDTO;
-import com.frederic.clienttra.dto.update.UpdateSchemeLineRequestDTO;
 import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
-import com.frederic.clienttra.entities.Scheme;
-import com.frederic.clienttra.entities.SchemeLine;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Component
 public class ItemMapper {
 
     public ItemDTO toDto(Item entity){
@@ -40,7 +39,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public List<Item> toEntities(List<BaseItemDTO> dtos){
+    public List<Item> toEntities(List<? extends BaseItemDTO> dtos){
         return dtos.stream()
                 .map(this::toEntity)
                 .toList();
