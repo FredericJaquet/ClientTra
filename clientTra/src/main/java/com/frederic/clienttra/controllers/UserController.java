@@ -28,21 +28,23 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserForAdminDTO> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserForAdminDTO>> getAllUsers() {
+
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserForAdminDTO> getUserById(@PathVariable int id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
+        UserForAdminDTO user=userService.getUserById(id)
                 .orElseThrow(UserNotFoundException::new);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/me")
-    public UserSelfDTO getSelfUser() {
-        return userService.getCurrentUserDetails();
+    public ResponseEntity<UserSelfDTO> getSelfUser()
+    {
+        return ResponseEntity.ok(userService.getCurrentUserDetails());
     }
 
     @PostMapping
@@ -78,8 +80,7 @@ public class UserController {
     }
 
     @PatchMapping("/me/password")
-    public ResponseEntity<GenericResponseDTO> changePassword(
-            @Valid @RequestBody UpdatePasswordRequestDTO dto) {
+    public ResponseEntity<GenericResponseDTO> changePassword(@Valid @RequestBody UpdatePasswordRequestDTO dto) {
         userService.changePassword(dto);
         String msg = messageResolver.getMessage("user.password.changed", "Contraseña modificada correctamente");
         return ResponseEntity.ok(new GenericResponseDTO(msg));

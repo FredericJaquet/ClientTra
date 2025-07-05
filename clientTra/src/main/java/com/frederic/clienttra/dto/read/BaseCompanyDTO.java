@@ -21,4 +21,5 @@ public class BaseCompanyDTO {
     private List<AddressDTO> addresses;
     private List<BankAccountDTO> bankAccounts;
     private List<ContactPersonDTO> contactPersons;
+    private List<SchemeDTO> schemes;
 }

@@ -5,6 +5,10 @@ import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.dto.update.UpdateBaseCompanyRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.exceptions.InvalidEmailException;
+import com.frederic.clienttra.exceptions.InvalidLegalNameException;
+import com.frederic.clienttra.exceptions.InvalidVatNumberException;
+import com.frederic.clienttra.utils.validators.EmailValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -48,29 +52,35 @@ public class CompanyMapper {
 
         safeMapToEntity(dto.getPhones(), phoneMapper::toEntity)
                 .forEach(company::addPhone);
-
         safeMapToEntity(dto.getAddresses(), addressMapper::toEntity)
                 .forEach(company::addAddress);
         safeMapToEntity(dto.getBankAccounts(), bankAccountMapper::toEntity)
                 .forEach(company::addBankAccount);
-
         safeMapToEntity(dto.getContactPersons(), contactPersonMapper::toEntity)
                 .forEach(company::addContactPerson);
-
         return company;
     }
 
     public void updateEntity(Company entity, UpdateBaseCompanyRequestDTO dto){
         if(dto.getVatNumber()!=null){
+            if (dto.getVatNumber().length() < 3){
+                throw new InvalidVatNumberException();
+            }
             entity.setVatNumber(dto.getVatNumber());
         }
         if(dto.getComName()!=null){
             entity.setComName(dto.getComName());
         }
         if(dto.getLegalName()!=null){
+            if(dto.getLegalName().length() < 3){
+                throw new InvalidLegalNameException();
+            }
             entity.setLegalName(dto.getLegalName());
         }
         if(dto.getEmail()!=null){
+            if(!EmailValidator.isValidEmail(dto.getEmail())){
+                throw new InvalidEmailException();
+            }
             entity.setEmail(dto.getEmail());
         }
         if(dto.getWeb()!=null){
@@ -80,15 +90,24 @@ public class CompanyMapper {
 
     public void updateEntity(Company entity, UpdateCompanyOwnerRequestDTO dto){
         if(dto.getVatNumber()!=null){
+            if (dto.getVatNumber().length() < 3){
+                throw new InvalidVatNumberException();
+            }
             entity.setVatNumber(dto.getVatNumber());
         }
         if(dto.getComName()!=null){
             entity.setComName(dto.getComName());
         }
         if(dto.getLegalName()!=null){
+            if(dto.getLegalName().length() < 3){
+                throw new InvalidLegalNameException();
+            }
             entity.setLegalName(dto.getLegalName());
         }
         if(dto.getEmail()!=null){
+            if(!EmailValidator.isValidEmail(dto.getEmail())){
+                throw new InvalidEmailException();
+            }
             entity.setEmail(dto.getEmail());
         }
         if(dto.getWeb()!=null){

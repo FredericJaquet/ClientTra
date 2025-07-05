@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -33,17 +34,30 @@ public class SchemeService {
         return schemeMapper.toDTOs(entities);
     }
 
-    public void createScheme(CreateSchemeRequestDTO dto) {
+    public SchemeDTO getScheme(Integer idCompany, Integer idScheme){
         Company owner = companyService.getCurrentCompanyOrThrow();
 
+        Scheme entity=schemeRepository.findByOwnerCompanyAndIdScheme(owner,idScheme)
+                .orElseThrow(SchemeNotFoundException::new);
+        if(!Objects.equals(entity.getCompany().getIdCompany(), idCompany)){
+            throw new SchemeNotFoundException();
+        }
+
+        return schemeMapper.toDTO(entity);
+    }
+
+    public void createScheme(Integer idCompany, CreateSchemeRequestDTO dto) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Company company = companyService.getCompanyById(idCompany);
         Scheme entity = schemeMapper.toEntity(dto);
         entity.setOwnerCompany(owner);
+        entity.setCompany(company);
 
         if (dto.getSchemeLines() != null && !dto.getSchemeLines().isEmpty()) {
             List<SchemeLine> lines = dto.getSchemeLines().stream()
                     .map(lineDto -> {
                         SchemeLine lineEntity = schemeLineMapper.toEntity(lineDto);
-                        lineEntity.setScheme(entity); // 💡 importante
+                        lineEntity.setScheme(entity);
                         return lineEntity;
                     })
                     .toList();
@@ -54,24 +68,30 @@ public class SchemeService {
         schemeRepository.save(entity);
     }
 
-    public void updateScheme(Integer idScheme, UpdateSchemeRequestDTO dto) {
+
+    public SchemeDTO updateScheme(Integer idCompany, Integer idScheme, UpdateSchemeRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Scheme entity = schemeRepository.findByOwnerCompanyAndIdScheme(owner, idScheme)
                 .orElseThrow(SchemeNotFoundException::new);
 
-        //TODO Convertir en CreateSchemeRequestDTO y pasar el DtoValidator
+        if(!Objects.equals(entity.getCompany().getIdCompany(), idCompany)){
+            throw new SchemeNotFoundException();
+        }
 
         schemeMapper.updateEntity(entity, dto);
 
         schemeRepository.save(entity);
+
+        return schemeMapper.toDTO(entity);
     }
 
-    public void deleteScheme(Integer idScheme){
+    public void deleteScheme(Integer idCompany, Integer idScheme){
         Company owner = companyService.getCurrentCompanyOrThrow();
         Scheme entity = schemeRepository.findByOwnerCompanyAndIdScheme(owner, idScheme)
                 .orElseThrow(SchemeNotFoundException::new);
-
+        if(!Objects.equals(entity.getCompany().getIdCompany(), idCompany)){
+            throw new SchemeNotFoundException();
+        }
         schemeRepository.delete(entity);
     }
-
 }

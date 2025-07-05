@@ -9,12 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomersForListDTO {
-
-    private Integer idCustomer;
+public class BaseCompanyMinimalDTO {//Sirve para rellenar los 2 campos de información que aparecen en un pedido al seleccionar el cliente
+    private Integer idCompany;
     private String comName;
     private String vatNumber;
-    private String email;
-    private String web;
-    private Boolean enabled;
+
 }

@@ -11,10 +11,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class UpdateCustomerRequestDTO extends UpdateBaseCompanyRequestDTO{
-    private String invoicingMethod;
+public class UpdateProviderRequestDTO extends UpdateBaseCompanyRequestDTO{
     private Integer duedate;
-    private String payMethod;
     private String defaultLanguage;
     private Double defaultVAT;
     private Double defaultWithholding;

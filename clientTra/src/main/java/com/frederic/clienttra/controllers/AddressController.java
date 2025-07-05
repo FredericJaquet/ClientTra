@@ -21,13 +21,13 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping
-    public List<AddressDTO> getAllAddresses(@PathVariable Integer idCompany) {
-        return addressService.getAllAddresses(idCompany);
+    public ResponseEntity<List<AddressDTO>> getAllAddresses(@PathVariable Integer idCompany) {
+        return ResponseEntity.ok(addressService.getAllAddresses(idCompany));
     }
 
     @GetMapping("/{idAddress}")
-    public AddressDTO getAddressById(@PathVariable Integer idCompany, @PathVariable Integer idAddress) {
-        return addressService.getAddress(idCompany, idAddress);
+    public ResponseEntity<AddressDTO> getAddressById(@PathVariable Integer idCompany, @PathVariable Integer idAddress) {
+        return ResponseEntity.ok(addressService.getAddress(idCompany, idAddress));
     }
 
     @DeleteMapping("/{idAddress}")
@@ -47,9 +47,9 @@ public class AddressController {
 
     @PatchMapping("/{idAddress}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public AddressDTO updateAddress(@PathVariable Integer idCompany,@PathVariable Integer idAddress, @RequestBody UpdateAddressRequestDTO dto) {
+    public ResponseEntity<AddressDTO> updateAddress(@PathVariable Integer idCompany,@PathVariable Integer idAddress, @RequestBody UpdateAddressRequestDTO dto) {
 
-        return addressService.updateAddress(idCompany, idAddress, dto);
+        return ResponseEntity.ok(addressService.updateAddress(idCompany, idAddress, dto));
     }
 
 }

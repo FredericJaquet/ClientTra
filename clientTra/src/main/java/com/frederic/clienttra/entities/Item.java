@@ -16,19 +16,14 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_item")
     private Integer idItem;
-
     @Column(length = 255)
     private String descrip;
-
     @Column(nullable = false)
-    private Integer qty;
-
+    private Double qty;
     @Column
     private Double discount;
-
     @Column(nullable = false)
     private Double total;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;

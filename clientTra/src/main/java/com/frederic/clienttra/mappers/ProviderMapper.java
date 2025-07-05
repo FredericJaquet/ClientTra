@@ -1,13 +1,13 @@
 package com.frederic.clienttra.mappers;
 
-import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
-import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
+import com.frederic.clienttra.dto.create.CreateProviderRequestDTO;
 import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
-import com.frederic.clienttra.dto.read.CustomerForListDTO;
-import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
-import com.frederic.clienttra.entities.Customer;
-import com.frederic.clienttra.projections.CustomerListProjection;
-import com.frederic.clienttra.projections.CustomerMinimalProjection;
+import com.frederic.clienttra.dto.read.ProviderDetailsDTO;
+import com.frederic.clienttra.dto.read.ProviderForListDTO;
+import com.frederic.clienttra.dto.update.UpdateProviderRequestDTO;
+import com.frederic.clienttra.entities.Provider;
+import com.frederic.clienttra.projections.ProviderListProjection;
+import com.frederic.clienttra.projections.ProviderMinimalProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class CustomerMapper {
+public class ProviderMapper {
 
     private final AddressMapper addressMapper;
     private final PhoneMapper phoneMapper;
@@ -26,10 +26,10 @@ public class CustomerMapper {
     private final ContactPersonMapper contactPersonMapper;
     private final SchemeMapper schemeMapper;
 
-    public List<CustomerForListDTO> toCustomerForListDTOS(List<CustomerListProjection> entities){
+    public List<ProviderForListDTO> toProviderForListDTOS(List<ProviderListProjection> entities){
         return entities.stream()
-                .map(p -> CustomerForListDTO.builder()
-                        .idCustomer(p.getIdCustomer())
+                .map(p -> ProviderForListDTO.builder()
+                        .idProvider(p.getIdProvider())
                         .comName(p.getComName())
                         .vatNumber(p.getVatNumber())
                         .email(p.getEmail())
@@ -39,35 +39,32 @@ public class CustomerMapper {
                 .collect(Collectors.toList());
     }
 
-    public CustomerDetailsDTO toCustomerDetailsDTO(Customer entity) {//TODO añadir los esquemas de facturación!!!!!!
-        return CustomerDetailsDTO.builder()
-                .idCustomer(entity.getIdCustomer())
+    public ProviderDetailsDTO toProviderDetailsDTO(Provider entity){
+        return ProviderDetailsDTO.builder()
+                .idProvider(entity.getIdProvider())
+                .defaultLanguage(entity.getDefaultLanguage())
+                .defaultVAT(entity.getDefaultVat())
+                .defaultWithholding(entity.getDefaultWithholding())
+                .duedate(entity.getDuedate())
+                .europe(entity.getEurope())
+                .enable(entity.getEnabled())
+                .vatNumber(entity.getCompany().getVatNumber())
                 .comName(entity.getCompany().getComName())
                 .legalName(entity.getCompany().getLegalName())
                 .web(entity.getCompany().getWeb())
                 .email(entity.getCompany().getEmail())
-                .invoicingMethod(entity.getInvoicingMethod())
-                .payMethod(entity.getPayMethod())
-                .defaultLanguage(entity.getDefaultLanguage())
-                .vatNumber(entity.getCompany().getVatNumber())
-                .defaultVat(entity.getDefaultVat())
-                .defaultWithholding(entity.getDefaultWithholding())
-                .duedate(entity.getDuedate())
-                .europe(entity.getEurope())
-                .enabled(entity.getEnabled())
                 .addresses(safeMapToDTO(entity.getCompany().getAddresses(), addressMapper::toAddressDTO))
                 .phones(safeMapToDTO(entity.getCompany().getPhones(), phoneMapper::toPhoneDTO))
                 .bankAccounts(safeMapToDTO(entity.getCompany().getBankAccounts(), bankAccountMapper::toBankAccountDTO))
                 .contactPersons(safeMapToDTO(entity.getCompany().getContactPersons(), contactPersonMapper::toContactPersonDTO))
                 .schemes(safeMapToDTO(entity.getCompany().getSchemes(), schemeMapper::toDTO))
                 .build();
+
     }
 
-    public Customer toEntity(CreateCustomerRequestDTO dto) {
-        return Customer.builder()
-                .invoicingMethod(dto.getInvoicingMethod())
+    public Provider toEntity(CreateProviderRequestDTO dto){
+        return Provider.builder()
                 .duedate(dto.getDuedate())
-                .payMethod(dto.getPayMethod())
                 .defaultLanguage(dto.getDefaultLanguage())
                 .defaultVat(dto.getDefaultVAT())
                 .defaultWithholding(dto.getDefaultWithholding())
@@ -76,15 +73,9 @@ public class CustomerMapper {
                 .build();
     }
 
-    public void updateEntity(Customer entity, UpdateCustomerRequestDTO dto) {
-        if (dto.getInvoicingMethod() != null) {
-            entity.setInvoicingMethod(dto.getInvoicingMethod());
-        }
+    public void updateEntity(Provider entity, UpdateProviderRequestDTO dto){
         if (dto.getDuedate() != null) {
             entity.setDuedate(dto.getDuedate());
-        }
-        if (dto.getPayMethod() != null) {
-            entity.setPayMethod(dto.getPayMethod());
         }
         if (dto.getDefaultLanguage() != null) {
             entity.setDefaultLanguage(dto.getDefaultLanguage());
@@ -103,7 +94,7 @@ public class CustomerMapper {
         }
     }
 
-    public BaseCompanyMinimalDTO toMinimalDTO(CustomerMinimalProjection entity) {
+    public BaseCompanyMinimalDTO toMinimalDTO(ProviderMinimalProjection entity){
         return BaseCompanyMinimalDTO.builder()
                 .idCompany(entity.getIdCompany())
                 .comName(entity.getComName())
@@ -111,7 +102,7 @@ public class CustomerMapper {
                 .build();
     }
 
-    public List<BaseCompanyMinimalDTO> toMinimalDTOs(List<CustomerMinimalProjection> entities) {
+    public List<BaseCompanyMinimalDTO> toMinimalDTOs(List<ProviderMinimalProjection> entities){
         return entities.stream()
                 .map(this::toMinimalDTO)
                 .toList();

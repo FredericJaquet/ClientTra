@@ -21,13 +21,13 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
 
     @GetMapping
-    public List<BankAccountDTO> getAllBankAccounts(@PathVariable Integer idCompany) {
-        return bankAccountService.getAllBankAccounts(idCompany);
+    public ResponseEntity<List<BankAccountDTO>> getAllBankAccounts(@PathVariable Integer idCompany) {
+        return ResponseEntity.ok(bankAccountService.getAllBankAccounts(idCompany));
     }
 
     @GetMapping("/{idBankAccount}")
-    public BankAccountDTO getBankAccountById(@PathVariable Integer idCompany, @PathVariable Integer idBankAccount) {
-        return bankAccountService.getBankAccount(idCompany, idBankAccount);
+    public ResponseEntity<BankAccountDTO> getBankAccountById(@PathVariable Integer idCompany, @PathVariable Integer idBankAccount) {
+        return ResponseEntity.ok(bankAccountService.getBankAccount(idCompany, idBankAccount));
     }
 
     @DeleteMapping("/{idBankAccount}")
@@ -47,9 +47,9 @@ public class BankAccountController {
 
     @PatchMapping("/{idBankAccount}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public BankAccountDTO updateBankAccount(@PathVariable Integer idCompany,@PathVariable Integer idBankAccount, @RequestBody UpdateBankAccountRequestDTO dto) {
+    public ResponseEntity<BankAccountDTO> updateBankAccount(@PathVariable Integer idCompany,@PathVariable Integer idBankAccount, @RequestBody UpdateBankAccountRequestDTO dto) {
 
-        return bankAccountService.updateBankAccount(idCompany, idBankAccount, dto);
+        return ResponseEntity.ok(bankAccountService.updateBankAccount(idCompany, idBankAccount, dto));
     }
 
 }

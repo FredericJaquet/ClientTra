@@ -1,15 +1,10 @@
 package com.frederic.clienttra.services;
 
-import com.frederic.clienttra.dto.create.CreateAddressRequestDTO;
 import com.frederic.clienttra.dto.create.CreateBankAccountRequestDTO;
-import com.frederic.clienttra.dto.read.AddressDTO;
 import com.frederic.clienttra.dto.read.BankAccountDTO;
-import com.frederic.clienttra.dto.update.UpdateAddressRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
-import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.Company;
-import com.frederic.clienttra.exceptions.AddressNotFoundException;
 import com.frederic.clienttra.exceptions.BankAccountNotFoundException;
 import com.frederic.clienttra.exceptions.CompanyNotFoundException;
 import com.frederic.clienttra.mappers.BankAccountMapper;

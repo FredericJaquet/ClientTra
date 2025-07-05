@@ -3,6 +3,7 @@ package com.frederic.clienttra.services;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.exceptions.CompanyNotFoundException;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
 import com.frederic.clienttra.exceptions.LogoNotLoadedException;
 import com.frederic.clienttra.mappers.CompanyMapper;
@@ -49,6 +50,12 @@ public class CompanyServiceImpl implements CompanyService {
         Company company=getCurrentCompanyOrThrow();
         CompanyOwnerDTO companyOwnerDTO=companyMapper.toCompanyOwnerDTO(company);
         return Optional.of(companyOwnerDTO);
+    }
+
+    @Override
+    public Company getCompanyById(Integer id){
+        return companyRepository.findByIdCompany(id)
+                .orElseThrow(CompanyNotFoundException::new);
     }
 
     @Override

@@ -16,29 +16,21 @@ public class Provider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_provider")
     private Integer idProvider;
-
     @Column(length = 10)
     private String defaultLanguage;
-
     @Column
-    private Double defaultVAT;
-
+    private Double defaultVat;
     @Column
     private Double defaultWithholding;
-
     @Column
     private Integer duedate;
-
     @Column
     private Boolean europe;
-
     @Column
     private Boolean enabled;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)
     private Company company;
-
     // This relationship points to the entity that owns the provider.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_owner_company", nullable = false)

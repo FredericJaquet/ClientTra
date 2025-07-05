@@ -99,15 +99,15 @@ CREATE TABLE IF NOT EXISTS customers (
 );
 
 CREATE TABLE IF NOT EXISTS providers (
-  id_provider          INT AUTO_INCREMENT PRIMARY KEY,
+  id_provider          INT		AUTO_INCREMENT PRIMARY KEY,
   default_language     VARCHAR(10),
-  default_vat          DOUBLE NOT NULL DEFAULT 0.21,
-  default_withholding  DOUBLE NOT NULL DEFAULT 0.15,
+  default_vat          DOUBLE 		NOT NULL DEFAULT 0.21,
+  default_withholding  DOUBLE 		NOT NULL DEFAULT 0.15,
   duedate              INT,
-  europe               BOOLEAN NOT NULL DEFAULT 1,
-  enabled              BOOLEAN NOT NULL DEFAULT 1,
-  id_company           INT NOT NULL,
-  id_owner_company     INT NOT NULL,
+  europe               BOOLEAN 		NOT NULL DEFAULT 1,
+  enabled              BOOLEAN 		NOT NULL DEFAULT 1,
+  id_company           INT 		NOT NULL,
+  id_owner_company     INT 		NOT NULL,
   FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
   FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
 );

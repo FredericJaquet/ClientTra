@@ -19,10 +19,4 @@ public class CustomerDetailsDTO extends BaseCompanyDTO {
     private Boolean europe;
     private Boolean enabled;
 
-
-
-
-
-
-
 }

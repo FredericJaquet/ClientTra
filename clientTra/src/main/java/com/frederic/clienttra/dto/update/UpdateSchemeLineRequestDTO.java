@@ -1,8 +1,6 @@
 package com.frederic.clienttra.dto.update;
 
 import com.frederic.clienttra.dto.bases.BaseSchemeLineDTO;
-import com.frederic.clienttra.entities.Scheme;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

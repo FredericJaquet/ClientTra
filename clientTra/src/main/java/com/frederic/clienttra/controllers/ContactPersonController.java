@@ -21,13 +21,13 @@ public class ContactPersonController {
     private final ContactPersonService contactPersonService;
 
     @GetMapping
-    public List<ContactPersonDTO> getAllContactPersons(@PathVariable Integer idCompany) {
-        return contactPersonService.getAllContactPersons(idCompany);
+    public ResponseEntity<List<ContactPersonDTO>> getAllContactPersons(@PathVariable Integer idCompany) {
+        return ResponseEntity.ok(contactPersonService.getAllContactPersons(idCompany));
     }
 
     @GetMapping("/{idContactPerson}")
-    public ContactPersonDTO getContactPersonById(@PathVariable Integer idCompany, @PathVariable Integer idContactPerson) {
-        return contactPersonService.getContactPerson(idCompany, idContactPerson);
+    public ResponseEntity<ContactPersonDTO> getContactPersonById(@PathVariable Integer idCompany, @PathVariable Integer idContactPerson) {
+        return ResponseEntity.ok(contactPersonService.getContactPerson(idCompany, idContactPerson));
     }
 
     @DeleteMapping("/{idContactPerson}")
@@ -47,8 +47,8 @@ public class ContactPersonController {
 
     @PatchMapping("/{idContactPerson}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ContactPersonDTO updateContactPerson(@PathVariable Integer idCompany,@PathVariable Integer idContactPerson, @RequestBody UpdateContactPersonRequestDTO dto) {
+    public ResponseEntity<ContactPersonDTO> updateContactPerson(@PathVariable Integer idCompany,@PathVariable Integer idContactPerson, @RequestBody UpdateContactPersonRequestDTO dto) {
 
-        return contactPersonService.updateContactPerson(idCompany, idContactPerson, dto);
+        return ResponseEntity.ok(contactPersonService.updateContactPerson(idCompany, idContactPerson, dto));
     }
 }

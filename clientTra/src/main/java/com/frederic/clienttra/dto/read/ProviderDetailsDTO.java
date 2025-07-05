@@ -1,23 +1,20 @@
-package com.frederic.clienttra.dto.update;
+package com.frederic.clienttra.dto.read;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class UpdateCustomerRequestDTO extends UpdateBaseCompanyRequestDTO{
-    private String invoicingMethod;
-    private Integer duedate;
-    private String payMethod;
+public class ProviderDetailsDTO extends BaseCompanyDTO {
+    private Integer idProvider;
     private String defaultLanguage;
     private Double defaultVAT;
     private Double defaultWithholding;
+    private Integer duedate;
     private Boolean europe;
-    private Boolean enabled;
+    private Boolean enable;
 }
