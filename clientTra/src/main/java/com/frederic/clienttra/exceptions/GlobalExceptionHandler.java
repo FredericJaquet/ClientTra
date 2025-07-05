@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         this.messageResolver = messageResolver;
     }
 
-    // --- Autenticación y autorización ---
+    // --- Authentication y authorization ---
     @ExceptionHandler(UserNotAuthenticatedException.class)
     public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(UserNotAuthenticatedException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), "No se pudo determinar la compañía del usuario autenticado.", request.getRequestURI());
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), "Acceso denegado. No tienes permisos para realizar esta acción.", request.getRequestURI());
     }
 
-    // --- Recursos no encontrados (404) ---
+    // --- Resources not found (404) ---
     @ExceptionHandler({
             UserNotFoundException.class,
             CompanyNotFoundForUserException.class,
@@ -46,14 +46,14 @@ public class GlobalExceptionHandler {
             PhoneNotFoundException.class,
             RoleNotFoundException.class,
             SchemeNotFoundException.class,
-            ProviderNotFoundException.class
+            ProviderNotFoundException.class,
+            OrderNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "El recurso solicitado no existe o no pertenece a tu compañía.", request.getRequestURI());
     }
 
-    // --- Validaciones manuales personalizadas ---
-
+    // --- Custom Validation ---
     @ExceptionHandler(ManualValidationException.class)
     public ResponseEntity<ErrorResponse> handleManualValidationException(ManualValidationException ex, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
@@ -72,8 +72,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // --- Validaciones con anotaciones (e.g. @Valid) ---
-
+    // --- Validation on tags (e.g. @Valid) ---
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
@@ -92,8 +91,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // --- Validaciones simples (campos incorrectos, ya existe, etc.) ---
-
+    // --- Validation simple (incorrect fields, already exists, etc.) ---
     @ExceptionHandler({
             InvalidEmailException.class,
             InvalidIbanException.class,
@@ -105,20 +103,25 @@ public class GlobalExceptionHandler {
             CompanyAlreadyExistsException.class,
             LogoNotLoadedException.class,
             LastAddressException.class,
-            CantDeleteSelfException.class
+            CantDeleteSelfException.class,
+            InvalidSchemeNameException.class,
+            InvalidSchemePriceException.class,
+            InvalidOrderDescriptionException.class,
+            InvalidOrderDateException.class,
+            InvalidOrderPriceException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidInput(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Datos inválidos o conflicto con la operación.", request.getRequestURI());
     }
 
-    // --- Genérico (último recurso) ---
+    // --- Generic (Last chance) ---
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), "Ha ocurrido un error inesperado.", request.getRequestURI());
     }
 
-    // --- Utilidad centralizada ---
+    // --- Centralized utilities ---
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String code, String fallbackMessage, String path) {
         String localizedMsg = messageResolver.getMessage(code);

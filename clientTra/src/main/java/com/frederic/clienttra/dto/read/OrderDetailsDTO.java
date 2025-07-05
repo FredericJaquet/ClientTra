@@ -1,5 +1,6 @@
 package com.frederic.clienttra.dto.read;
 
+import com.frederic.clienttra.dto.bases.BaseOrderDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderDetailsDTO {
+public class OrderDetailsDTO implements BaseOrderDTO {
     private Integer idOrder;
     private String descrip;
     private LocalDate dateOrder;
@@ -24,5 +25,5 @@ public class OrderDetailsDTO {
     private String sourceLanguage;
     private String targetLanguage;
     private BaseCompanyMinimalDTO company;
-    private List<ItemDTO> lines;
+    private List<ItemDTO> items;
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class OrderListDTO {
-    private Integer id;
+    private Integer idOrder;
     private String descrip;
     private LocalDate dateOrder;
     private Double total;
