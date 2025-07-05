@@ -3,8 +3,8 @@ package com.frederic.clienttra.controllers;
 import com.frederic.clienttra.dto.*;
 import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
 import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
-import com.frederic.clienttra.dto.read.CustomerMinimalDTO;
-import com.frederic.clienttra.dto.read.CustomersForListDTO;
+import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
+import com.frederic.clienttra.dto.read.CustomerForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.services.CustomerService;
 import jakarta.validation.Valid;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,21 +24,26 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public List<CustomersForListDTO> getAllCustomers() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<List<CustomerForListDTO>> getAllCustomers() {
+        return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
-        customerService.createCustomer(dto);
-        return ResponseEntity.ok(new GenericResponseDTO("customer.created.success"));
+        int newId = customerService.createCustomer(dto);
+        /*CustomerDetailsDTO created = customerService.getCustomerById(newId);//Esto es un ejemplo de como devolver el nuevo cliente creado
+        return ResponseEntity
+                .created(URI.create("/api/customers/" + newId))
+                .body(created);*/
+        return ResponseEntity
+                .created(URI.create("/api/customers/" + newId))
+                .body(new GenericResponseDTO("customer.created.success"));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDetailsDTO> getCustomerById(@PathVariable int id) {
-        CustomerDetailsDTO customerDetails = customerService.getCustomerById(id);
-        return ResponseEntity.ok(customerDetails);
+        return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
     @PatchMapping("/{id}")
@@ -55,12 +61,12 @@ public class CustomerController {
     }
 
     @GetMapping("/search")
-    public List<CustomersForListDTO> searchCustomers(@RequestParam String query) {
-        return customerService.searchByNameOrVat(query);
+    public ResponseEntity<List<CustomerForListDTO>> searchCustomers(@RequestParam String input) {
+        return ResponseEntity.ok(customerService.searchByNameOrVat(input));
     }
 
     @GetMapping("/minimal-list")
-    public List<CustomerMinimalDTO> getMinimalCustomers() {
-        return customerService.getMinimalCustomerList();
+    public ResponseEntity<List<BaseCompanyMinimalDTO>> getMinimalCustomers() {
+        return ResponseEntity.ok(customerService.getMinimalCustomerList());
     }
 }

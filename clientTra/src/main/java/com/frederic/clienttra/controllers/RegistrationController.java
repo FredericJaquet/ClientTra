@@ -1,5 +1,6 @@
 package com.frederic.clienttra.controllers;
 
+import com.frederic.clienttra.dto.GenericResponseDTO;
 import com.frederic.clienttra.dto.create.RegistrationRequestDTO;
 import com.frederic.clienttra.services.RegistrationService;
 import jakarta.validation.Valid;
@@ -19,9 +20,9 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public ResponseEntity<Void> registerCompany(@Valid @RequestBody RegistrationRequestDTO dto) {
+    public ResponseEntity<GenericResponseDTO> registerCompany(@Valid @RequestBody RegistrationRequestDTO dto) {
         registrationService.register(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(new GenericResponseDTO("registration.created.success"));
     }
 }
 

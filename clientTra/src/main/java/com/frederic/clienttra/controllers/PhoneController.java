@@ -21,13 +21,13 @@ public class PhoneController {
     private final PhoneService phoneService;
 
     @GetMapping
-    public List<PhoneDTO> getAllPhones(@PathVariable Integer idCompany) {
-        return phoneService.getAllPhones(idCompany);
+    public ResponseEntity<List<PhoneDTO>> getAllPhones(@PathVariable Integer idCompany) {
+        return ResponseEntity.ok(phoneService.getAllPhones(idCompany));
     }
 
     @GetMapping("/{idPhone}")
-    public PhoneDTO getPhoneById(@PathVariable Integer idCompany, @PathVariable Integer idPhone) {
-        return phoneService.getPhone(idCompany, idPhone);
+    public ResponseEntity<PhoneDTO> getPhoneById(@PathVariable Integer idCompany, @PathVariable Integer idPhone) {
+        return ResponseEntity.ok(phoneService.getPhone(idCompany, idPhone));
     }
 
     @DeleteMapping("/{idPhone}")
@@ -47,8 +47,8 @@ public class PhoneController {
 
     @PatchMapping("/{idPhone}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public PhoneDTO updatePhone(@PathVariable Integer idCompany,@PathVariable Integer idPhone, @RequestBody UpdatePhoneRequestDTO dto) {
+    public ResponseEntity<PhoneDTO> updatePhone(@PathVariable Integer idCompany,@PathVariable Integer idPhone, @RequestBody UpdatePhoneRequestDTO dto) {
 
-        return phoneService.updatePhone(idCompany, idPhone, dto);
+        return ResponseEntity.ok(phoneService.updatePhone(idCompany, idPhone, dto));
     }
 }

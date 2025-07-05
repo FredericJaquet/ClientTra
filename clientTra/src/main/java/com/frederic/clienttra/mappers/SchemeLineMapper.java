@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 @Component
 public class SchemeLineMapper {
 
-    public List<SchemeLineDTO> toDTOs(List<SchemeLine> entities) {
+    public List<SchemeLineDTO> toDtos(List<SchemeLine> entities) {
         return entities.stream()
-                .map(this::toDTO)
+                .map(this::toDto)
                 .toList();
     }
 
-    public SchemeLineDTO toDTO(SchemeLine entity) {
+    public SchemeLineDTO toDto(SchemeLine entity) {
         return SchemeLineDTO.builder()
                 .descrip(entity.getDescrip())
                 .discount(entity.getDiscount())
@@ -45,6 +45,7 @@ public class SchemeLineMapper {
         Map<Integer, SchemeLine> existingLinesMap = entity.getSchemeLines().stream()
             .filter(line -> line.getIdSchemeLine() != null)
             .collect(Collectors.toMap(SchemeLine::getIdSchemeLine, Function.identity()));
+
         for (UpdateSchemeLineRequestDTO dto : dtos) {
             Integer id = dto.getIdSchemeLine();
             if (id != null && existingLinesMap.containsKey(id)) {

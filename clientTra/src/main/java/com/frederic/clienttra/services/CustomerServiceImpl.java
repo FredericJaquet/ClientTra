@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService {//TODO Me falta los esquemas aquí!!
+public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CompanyRepository companyRepository;
@@ -27,38 +27,38 @@ public class CustomerServiceImpl implements CustomerService {//TODO Me falta los
     private final CompanyMapper companyMapper;
 
     @Override
-    public List<CustomersForListDTO> getAllCustomers() {
+    public List<CustomerForListDTO> getAllCustomers() {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner));
-        List<CustomersForListDTO> customers=customerMapper.customersForListDTOS(entities);
-        customers.sort(Comparator.comparing(CustomersForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+        List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
+        dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
-        return customers;
+        return dtos;
     }
 
     @Override
-    public List<CustomersForListDTO> searchByNameOrVat(String input) {
+    public List<CustomerForListDTO> searchByNameOrVat(String input) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         String query = "%" + input + "%";
 
         List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByComNameOrLegalNameOrVatNumber(owner, query));
-        List<CustomersForListDTO> customers=customerMapper.customersForListDTOS(entities);
-        customers.sort(Comparator.comparing(CustomersForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+        List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
+        dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
-        return customers;
+        return dtos;
     }
 
     @Override
     public CustomerDetailsDTO getCustomerById(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer customer = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
+        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
                 .orElseThrow(CustomerNotFoundException::new);
-        return customerMapper.toCustomerDetailsDTO(customer);
+        return customerMapper.toCustomerDetailsDTO(entity);
     }
 
     @Override
-    public void createCustomer(CreateCustomerRequestDTO dto) {
+    public int createCustomer(CreateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         Company companyEntity = companyMapper.toEntity(dto);
@@ -66,45 +66,45 @@ public class CustomerServiceImpl implements CustomerService {//TODO Me falta los
 
         Company savedCompany = companyRepository.save(companyEntity);
 
-        Customer customer = customerMapper.toEntity(dto);
-        customer.setCompany(savedCompany);
-        customer.setOwnerCompany(owner);
-        customer.setEnabled(true);
+        Customer entity = customerMapper.toEntity(dto);
+        entity.setCompany(savedCompany);
+        entity.setOwnerCompany(owner);
+        entity.setEnabled(true);
 
-        customerRepository.save(customer);
+        Customer customerSaved=customerRepository.save(entity);
+
+        return customerSaved.getIdCustomer();
     }
 
     @Override
     public void updateCustomer(int id, UpdateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer customer = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
+        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
                 .orElseThrow(CustomerNotFoundException::new);
 
-        Company company = customer.getCompany();
-
-        //TODO Convertir en CreateCustomerRequestDTO y pasar el DtoValidator
+        Company company = entity.getCompany();
 
         companyMapper.updateEntity(company,dto);
-        customerMapper.updateEntity(customer, dto);
+        customerMapper.updateEntity(entity, dto);
 
         companyRepository.save(company);
-        customerRepository.save(customer);
+        customerRepository.save(entity);
     }
 
     @Override
     public void disableCustomer(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer customer = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
+        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
                 .orElseThrow(CustomerNotFoundException::new);
-        customer.setEnabled(false);
-        customerRepository.save(customer);
+        entity.setEnabled(false);
+        customerRepository.save(entity);
     }
 
     @Override
-    public List<CustomerMinimalDTO> getMinimalCustomerList() {
+    public List<BaseCompanyMinimalDTO> getMinimalCustomerList() {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        List<CustomerMinimalProjection> projections = customerRepository.findMinimalListByOwnerCompany(owner);
-        return customerMapper.toMinimalDTOs(projections);
+        List<CustomerMinimalProjection> entities = customerRepository.findMinimalListByOwnerCompany(owner);
+        return customerMapper.toMinimalDTOs(entities);
     }
 
 }

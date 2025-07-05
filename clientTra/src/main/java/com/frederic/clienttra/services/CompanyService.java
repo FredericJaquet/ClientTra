@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface CompanyService {
     Optional<Company> getCurrentCompany();
     Company getCurrentCompanyOrThrow();
+    Company getCompanyById(Integer idCompany);
     void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto);
     void uploadCompanyLogo(MultipartFile file);
 

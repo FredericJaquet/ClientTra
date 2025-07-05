@@ -44,24 +44,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<CustomerListProjection> findListByComNameOrLegalNameOrVatNumber(@Param("owner") Company owner, @Param("input") String input);
 
     @Query("""
-    SELECT c FROM Customer c
-    JOIN FETCH c.company comp
-    LEFT JOIN FETCH comp.addresses
-    LEFT JOIN FETCH comp.phones
-    LEFT JOIN FETCH comp.bankAccounts
-    LEFT JOIN FETCH comp.contactPersons
-    WHERE c.ownerCompany = :owner AND c.idCustomer = :id
-""")
-    Optional<Customer> findByOwnerCompanyAndIdCustomerWithDetails(Company owner, int id);
-
-    @Query("""
-    SELECT c.idCustomer AS idCustomer,
-           c.comName AS comName,
-           c.vatNumber AS vatNumber
+    SELECT co.idCompany AS idCompany,
+           co.comName AS comName,
+           co.vatNumber AS vatNumber
     FROM Customer c
-    WHERE c.ownerCompany = :owner
+    JOIN c.company co
+    WHERE c.ownerCompany = :owner AND c.enabled = true
 """)
     List<CustomerMinimalProjection> findMinimalListByOwnerCompany(Company owner);
-
 
 }

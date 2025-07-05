@@ -39,7 +39,6 @@ public class AddressService {
         customers.sort(Comparator.comparing(AddressDTO::getCity, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         return addressMapper.toAddressDTOList(entities);
-
     }
 
     public AddressDTO getAddress(Integer idCompany, Integer idAddress){

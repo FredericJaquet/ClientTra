@@ -4,6 +4,8 @@ import com.frederic.clienttra.dto.bases.BaseSchemeDTO;
 import com.frederic.clienttra.dto.read.SchemeDTO;
 import com.frederic.clienttra.dto.update.UpdateSchemeRequestDTO;
 import com.frederic.clienttra.entities.Scheme;
+import com.frederic.clienttra.exceptions.InvalidSchemeNameException;
+import com.frederic.clienttra.exceptions.InvalidSchemePriceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +31,7 @@ public class SchemeMapper {
                 .fieldName(entity.getFieldName())
                 .sourceLanguage(entity.getSourceLanguage())
                 .targetLanguage(entity.getTargetLanguage())
-                .schemeLines(schemeLineMapper.toDTOs(entity.getSchemeLines()))
+                .schemeLines(schemeLineMapper.toDtos(entity.getSchemeLines()))
                 .build();
     }
 
@@ -53,9 +55,15 @@ public class SchemeMapper {
 
     public void updateEntity(Scheme entity, UpdateSchemeRequestDTO dto){
         if(dto.getSchemeName() != null){
+            if(dto.getSchemeName().isBlank()) {
+                throw new InvalidSchemeNameException();
+            }
             entity.setSchemeName(dto.getSchemeName());
         }
         if(dto.getPrice() != null){
+            if(dto.getPrice() <= 0) {
+                throw new InvalidSchemePriceException();
+            }
             entity.setPrice(dto.getPrice());
         }
         if(dto.getUnits() != null){
@@ -74,8 +82,5 @@ public class SchemeMapper {
             schemeLineMapper.updateEntities(entity,dto.getSchemeLines());
         }
     }
-
-
-
 
 }

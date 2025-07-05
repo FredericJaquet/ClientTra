@@ -25,9 +25,9 @@ public class OwnerController {
 
     @GetMapping
     public ResponseEntity<CompanyOwnerDTO> getCompany() {
-       return companyService.getCompanyOwnerDTO()
-                .map(ResponseEntity::ok)
-                .orElseThrow(CompanyNotFoundForUserException::new);
+       CompanyOwnerDTO company=companyService.getCompanyOwnerDTO()
+               .orElseThrow(CompanyNotFoundForUserException::new);
+        return ResponseEntity.ok(company);
     }
 
     @PatchMapping
@@ -41,7 +41,7 @@ public class OwnerController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GenericResponseDTO> uploadCompanyLogo(@RequestParam("logo") MultipartFile file) {
         companyService.uploadCompanyLogo(file);
-        String msg = messageResolver.getMessage("logo.upload.success", "Logo actualizado correctamente");
+        String msg = messageResolver.getMessage("logo.upload.success", "Logo actualizado correctamente");//TODO esto hay que hacerlo en todos los COntrollers
         return ResponseEntity.ok(new GenericResponseDTO(msg));
     }
 

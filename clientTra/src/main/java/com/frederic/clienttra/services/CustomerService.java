@@ -2,18 +2,18 @@ package com.frederic.clienttra.services;
 
 import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
 import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
-import com.frederic.clienttra.dto.read.CustomerMinimalDTO;
-import com.frederic.clienttra.dto.read.CustomersForListDTO;
+import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
+import com.frederic.clienttra.dto.read.CustomerForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 
 import java.util.List;
 
 public interface CustomerService {
-    List<CustomersForListDTO> getAllCustomers();
+    List<CustomerForListDTO> getAllCustomers();
     CustomerDetailsDTO getCustomerById(int id);
-    void createCustomer(CreateCustomerRequestDTO dto);
+    int createCustomer(CreateCustomerRequestDTO dto);
     void updateCustomer(int id, UpdateCustomerRequestDTO dto);
     void disableCustomer(int id);
-    List<CustomersForListDTO> searchByNameOrVat(String query);
-    List<CustomerMinimalDTO> getMinimalCustomerList();
+    List<CustomerForListDTO> searchByNameOrVat(String query);
+    List<BaseCompanyMinimalDTO> getMinimalCustomerList();
 }

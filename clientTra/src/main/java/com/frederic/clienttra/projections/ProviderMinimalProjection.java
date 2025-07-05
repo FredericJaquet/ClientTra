@@ -1,6 +1,6 @@
 package com.frederic.clienttra.projections;
 
-public interface CustomerMinimalProjection {
+public interface ProviderMinimalProjection {
     Integer getIdCompany();
     String getComName();
     String getVatNumber();
