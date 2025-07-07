@@ -16,6 +16,7 @@ import com.frederic.clienttra.repositories.CompanyRepository;
 import com.frederic.clienttra.repositories.ProviderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,6 +32,7 @@ public class ProviderServiceImpl implements  ProviderService{
     private final CompanyMapper companyMapper;
     private final CompanyService companyService;
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProviderForListDTO> getAllProviders() {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -41,6 +43,7 @@ public class ProviderServiceImpl implements  ProviderService{
         return dtos;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProviderDetailsDTO getProviderById(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -50,6 +53,7 @@ public class ProviderServiceImpl implements  ProviderService{
         return providerMapper.toProviderDetailsDTO(entity);
     }
 
+    @Transactional
     @Override
     public int createProvider(CreateProviderRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -68,6 +72,7 @@ public class ProviderServiceImpl implements  ProviderService{
         return providerSaved.getIdProvider();
     }
 
+    @Transactional
     @Override
     public void updateProvider(int id, UpdateProviderRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -80,7 +85,7 @@ public class ProviderServiceImpl implements  ProviderService{
         companyRepository.save(company);
         providerRepository.save(entity);
     }
-
+    @Transactional
     @Override
     public void disableProvider(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -90,6 +95,7 @@ public class ProviderServiceImpl implements  ProviderService{
         providerRepository.save(entity);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProviderForListDTO> searchByNameOrVat(String input) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -102,6 +108,7 @@ public class ProviderServiceImpl implements  ProviderService{
         return dtos;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BaseCompanyMinimalDTO> getMinimalProviderList() {
         Company owner = companyService.getCurrentCompanyOrThrow();

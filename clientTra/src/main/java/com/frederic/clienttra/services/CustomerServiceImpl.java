@@ -11,6 +11,7 @@ import com.frederic.clienttra.projections.CustomerMinimalProjection;
 import com.frederic.clienttra.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,6 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CompanyService companyService;
     private final CompanyMapper companyMapper;
 
+    @Transactional(readOnly = true)
     @Override
     public List<CustomerForListDTO> getAllCustomers() {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -37,6 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
         return dtos;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CustomerForListDTO> searchByNameOrVat(String input) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -49,6 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
         return dtos;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CustomerDetailsDTO getCustomerById(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -57,6 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toCustomerDetailsDTO(entity);
     }
 
+    @Transactional
     @Override
     public int createCustomer(CreateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -76,6 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerSaved.getIdCustomer();
     }
 
+    @Transactional
     @Override
     public void updateCustomer(int id, UpdateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -91,6 +97,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(entity);
     }
 
+    @Transactional
     @Override
     public void disableCustomer(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
@@ -100,6 +107,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(entity);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BaseCompanyMinimalDTO> getMinimalCustomerList() {
         Company owner = companyService.getCurrentCompanyOrThrow();

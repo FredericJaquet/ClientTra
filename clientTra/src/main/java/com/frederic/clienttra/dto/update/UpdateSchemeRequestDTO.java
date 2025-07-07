@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UpdateSchemeRequestDTO implements BaseSchemeDTO {
-    private Integer idScheme;
+    //private Integer idScheme;
     private String schemeName;
     private Double price;
     private String units;

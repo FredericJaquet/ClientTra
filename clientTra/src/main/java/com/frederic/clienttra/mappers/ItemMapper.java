@@ -35,7 +35,7 @@ public class ItemMapper {
                 .descrip(dto.getDescrip())
                 .qty(dto.getQty())
                 .discount(dto.getDiscount())
-                .total(dto.getTotal())//TODO Lógica para verificar el total
+                .total(dto.getTotal())
                 .build();
     }
 
@@ -44,31 +44,5 @@ public class ItemMapper {
                 .map(this::toEntity)
                 .toList();
     }
-
-    public void updateEntities(Order entity, List<UpdateItemRequestDTO> dtos){
-        Map<Integer, Item> existingLinesMap = entity.getItems().stream()
-                .filter(line -> line.getIdItem() != null)
-                .collect(Collectors.toMap(Item::getIdItem, Function.identity()));
-
-        for (UpdateItemRequestDTO dto : dtos) {
-            Integer id = dto.getIdItem();
-            if (id != null && existingLinesMap.containsKey(id)) {
-                Item line = existingLinesMap.get(id);
-                if (dto.getDescrip() != null) {
-                    line.setDescrip(dto.getDescrip());
-                }
-                if(dto.getQty() != null){
-                    line.setDescrip(dto.getDescrip());
-                }
-                if (dto.getDiscount() != null) {
-                    line.setDiscount(dto.getDiscount());
-                }
-                if(dto.getTotal() != null){
-                    line.setTotal(dto.getTotal());//TODO Lógica para verificar el total
-                }
-            }
-        }
-    }
-
 
 }

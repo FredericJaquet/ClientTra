@@ -78,9 +78,9 @@ public class SchemeMapper {
         if(dto.getTargetLanguage() != null){
             entity.setTargetLanguage(dto.getTargetLanguage());
         }
-        if(dto.getSchemeLines() != null && !dto.getSchemeLines().isEmpty()){
+        /*if(dto.getSchemeLines() != null && !dto.getSchemeLines().isEmpty()){
             schemeLineMapper.updateEntities(entity,dto.getSchemeLines());
-        }
+        }*/
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UpdateOrderRequestDTO implements BaseOrderDTO {
-    private Integer idorder;
+    //private Integer idorder;
     private String descrip;
     private LocalDate dateOrder;
     private Double pricePerUnit;
