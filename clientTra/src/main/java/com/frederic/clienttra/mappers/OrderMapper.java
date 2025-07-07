@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderMapper {
      private final ItemMapper itemMapper;
+     private final CompanyMapper companyMapper;
 
     public OrderDetailsDTO toDetailsDto(Order entity){
         return OrderDetailsDTO.builder()
@@ -30,6 +31,7 @@ public class OrderMapper {
                 .sourceLanguage(entity.getSourceLanguage())
                 .targetLanguage(entity.getTargetLanguage())
                 .items(itemMapper.toDtos(entity.getItems()))
+                .company(companyMapper.toBaseCompanyMinimalDTO(entity.getCompany()))
                 .build();
     }
 
@@ -61,12 +63,12 @@ public class OrderMapper {
                 .dateOrder(dto.getDateOrder())
                 .pricePerUnit(dto.getPricePerUnit())
                 .units(dto.getUnits())
-                .total(dto.getTotal())//TODO crear una función para validar el total EN EL SERVICE
+                .total(dto.getTotal())
                 .billed(false)
                 .fieldName(dto.getFieldName())
                 .sourceLanguage(dto.getSourceLanguage())
                 .targetLanguage(dto.getTargetLanguage())
-                .items(itemMapper.toEntities(dto.getItems()))//TODO crear una función para validar el total EN EL SERVICE
+                .items(itemMapper.toEntities(dto.getItems()))
                 .build();
     }
 
@@ -96,7 +98,7 @@ public class OrderMapper {
             entity.setUnits(dto.getUnits());
         }
         if(dto.getTotal() != null){
-           entity.setTotal(dto.getTotal());//TODO crear una función para validar el total EN EL SERVICE
+           entity.setTotal(dto.getTotal());
         }
         if(dto.getBilled() != null){
             entity.setBilled(dto.getBilled());
@@ -109,9 +111,6 @@ public class OrderMapper {
         }
         if(dto.getTargetLanguage() != null){
             entity.setTargetLanguage(dto.getTargetLanguage());
-        }
-        if(dto.getItems() != null && !dto.getItems().isEmpty()){
-            itemMapper.updateEntities(entity, dto.getItems());//TODO crear una función para validar el total EN EL SERVICE
         }
 
     }

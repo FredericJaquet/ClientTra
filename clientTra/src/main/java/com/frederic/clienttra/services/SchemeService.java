@@ -2,10 +2,15 @@ package com.frederic.clienttra.services;
 
 import com.frederic.clienttra.dto.create.CreateSchemeRequestDTO;
 import com.frederic.clienttra.dto.read.SchemeDTO;
+import com.frederic.clienttra.dto.update.UpdateItemRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateSchemeLineRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateSchemeRequestDTO;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Scheme;
 import com.frederic.clienttra.entities.SchemeLine;
+import com.frederic.clienttra.exceptions.InvalidSchemeNameException;
+import com.frederic.clienttra.exceptions.InvalidSchemePriceException;
 import com.frederic.clienttra.exceptions.SchemeNotFoundException;
 import com.frederic.clienttra.mappers.SchemeLineMapper;
 import com.frederic.clienttra.mappers.SchemeMapper;
@@ -14,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,19 +79,50 @@ public class SchemeService {
     @Transactional
     public SchemeDTO updateScheme(Integer idCompany, Integer idScheme, UpdateSchemeRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         Scheme entity = schemeRepository.findByOwnerCompanyAndIdScheme(owner, idScheme)
                 .orElseThrow(SchemeNotFoundException::new);
 
-        if(!Objects.equals(entity.getCompany().getIdCompany(), idCompany)){
+        if (!Objects.equals(entity.getCompany().getIdCompany(), idCompany)) {
             throw new SchemeNotFoundException();
         }
 
-        schemeMapper.updateEntity(entity, dto);
+        // Actualizar campos simples
+        schemeMapper.updateEntity(entity,dto);
 
+        // Actualizar líneas
+        List<UpdateSchemeLineRequestDTO> updatedItemsDTO = dto.getSchemeLines() != null ? dto.getSchemeLines() : Collections.emptyList();
+
+        Map<Integer, SchemeLine> existingLinesMap = entity.getSchemeLines().stream()
+                .filter(i -> i.getIdSchemeLine() != null)
+                .collect(Collectors.toMap(SchemeLine::getIdSchemeLine, i -> i));
+
+        List<SchemeLine> updatedLines = new ArrayList<>();
+
+        for(UpdateSchemeLineRequestDTO lineDTO : updatedItemsDTO) {
+            if (lineDTO.getIdSchemeLine() != null && existingLinesMap.containsKey(lineDTO.getIdSchemeLine())) {
+                SchemeLine line = existingLinesMap.get(lineDTO.getIdSchemeLine());
+                if (lineDTO.getDescrip() != null) {
+                    line.setDescrip(lineDTO.getDescrip());
+                }
+                if (lineDTO.getDiscount() != null) {
+                    line.setDiscount(lineDTO.getDiscount());
+                }
+                updatedLines.add(line);
+                existingLinesMap.remove(lineDTO.getIdSchemeLine());
+            } else {
+                SchemeLine newLine = schemeLineMapper.toEntity(lineDTO);
+                newLine.setScheme(entity);
+                updatedLines.add(newLine);
+            }
+        }
+        entity.getSchemeLines().clear();
+        entity.getSchemeLines().addAll(updatedLines);
         schemeRepository.save(entity);
 
         return schemeMapper.toDto(entity);
     }
+
 
     @Transactional
     public void deleteScheme(Integer idCompany, Integer idScheme){

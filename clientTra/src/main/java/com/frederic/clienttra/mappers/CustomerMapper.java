@@ -39,7 +39,7 @@ public class CustomerMapper {
                 .collect(Collectors.toList());
     }
 
-    public CustomerDetailsDTO toCustomerDetailsDTO(Customer entity) {//TODO añadir los esquemas de facturación!!!!!!
+    public CustomerDetailsDTO toCustomerDetailsDTO(Customer entity) {
         return CustomerDetailsDTO.builder()
                 .idCustomer(entity.getIdCustomer())
                 .comName(entity.getCompany().getComName())

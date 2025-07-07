@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateBankAccountRequestDTO implements BaseBankAccountDTO {
-    private Integer idBankAccount;
     private String iban;
     private String swift;
     private String branch;

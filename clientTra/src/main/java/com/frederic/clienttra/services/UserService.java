@@ -16,11 +16,11 @@ import com.frederic.clienttra.repositories.RoleRepository;
 import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,6 +38,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
     public List<UserForAdminDTO> getAllUsers() {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
 
@@ -47,6 +48,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserSelfDTO getCurrentUserDetails() {
         int idUser = SecurityUtils.getCurrentUserId();
 
@@ -56,6 +58,7 @@ public class UserService {
         return userMapper.toSelfDTO(user);
     }
 
+    @Transactional(readOnly = true)
     public Optional<UserForAdminDTO> getUserById(Integer id) {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
 
@@ -63,6 +66,7 @@ public class UserService {
                 .map(userMapper::toAdminDTO);
     }
 
+    @Transactional
     public void deleteUserById(int id) {
         User userToDelete = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
@@ -85,6 +89,7 @@ public class UserService {
         userRepository.save(userToDelete);
     }
 
+    @Transactional
     public void reactivateUserById(int id){
         User userToReactivate = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
@@ -100,6 +105,7 @@ public class UserService {
         userRepository.save(userToReactivate);
     }
 
+    @Transactional
     public UserForAdminDTO createUser(CreateUserRequestDTO dto) {
         Company currentCompany = companyService.getCurrentCompany()
                 .orElseThrow(UserNotAuthenticatedException::new);
@@ -144,7 +150,7 @@ public class UserService {
 
         userRepository.save(user);
     }
-
+    @Transactional
     public void changePassword(UpdatePasswordRequestDTO dto) {
         int userId = SecurityUtils.getCurrentUserId();
         User user = userRepository.findById(userId)

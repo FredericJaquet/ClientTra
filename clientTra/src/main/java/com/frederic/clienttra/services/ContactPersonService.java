@@ -14,6 +14,7 @@ import com.frederic.clienttra.utils.validators.DtoValidator;
 import com.frederic.clienttra.utils.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ContactPersonService {
     private final CompanyRepository companyRepository;
     private final DtoValidator dtoValidator;
 
+    @Transactional(readOnly = true)
     public List<ContactPersonDTO> getAllContactPersons(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
@@ -35,6 +37,7 @@ public class ContactPersonService {
         return contactPersonMapper.toContactPersonDTOList(entities);
     }
 
+    @Transactional(readOnly = true)
     public ContactPersonDTO getContactPerson(Integer idCompany, Integer idContactPerson){
         ownerValidator.checkOwner(idCompany);
 
@@ -43,6 +46,7 @@ public class ContactPersonService {
         return contactPersonMapper.toContactPersonDTO(entity);
     }
 
+    @Transactional
     public void deleteContactPerson(Integer idCompany, Integer idContactPerson){
         ownerValidator.checkOwner(idCompany);
 
@@ -51,6 +55,7 @@ public class ContactPersonService {
         contactPersonRepository.delete(entity);
     }
 
+    @Transactional
     public void createContactPerson(Integer idCompany, CreateContactPersonRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
 
@@ -61,6 +66,7 @@ public class ContactPersonService {
         contactPersonRepository.save(entity);
     }
 
+    @Transactional
     public ContactPersonDTO updateContactPerson(Integer idCompany, Integer idContactPerson, UpdateContactPersonRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
         ContactPerson entity = contactPersonRepository.findByIdContactPersonAndCompany_idCompany(idContactPerson, idCompany)

@@ -11,7 +11,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     List<Order> findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(Company owner, Integer idCompany);
     List<Order> findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(Company owner, Integer idCompany);
-    Optional<Order> findByIdAndOwnerCompany(Integer idOrder, Company ownerCompany);
+    Optional<Order> findByIdOrderAndOwnerCompany(Integer idOrder, Company ownerCompany);
     List<Order> findByOwnerCompanyAndCompany_idCompanyAndBilledTrueOrderByDateOrderDesc(Company owner, Integer idCompany);
 
 }

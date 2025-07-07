@@ -16,6 +16,7 @@ import com.frederic.clienttra.utils.validators.DtoValidator;
 import com.frederic.clienttra.utils.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,6 +32,7 @@ public class AddressService {
     private final DtoValidator dtoValidator;
     private final AddressValidator addressValidator;
 
+    @Transactional(readOnly = true)
     public List<AddressDTO> getAllAddresses(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
@@ -41,6 +43,7 @@ public class AddressService {
         return addressMapper.toAddressDTOList(entities);
     }
 
+    @Transactional(readOnly = true)
     public AddressDTO getAddress(Integer idCompany, Integer idAddress){
         ownerValidator.checkOwner(idCompany);
 
@@ -49,6 +52,7 @@ public class AddressService {
         return addressMapper.toAddressDTO(entity);
     }
 
+    @Transactional
     public void deleteAddress(Integer idCompany, Integer idAddress){
         ownerValidator.checkOwner(idCompany);
 
@@ -62,6 +66,7 @@ public class AddressService {
         addressRepository.delete(entity);
     }
 
+    @Transactional
     public void createAddress(Integer idCompany, CreateAddressRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
 
@@ -72,6 +77,7 @@ public class AddressService {
         addressRepository.save(entity);
     }
 
+    @Transactional
     public AddressDTO updateAddress(Integer idCompany, Integer idAddress, UpdateAddressRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
         Address entity = addressRepository.findByIdAddressAndCompany_idCompany(idAddress, idCompany)

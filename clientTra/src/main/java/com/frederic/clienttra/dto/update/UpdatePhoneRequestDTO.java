@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdatePhoneRequestDTO implements BasePhoneDTO {
-    private Integer idPhone;
+    //private Integer idPhone;
     private String phoneNumber;
     private String kind;
 }

@@ -47,7 +47,8 @@ public class GlobalExceptionHandler {
             RoleNotFoundException.class,
             SchemeNotFoundException.class,
             ProviderNotFoundException.class,
-            OrderNotFoundException.class
+            OrderNotFoundException.class,
+            ChangeRateNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "El recurso solicitado no existe o no pertenece a tu compañía.", request.getRequestURI());

@@ -58,22 +58,22 @@ public class OrderService {
     public OrderDetailsDTO updateOrder(Integer idCompany, Integer idOrder, UpdateOrderRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        Order order = orderRepository.findByIdAndOwnerCompany(idOrder, owner)
+        Order entity = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
                 .orElseThrow(OrderNotFoundException::new);
 
         // Validar que la orden pertenece a la empresa correcta
-        if (!order.getOwnerCompany().equals(owner) || !order.getCompany().getIdCompany().equals(idCompany)) {
+        if (!entity.getOwnerCompany().equals(owner) || !entity.getCompany().getIdCompany().equals(idCompany)) {
             throw new OrderNotFoundException();
         }
 
         // Actualizar campos básicos
-        orderMapper.updateEntity(order, dto);
+        orderMapper.updateEntity(entity, dto);
 
         // Gestionar líneas (items)
         List<UpdateItemRequestDTO> updatedItemsDTO = dto.getItems() != null ? dto.getItems() : Collections.emptyList();
 
         // Map idItem -> Item existente para facilitar actualización
-        Map<Integer, Item> existingItemsMap = order.getItems().stream()
+        Map<Integer, Item> existingItemsMap = entity.getItems().stream()
                 .filter(i -> i.getIdItem() != null)
                 .collect(Collectors.toMap(Item::getIdItem, i -> i));
 
@@ -83,16 +83,22 @@ public class OrderService {
             if (itemDTO.getIdItem() != null && existingItemsMap.containsKey(itemDTO.getIdItem())) {
                 // Actualizar línea existente
                 Item item = existingItemsMap.get(itemDTO.getIdItem());
-                if (itemDTO.getDescrip() != null) item.setDescrip(itemDTO.getDescrip());
-                if (itemDTO.getQty() != null) item.setQty(itemDTO.getQty());
-                if (itemDTO.getDiscount() != null) item.setDiscount(itemDTO.getDiscount());
+                if (itemDTO.getDescrip() != null){
+                    item.setDescrip(itemDTO.getDescrip());
+                }
+                if (itemDTO.getQty() != null){
+                    item.setQty(itemDTO.getQty());
+                }
+                if (itemDTO.getDiscount() != null){
+                    item.setDiscount(itemDTO.getDiscount());
+                }
                 // El total lo calculamos después
                 updatedItems.add(item);
                 existingItemsMap.remove(itemDTO.getIdItem()); // marcamos que está actualizada
             } else {
                 // Línea nueva
                 Item newItem = itemMapper.toEntity(itemDTO);
-                newItem.setOrder(order);
+                newItem.setOrder(entity);
                 updatedItems.add(newItem);
             }
         }
@@ -100,28 +106,29 @@ public class OrderService {
         // Las que quedaron en existingItemsMap son líneas eliminadas, no las añadimos a updatedItems
 
         // Reemplazar la lista entera en la entidad (orphanRemoval eliminará las que se quitaron)
-        order.setItems(updatedItems);
+        entity.getItems().clear();
+        entity.getItems().addAll(updatedItems);
 
         // Recalcular totales y asignar pedido a cada línea
         double totalOrder = 0.0;
         for (Item item : updatedItems) {
-            item.setOrder(order);
+            item.setOrder(entity);
             double discount = item.getDiscount() != null ? item.getDiscount() : 0.0;
-            double lineTotal = item.getQty() * order.getPricePerUnit() * (1 - discount / 100.0);
+            double lineTotal = item.getQty() * entity.getPricePerUnit() * (1 - discount / 100.0);
             item.setTotal(lineTotal);
             totalOrder += lineTotal;
         }
-        order.setTotal(totalOrder);
+        entity.setTotal(totalOrder);
 
-        orderRepository.save(order);
+        orderRepository.save(entity);
 
-        return orderMapper.toDetailsDto(order);
+        return orderMapper.toDetailsDto(entity);
     }
 
     @Transactional(readOnly = true)
     public OrderDetailsDTO getOrderDetails(Integer idCompany, Integer idOrder) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Order order = orderRepository.findByIdAndOwnerCompany(idOrder, owner)
+        Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
                 .orElseThrow(OrderNotFoundException::new);
         if (!order.getOwnerCompany().equals(owner) || !order.getCompany().getIdCompany().equals(idCompany)) {
             throw new OrderNotFoundException();
@@ -150,7 +157,7 @@ public class OrderService {
     @Transactional
     public void deleteOrder(Integer idCompany, Integer idOrder) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Order order = orderRepository.findByIdAndOwnerCompany(idOrder, owner)
+        Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
                 .orElseThrow(OrderNotFoundException::new);
         if (!order.getOwnerCompany().equals(owner) || !order.getCompany().getIdCompany().equals(idCompany)) {
             throw new OrderNotFoundException();

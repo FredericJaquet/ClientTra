@@ -209,3 +209,4 @@ CREATE TABLE IF NOT EXISTS items (
 -- Datos iniciales
 INSERT INTO roles (role_name) VALUES ('ROLE_ADMIN'), ('ROLE_ACCOUNTING'), ('ROLE_USER');
 INSERT INTO plans (plan_name) VALUES ('FREEMIUM'), ('PREMIUM');
+INSERT INTO change_rates value ('€','€',1);

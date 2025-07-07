@@ -14,6 +14,7 @@ import com.frederic.clienttra.utils.validators.DtoValidator;
 import com.frederic.clienttra.utils.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class BankAccountService {
     private final CompanyRepository companyRepository;
     private final DtoValidator dtoValidator;
 
+    @Transactional(readOnly = true)
     public List<BankAccountDTO> getAllBankAccounts(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
@@ -34,6 +36,7 @@ public class BankAccountService {
         return bankAccountMapper.toBankAccountDTOList(entities);
     }
 
+    @Transactional(readOnly = true)
     public BankAccountDTO getBankAccount(Integer idCompany, Integer idBankAccount){
         ownerValidator.checkOwner(idCompany);
 
@@ -42,6 +45,7 @@ public class BankAccountService {
         return bankAccountMapper.toBankAccountDTO(entity);
     }
 
+    @Transactional
     public void deleteBankAccount(Integer idCompany, Integer idBankAccount){
         ownerValidator.checkOwner(idCompany);
 
@@ -50,6 +54,7 @@ public class BankAccountService {
         bankAccountRepository.delete(entity);
     }
 
+    @Transactional
     public void createBankAccount(Integer idCompany, CreateBankAccountRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
 
@@ -60,6 +65,7 @@ public class BankAccountService {
         bankAccountRepository.save(entity);
     }
 
+    @Transactional
     public BankAccountDTO updateBankAccount(Integer idCompany, Integer idBankAccount, UpdateBankAccountRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
         BankAccount entity = bankAccountRepository.findByIdBankAccountAndCompany_idCompany(idBankAccount, idCompany)

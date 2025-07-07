@@ -15,6 +15,7 @@ import com.frederic.clienttra.utils.validators.DtoValidator;
 import com.frederic.clienttra.utils.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class PhoneService {
     private final CompanyRepository companyRepository;
     private final DtoValidator dtoValidator;
 
+    @Transactional(readOnly = true)
     public List<PhoneDTO> getAllPhones(Integer idCompany){
         ownerValidator.checkOwner(idCompany);
 
@@ -36,6 +38,7 @@ public class PhoneService {
         return phoneMapper.toPhoneDTOList(entities);
     }
 
+    @Transactional(readOnly = true)
     public PhoneDTO getPhone(Integer idCompany, Integer idPhone){
         ownerValidator.checkOwner(idCompany);
 
@@ -44,6 +47,7 @@ public class PhoneService {
         return phoneMapper.toPhoneDTO(entity);
     }
 
+    @Transactional
     public void deletePhone(Integer idCompany, Integer idPhone){
         ownerValidator.checkOwner(idCompany);
 
@@ -52,6 +56,7 @@ public class PhoneService {
         phoneRepository.delete(entity);
     }
 
+    @Transactional
     public void createPhone(Integer idCompany, CreatePhoneRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
 
@@ -62,6 +67,7 @@ public class PhoneService {
         phoneRepository.save(entity);
     }
 
+    @Transactional
     public PhoneDTO updatePhone(Integer idCompany, Integer idPhone, UpdatePhoneRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
         Phone entity = phoneRepository.findByIdPhoneAndCompany_idCompany(idPhone, idCompany)

@@ -1,6 +1,7 @@
 package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.create.CreateBaseCompanyRequestDTO;
+import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.dto.update.UpdateBaseCompanyRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
@@ -118,7 +119,13 @@ public class CompanyMapper {
         }
     }
 
-
+    public BaseCompanyMinimalDTO toBaseCompanyMinimalDTO(Company entity){
+        return BaseCompanyMinimalDTO.builder()
+                .idCompany(entity.getIdCompany())
+                .vatNumber(entity.getVatNumber())
+                .comName(entity.getComName())
+                .build();
+    }
 
     private <T, R> List<R> safeMapToDTO(List<T> list, Function<T, R> mapper) {
         return list == null ? List.of() :

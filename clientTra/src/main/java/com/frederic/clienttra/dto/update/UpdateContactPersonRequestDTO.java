@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateContactPersonRequestDTO implements BaseContactPersonDTO {
-    private Integer idContactPerson;
+    //private Integer idContactPerson;
     private String firstname;
     private String middlename;
     private String lastname;

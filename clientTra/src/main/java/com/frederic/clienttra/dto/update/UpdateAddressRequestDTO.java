@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateAddressRequestDTO implements BaseAddressDTO {
-    private Integer idAddress;
+    //private Integer idAddress;
     private String street;
     private String stNumber;
     private String apt;

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Company> getCurrentCompany() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,23 +43,27 @@ public class CompanyServiceImpl implements CompanyService {
         return Optional.empty();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Company getCurrentCompanyOrThrow() {
         return getCurrentCompany().orElseThrow(CompanyNotFoundForUserException::new);
     }
 
+    @Transactional(readOnly = true)
     public Optional<CompanyOwnerDTO> getCompanyOwnerDTO(){
         Company company=getCurrentCompanyOrThrow();
         CompanyOwnerDTO companyOwnerDTO=companyMapper.toCompanyOwnerDTO(company);
         return Optional.of(companyOwnerDTO);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Company getCompanyById(Integer id){
         return companyRepository.findByIdCompany(id)
                 .orElseThrow(CompanyNotFoundException::new);
     }
 
+    @Transactional
     @Override
     public void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto) {
         Company company = getCurrentCompanyOrThrow();
@@ -69,6 +75,7 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(company);
     }
 
+    @Transactional
     @Override
     public void uploadCompanyLogo(MultipartFile file) {
         if (file == null || file.isEmpty()) {
