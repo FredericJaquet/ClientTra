@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
-public class CustomerController {
+public class CustomerController {//TODO Crear endpoints para clientes habilitados y deshabilitados
 
     private final CustomerService customerService;
 

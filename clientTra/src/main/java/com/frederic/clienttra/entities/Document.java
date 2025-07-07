@@ -1,5 +1,7 @@
 package com.frederic.clienttra.entities;
 
+import com.frederic.clienttra.enums.DocumentStatus;
+import com.frederic.clienttra.enums.DocumentType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -23,10 +25,12 @@ public class Document {
     private String docNumber;
     @Column(nullable = false)
     private LocalDate docDate;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String docType;
+    private DocumentType docType;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String status;
+    private DocumentStatus status;
     @Column(length = 10)
     private String language;
     @Column(nullable = false)

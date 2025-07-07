@@ -135,11 +135,16 @@ CREATE TABLE IF NOT EXISTS scheme_lines (
 );
 
 CREATE TABLE IF NOT EXISTS change_rates (
-  id_change_rate       INT AUTO_INCREMENT PRIMARY KEY, 
-  currency1            VARCHAR(10) NOT NULL DEFAULT '€',
+  id_change_rate       INT AUTO_INCREMENT PRIMARY KEY,
+  currency1            VARCHAR(10) NOT NULL,
   currency2            VARCHAR(10) NOT NULL,
-  rate                 DOUBLE NOT NULL DEFAULT 1
+  rate                 DECIMAL(10,6) NOT NULL DEFAULT 1.000000,
+  date                 DATE NOT NULL,
+  id_owner_company     INT NOT NULL,
+
+  FOREIGN KEY (id_owner_company)	REFERENCES companies(id_company) ON DELETE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS documents (
   id_document          INT AUTO_INCREMENT PRIMARY KEY,
