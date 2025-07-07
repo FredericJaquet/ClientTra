@@ -5,6 +5,7 @@ import com.frederic.clienttra.dto.read.ChangeRateDTO;
 import com.frederic.clienttra.dto.update.UpdateChangeRateRequestDTO;
 import com.frederic.clienttra.entities.ChangeRate;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.exceptions.AccessDeniedException;
 import com.frederic.clienttra.exceptions.ChangeRateNotFoundException;
 import com.frederic.clienttra.mappers.ChangeRateMapper;
 import com.frederic.clienttra.repositories.ChangeRateRepository;
@@ -34,6 +35,17 @@ public class ChangeRateService {
         ChangeRate entity = changeRateRepository.findByOwnerCompanyAndIdChangeRate(owner, idChangeRate)
                 .orElseThrow(ChangeRateNotFoundException::new);
         return changeRateMapper.toDto(entity);
+    }
+
+    @Transactional
+    public ChangeRate getChangeRateByIdAndOwner(Integer idChangeRate, Company owner){
+        Company currentOwner = companyService.getCurrentCompanyOrThrow();
+        if (!owner.equals(currentOwner)) {
+            throw new AccessDeniedException();
+        }
+
+        return changeRateRepository.findByOwnerCompanyAndIdChangeRate(owner, idChangeRate)
+                .orElseThrow(ChangeRateNotFoundException::new);
     }
 
     @Transactional

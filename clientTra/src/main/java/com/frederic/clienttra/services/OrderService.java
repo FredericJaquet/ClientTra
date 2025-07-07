@@ -8,6 +8,7 @@ import com.frederic.clienttra.dto.update.UpdateOrderRequestDTO;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
+import com.frederic.clienttra.exceptions.AccessDeniedException;
 import com.frederic.clienttra.exceptions.OrderNotFoundException;
 import com.frederic.clienttra.mappers.ItemMapper;
 import com.frederic.clienttra.mappers.OrderMapper;
@@ -143,6 +144,17 @@ public class OrderService {
         List<Order> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(owner, idCompany);
 
         return orderMapper.toListDtos(orders);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> getOrdersByIdsAndOwner(List<Integer> orderIds, Company owner) {
+        List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(orderIds, owner);
+
+        if (orders.size() != orderIds.size()) {
+            throw new OrderNotFoundException();
+        }
+
+        return orders;
     }
 
     @Transactional(readOnly = true)

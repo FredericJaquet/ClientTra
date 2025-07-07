@@ -23,7 +23,7 @@ public interface BaseDocumentDTO {
     String getNoteDelivery();
     String getNotePayment();
     LocalDate getDeadline();
-    BaseChangeRateDTO getChangeRate();
-    BaseBankAccountDTO getBankAccount();
-    List<BaseOrderDTO> getOrders();
+    Integer getIdChangeRate();
+    Integer getIdBankAccount();
+    List<Integer> getOrderIds();
 }

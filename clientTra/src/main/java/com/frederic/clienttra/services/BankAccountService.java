@@ -5,6 +5,7 @@ import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
 import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.exceptions.AccessDeniedException;
 import com.frederic.clienttra.exceptions.BankAccountNotFoundException;
 import com.frederic.clienttra.exceptions.CompanyNotFoundException;
 import com.frederic.clienttra.mappers.BankAccountMapper;
@@ -26,6 +27,7 @@ public class BankAccountService {
     private final OwnerValidator ownerValidator;
     private final CompanyRepository companyRepository;
     private final DtoValidator dtoValidator;
+    private final CompanyService companyService;
 
     @Transactional(readOnly = true)
     public List<BankAccountDTO> getAllBankAccounts(Integer idCompany){
@@ -43,6 +45,17 @@ public class BankAccountService {
         BankAccount entity = bankAccountRepository.findByIdBankAccountAndCompany_idCompany(idBankAccount, idCompany)
                 .orElseThrow(BankAccountNotFoundException::new);
         return bankAccountMapper.toBankAccountDTO(entity);
+    }
+
+    @Transactional
+    public BankAccount getBankAccountByIdAndOwner(Integer idBankAccount, Company owner){
+        Company currentOwner = companyService.getCurrentCompanyOrThrow();
+        if (!owner.equals(currentOwner)) {
+            throw new AccessDeniedException();
+        }
+
+        return bankAccountRepository.findByOwnerCompanyAndIdBankAccount(owner, idBankAccount)
+                .orElseThrow(BankAccountNotFoundException::new);
     }
 
     @Transactional
