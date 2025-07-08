@@ -3,43 +3,153 @@ package com.frederic.clienttra.services;
 import com.frederic.clienttra.dto.create.CreateDocumentRequestDTO;
 import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
+import com.frederic.clienttra.dto.update.UpdateDocumentRequestDTO;
+import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
+import com.frederic.clienttra.exceptions.*;
+import com.frederic.clienttra.mappers.DocumentMapper;
+import com.frederic.clienttra.projections.DocumentListProjection;
+import com.frederic.clienttra.repositories.CompanyRepository;
+import com.frederic.clienttra.repositories.CustomerRepository;
+import com.frederic.clienttra.repositories.DocumentRepository;
+import com.frederic.clienttra.repositories.OrderRepository;
+import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerInvoiceService implements DocumentService{
+
+    private final DocumentMapper documentMapper;
+    private final DocumentRepository documentRepository;
+    private final BankAccountService bankAccountService;
+    private final ChangeRateService changeRateService;
+    private final CompanyService companyService;
+    private final OrderService orderService;
+    private final CompanyRepository companyRepository;
+    private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
+    private final DocumentUtils documentUtils;
+
+    @Transactional(readOnly = true)
     @Override
-    public List<DocumentForListDTO> getAllDocumentsByType(DocumentType DOC_TYPE) {
-        return List.of();
+    public List<DocumentForListDTO> getAllDocumentsByType(DocumentType type) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<DocumentListProjection> entities = documentRepository.findListByDocTypeAndOwnerCompany(type, owner);
+
+        return documentMapper.toListDtosFromProjection(entities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<DocumentForListDTO> getDocumentsByCustomerId(DocumentType DOC_TYPE, Integer idCustomer) {
-        return List.of();
+    public List<DocumentForListDTO> getDocumentsByCompanyId(DocumentType type, Integer idCompany) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<DocumentListProjection> entities = documentRepository.findListByDocTypeIdCompanyAndOwnerCompany(type, idCompany, owner);
+
+        return documentMapper.toListDtosFromProjection(entities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<DocumentForListDTO> getDocumentsByStatus(DocumentType DOC_TYPE, DocumentStatus status) {
-        return List.of();
+    public List<DocumentForListDTO> getDocumentsByStatus(DocumentType type, DocumentStatus status) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<DocumentListProjection> entities = documentRepository.findListByDocTypeStatusAndOwnerCompany(type, status, owner);
+
+        return documentMapper.toListDtosFromProjection(entities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<DocumentForListDTO> getDocumentsByCustomerAndStatus(DocumentType DOC_TYPE, Integer idCustomer, DocumentStatus status) {
-        return List.of();
+    public List<DocumentForListDTO> getDocumentsByIdCompanyAndStatus(DocumentType type, Integer idCompany, DocumentStatus status) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        List<DocumentListProjection> entities = documentRepository.findListByDocTypeIdCompanyStatusAndOwnerCompany(type, idCompany, status, owner);
+        return documentMapper.toListDtosFromProjection(entities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public DocumentDTO createDocumentForCustomer(Integer idCompany, CreateDocumentRequestDTO dto, DocumentType DOC_TYPE) {
-        return null;
+    public DocumentDTO getDocumentById(DocumentType type, Integer id) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        Document entity = documentRepository.findByOwnerCompanyIdDocumentAndDocType(owner, id, type)
+                .orElseThrow(DocumentNotFoundException::new);
+
+        return documentMapper.toDto(entity);
     }
 
+    @Transactional
     @Override
-    public String getLastDocumentNumber(DocumentType DOC_TYPE) {
-        return "";
+    public DocumentDTO createDocument(Integer idCompany, CreateDocumentRequestDTO dto, DocumentType DOC_TYPE) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        String notePayment=null;
+        String currency=null;
+        LocalDate deadline=null;
+
+        // 1. Recuperar entidades relacionadas
+        ChangeRate changeRate = changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner);
+        BankAccount bankAccount = dto.getIdBankAccount() != null ? bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner) : null;
+        Document parent = dto.getIdDocumentParent() == null ? null : documentRepository.findByOwnerCompanyAndIdDocument(owner, dto.getIdDocumentParent())
+                .orElseThrow(DocumentNotFoundException::new);
+        List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(dto.getOrderIds(), owner);
+        if (orders.isEmpty()) {
+            throw new CantCreateDocumentWithoutOrdersException();
+        }
+
+        Company company=companyRepository.findByIdCompany(idCompany)
+                .orElseThrow(CompanyNotFoundException::new);
+
+        //2. Campos calculados
+        Customer customer=customerRepository.findByOwnerCompanyAndIdCompany(owner,orders.getFirst().getCompany().getIdCompany())
+                .orElseThrow(CustomerNotFoundException::new);
+
+        notePayment = documentUtils.generateNotePayment(dto.getDocDate(), customer, bankAccount);
+        dto.setNotePayment(notePayment);
+
+        currency = changeRate.getCurrency1();
+        dto.setCurrency(currency);
+        deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
+        dto.setDeadline(deadline);
+
+        // 3. Crear entidad
+        Document entity = documentMapper.toEntity(dto, changeRate, bankAccount, parent, orders);
+        entity.setOwnerCompany(owner);
+        entity.setCompany(company);
+
+        //4. Calcular los totales
+        documentUtils.calculateTotals(entity);
+
+        // 5. Marcar los pedidos como facturados (antes de guardar el documento)
+        orderService.markOrdersAsBilled(orders);
+
+        // 6. Guardar el documento
+        Document newEntity = documentRepository.save(entity);
+
+        return documentMapper.toDto(newEntity);
     }
+
+    @Transactional
+    @Override
+    public void updateDocument(Integer idDocument, CreateDocumentRequestDTO dto) {//TODO Falta este. IMPORTANTE: Comprobar que está en estado PENDING
+
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public String getLastDocumentNumber(DocumentType type) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        return documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type)
+                .orElseThrow(LastNumberNotFoundException::new);
+    }
+
+    //TODO Crear un SoftDelete, con Status="DELETED" y luego modifica las consultas en el Repositorio (c.status not in ('MODIFIED', 'DELETED'), creo
 }

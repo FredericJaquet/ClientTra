@@ -9,10 +9,10 @@ public enum DocumentStatus {
     PENDING("PENDING"),
     PAID("PAID"),
     ACCEPTED("ACCEPTED"),
-    REJECTED("PREJECTED");
+    REJECTED("REJECTED"),
+    MODIFIED("MODIFIED");
 
     private final String code;
-
 
     public static DocumentStatus fromCode(String code) {
         for (DocumentStatus status : values()) {

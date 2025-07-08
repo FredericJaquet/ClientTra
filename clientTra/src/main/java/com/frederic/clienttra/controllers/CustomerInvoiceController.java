@@ -5,6 +5,7 @@ import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
+import com.frederic.clienttra.services.CustomerInvoiceService;
 import com.frederic.clienttra.services.DocumentService;
 import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CustomerInvoiceController {
 
     private final DocumentService documentService;
+    private final CustomerInvoiceService customerInvoiceService;
     private final DocumentUtils documentUtils;
     private static final DocumentType DOC_TYPE = DocumentType.INV_CUST;
 
@@ -28,9 +30,15 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/by-customer/{idCustomer}")
-    public ResponseEntity<List<DocumentForListDTO>> getCustomerInvoicesByCustomer(@PathVariable Integer idCustomer) {
-        List<DocumentForListDTO> result = documentService.getDocumentsByCustomerId(DOC_TYPE, idCustomer);
+    @GetMapping
+    public ResponseEntity<DocumentDTO> getCustomerInvoiceById(@PathVariable Integer idDocument){
+        DocumentDTO dto = customerInvoiceService.getDocumentById(DOC_TYPE, idDocument);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/by-customer/{idCompany}")
+    public ResponseEntity<List<DocumentForListDTO>> getCustomerInvoicesByCustomer(@PathVariable Integer idCompany) {
+        List<DocumentForListDTO> result = documentService.getDocumentsByCompanyId(DOC_TYPE, idCompany);
         return ResponseEntity.ok(result);
     }
 
@@ -40,19 +48,25 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/by-customer/{idCustomer}/by-status")
+    @GetMapping("/by-customer/{idCompany}/by-status")
     public ResponseEntity<List<DocumentForListDTO>> getCustomerInvoicesByCustomerAndStatus(
-            @PathVariable Integer idCustomer,
+            @PathVariable Integer idCompany,
             @RequestParam DocumentStatus status) {
-        List<DocumentForListDTO> result = documentService.getDocumentsByCustomerAndStatus(DOC_TYPE, idCustomer, status);
+        List<DocumentForListDTO> result = documentService.getDocumentsByIdCompanyAndStatus(DOC_TYPE, idCompany, status);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/create/{idCompany}")
     public ResponseEntity<DocumentDTO> createCustomerInvoice(@PathVariable Integer idCompany,
                                                              @RequestBody CreateDocumentRequestDTO dto) {
-        DocumentDTO created = documentService.createDocumentForCustomer(idCompany, dto, DOC_TYPE);
+        DocumentDTO created = documentService.createDocument(idCompany, dto, DOC_TYPE);
         return ResponseEntity.ok(created);
+    }
+
+    @PostMapping("modify-to-new-version/{idDocument}")
+    public ResponseEntity<DocumentDTO> modifyDocumentToCustomerInvoice(@PathVariable Integer idDocument, @RequestBody CreateDocumentRequestDTO dto){
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/last-number")

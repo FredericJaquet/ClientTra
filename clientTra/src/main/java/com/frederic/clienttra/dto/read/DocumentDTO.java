@@ -13,11 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DocumentDTO{
+public class DocumentDTO {
 
     private Integer idDocument;
     private String docNumber;
     private LocalDate docDate;
+
     private DocumentType docType;
     private DocumentStatus status;
     private String language;

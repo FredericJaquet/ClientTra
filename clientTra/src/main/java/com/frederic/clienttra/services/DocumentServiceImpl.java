@@ -66,7 +66,7 @@ public class DocumentServiceImpl {//TODO Separar bien la lógica por Endpoints a
         // 4. Guardar y actualizar pedidos si es factura
         documentRepository.save(entity);//TODO Y la Company?? Le tenemos que asociar la Company (la podemos encontrar el los Orders creo.
         if ("CUSTOMER_INVOICE".equals(dto.getDocType()) || "PROVIDER_INVOICE".equals(dto.getDocType())) {
-            orderService.markOrdersAsBilled(orders);//TODO Implementar este método
+            //TODO Implementar este método
         }
 
         return documentMapper.toDto(entity);

@@ -1,4 +1,4 @@
-package com.frederic.clienttra.utils.validators;
+package com.frederic.clienttra.validators;
 
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.exceptions.AccessDeniedException;

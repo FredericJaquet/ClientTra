@@ -49,7 +49,8 @@ public class GlobalExceptionHandler {
             ProviderNotFoundException.class,
             OrderNotFoundException.class,
             ChangeRateNotFoundException.class,
-            DocumentNotFoundException.class
+            DocumentNotFoundException.class,
+            LastNumberNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "El recurso solicitado no existe o no pertenece a tu compañía.", request.getRequestURI());
@@ -110,7 +111,9 @@ public class GlobalExceptionHandler {
             InvalidSchemePriceException.class,
             InvalidOrderDescriptionException.class,
             InvalidOrderDateException.class,
-            InvalidOrderPriceException.class
+            InvalidOrderPriceException.class,
+            CantCreateDocumentWithoutOrdersException.class,
+            CantModifyPaidInvoiceException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidInput(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Datos inválidos o conflicto con la operación.", request.getRequestURI());

@@ -7,6 +7,7 @@ import com.frederic.clienttra.dto.update.UpdateOrderRequestDTO;
 import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.exceptions.InvalidOrderDescriptionException;
 import com.frederic.clienttra.exceptions.InvalidOrderPriceException;
+import com.frederic.clienttra.projections.OrderListProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +42,7 @@ public class OrderMapper {
                 .toList();
     }
 
-    public OrderListDTO toListDto(Order entity){
+    public OrderListDTO toListDtosFromProjection(OrderListProjection entity){
         return OrderListDTO.builder()
                 .idOrder(entity.getIdOrder())
                 .descrip(entity.getDescrip())
@@ -51,9 +52,25 @@ public class OrderMapper {
                 .build();
     }
 
-    public List<OrderListDTO> toListDtos(List<Order> entities){
+    public OrderListDTO toListDtosFromEntity(Order entity) {
+        return OrderListDTO.builder()
+                .idOrder(entity.getIdOrder())
+                .descrip(entity.getDescrip())
+                .dateOrder(entity.getDateOrder())
+                .total(entity.getTotal())
+                .billed(entity.getBilled())
+                .build();
+    }
+
+    public List<OrderListDTO> toListDtosFromProjection(List<OrderListProjection> entities){
         return entities.stream()
-                .map(this::toListDto)
+                .map(this::toListDtosFromProjection)
+                .toList();
+    }
+
+    public List<OrderListDTO> toListDtosFromEntities(List<Order> entities){
+        return entities.stream()
+                .map(this::toListDtosFromEntity)
                 .toList();
     }
 
@@ -72,7 +89,7 @@ public class OrderMapper {
                 .build();
     }
 
-    public List<Order> toEntities(List<? extends BaseOrderDTO> dtos){//TODO este probablemente nunca se use
+    public List<Order> toEntities(List<? extends BaseOrderDTO> dtos){//TODO este probablemente nunca se use, pero si actualizar varios pedidos a la vez (para marcar como pagado)
         return dtos.stream()
                 .map(this::toEntity)
                 .toList();

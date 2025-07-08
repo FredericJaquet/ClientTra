@@ -33,7 +33,6 @@ CREATE TABLE phones (
   FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS contact_persons (
   id_contact_person    INT AUTO_INCREMENT PRIMARY KEY,
   firstname            VARCHAR(40) NOT NULL,
@@ -144,7 +143,6 @@ CREATE TABLE IF NOT EXISTS change_rates (
 
   FOREIGN KEY (id_owner_company)	REFERENCES companies(id_company) ON DELETE CASCADE
 );
-
 
 CREATE TABLE IF NOT EXISTS documents (
   id_document          INT AUTO_INCREMENT PRIMARY KEY,
