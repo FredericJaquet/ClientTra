@@ -15,8 +15,9 @@ public interface DocumentService {
     List<DocumentForListDTO> getDocumentsByStatus(DocumentType DOC_TYPE, DocumentStatus status);
     List<DocumentForListDTO> getDocumentsByIdCompanyAndStatus(DocumentType DOC_TYPE, Integer idCompany, DocumentStatus status);
     DocumentDTO createDocument(Integer idCompany, CreateDocumentRequestDTO dto, DocumentType DOC_TYPE);
-    void updateDocument(Integer idDocument, CreateDocumentRequestDTO dto);
+    DocumentDTO updateDocument(Integer idDocument, CreateDocumentRequestDTO dto);
     DocumentDTO getDocumentById(DocumentType DOC_TYPE, Integer id);
     String getLastDocumentNumber(DocumentType DOC_TYPE);
+    void deleteDocumentSoft(Integer id);
 
 }

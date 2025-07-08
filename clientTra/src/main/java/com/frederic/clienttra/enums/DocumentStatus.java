@@ -10,7 +10,8 @@ public enum DocumentStatus {
     PAID("PAID"),
     ACCEPTED("ACCEPTED"),
     REJECTED("REJECTED"),
-    MODIFIED("MODIFIED");
+    MODIFIED("MODIFIED"),
+    DELETED("DELETED");
 
     private final String code;
 

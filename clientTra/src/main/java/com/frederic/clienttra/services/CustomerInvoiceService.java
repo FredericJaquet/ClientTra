@@ -138,8 +138,28 @@ public class CustomerInvoiceService implements DocumentService{
 
     @Transactional
     @Override
-    public void updateDocument(Integer idDocument, CreateDocumentRequestDTO dto) {//TODO Falta este. IMPORTANTE: Comprobar que está en estado PENDING
+    public DocumentDTO updateDocument(Integer idDocument, CreateDocumentRequestDTO dto) {//TODO Falta este. IMPORTANTE: Comprobar que está en estado PENDING
 
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Document entityParent = documentRepository.findByOwnerCompanyAndIdDocument(owner,idDocument)
+                .orElseThrow(DocumentNotFoundException::new);
+
+        if(entityParent.getStatus().equals(DocumentStatus.MODIFIED)){
+            throw new CantModifyDocumentAlreadyModified();
+        }
+
+        if(entityParent.getDocType().equals(DocumentType.INV_CUST)){
+            if(!entityParent.getStatus().equals(DocumentStatus.PENDING)){
+                throw new CantModifyPaidInvoiceException();
+            }
+            entityParent.setStatus(DocumentStatus.MODIFIED);
+            documentRepository.save(entityParent);
+        }
+
+        dto.setIdDocumentParent(entityParent.getIdDocument());
+        Integer idCompany=entityParent.getCompany().getIdCompany();
+
+        return createDocument(idCompany,dto,DocumentType.INV_CUST);
     }
 
     @Transactional(readOnly = true)
@@ -151,5 +171,13 @@ public class CustomerInvoiceService implements DocumentService{
                 .orElseThrow(LastNumberNotFoundException::new);
     }
 
-    //TODO Crear un SoftDelete, con Status="DELETED" y luego modifica las consultas en el Repositorio (c.status not in ('MODIFIED', 'DELETED'), creo
+    @Transactional
+    @Override
+    public void deleteDocumentSoft(Integer id) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Document entity = documentRepository.findByOwnerCompanyAndIdDocument(owner, id)
+                .orElseThrow(DocumentNotFoundException::new);
+        entity.setStatus(DocumentStatus.DELETED);
+        documentRepository.save(entity);
+    }
 }
