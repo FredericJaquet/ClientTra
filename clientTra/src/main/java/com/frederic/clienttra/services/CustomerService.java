@@ -10,10 +10,12 @@ import java.util.List;
 
 public interface CustomerService {
     List<CustomerForListDTO> getAllCustomers();
+    List<CustomerForListDTO> getAllCustomersEnabled(boolean enabled);
     CustomerDetailsDTO getCustomerById(int id);
+    List<CustomerForListDTO> searchByNameOrVat(String query);
+    List<BaseCompanyMinimalDTO> getMinimalCustomerList();
     int createCustomer(CreateCustomerRequestDTO dto);
     void updateCustomer(int id, UpdateCustomerRequestDTO dto);
     void disableCustomer(int id);
-    List<CustomerForListDTO> searchByNameOrVat(String query);
-    List<BaseCompanyMinimalDTO> getMinimalCustomerList();
+
 }

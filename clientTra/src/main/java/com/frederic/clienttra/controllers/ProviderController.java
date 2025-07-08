@@ -28,6 +28,26 @@ public class ProviderController {
         return ResponseEntity.ok(providerService.getAllProviders());
     }
 
+    @GetMapping
+    public ResponseEntity<List<ProviderForListDTO>> getAllProvidersEnabled(@RequestParam boolean enabled){
+        return ResponseEntity.ok(providerService.getAllProvidersEnabled(enabled));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProviderDetailsDTO> getProviderById(@PathVariable int id){
+        return ResponseEntity.ok(providerService.getProviderById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProviderForListDTO>> searchProvider(@RequestParam String input){
+        return ResponseEntity.ok(providerService.searchByNameOrVat(input));
+    }
+
+    @GetMapping("minimal-list")
+    public ResponseEntity<List<BaseCompanyMinimalDTO>> getMinimalProviders(){
+        return ResponseEntity.ok(providerService.getMinimalProviderList());
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> createProvider(@Valid @RequestBody CreateProviderRequestDTO dto){
@@ -36,11 +56,6 @@ public class ProviderController {
         return ResponseEntity
                 .created(URI.create("/api/customers/"+newId))
                 .body(new GenericResponseDTO("provider.created.success"));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProviderDetailsDTO> getProviderById(@PathVariable int id){
-        return ResponseEntity.ok(providerService.getProviderById(id));
     }
 
     @PatchMapping("/{id}")
@@ -57,13 +72,4 @@ public class ProviderController {
         return ResponseEntity.ok(new GenericResponseDTO(("provider.deleted.success")));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<ProviderForListDTO>> searchProvider(@RequestParam String input){
-        return ResponseEntity.ok(providerService.searchByNameOrVat(input));
-    }
-
-    @GetMapping("minimal-list")
-    public ResponseEntity<List<BaseCompanyMinimalDTO>> getMinimalProviders(){
-        return ResponseEntity.ok(providerService.getMinimalProviderList());
-    }
 }

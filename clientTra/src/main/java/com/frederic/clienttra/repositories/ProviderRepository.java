@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     Optional<Provider> findByOwnerCompanyAndIdProvider(Company ownerCompany, Integer id);
+    List<ProviderListProjection> findByOwnerCompanyAndEnabled(Company ownerCompany, boolean enabled);
 
     @Query("""
         SELECT p.idProvider AS idProvider,
