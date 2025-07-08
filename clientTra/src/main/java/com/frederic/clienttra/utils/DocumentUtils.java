@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,37 @@ public class DocumentUtils {
         return note.toString();
     }
 
+    public void calculateTotals(Document document){
+        double totalNet=0.0;
+        double totalVat=0.0;
+        double totalWithholding=0.0;
+        double totalGross=0.0;
+        double totalToPay=0.0;
+        List<Order>orders=document.getOrders();
+
+        for(Order order : orders){
+            totalNet=totalNet+order.getTotal();
+        }
+
+        totalVat=totalNet*document.getVatRate();
+        totalWithholding=totalNet*document.getWithholding();
+        totalGross=totalNet+totalVat;
+        totalToPay=totalGross-totalWithholding;
+        document.setTotalNet(totalNet);
+        document.setTotalVat(totalVat);
+        document.setTotalWithholding(totalWithholding);
+        document.setTotalGross(totalGross);
+        document.setTotalToPay(totalToPay);
+    }
+
+    public Double caculateTotalNet(List<Order> orders){
+        double totalNet=0.0;
+        for(Order order : orders){
+            totalNet=totalNet+ order.getTotal();
+        }
+        return totalNet;
+    }
+
     public Double calculateTotalGrossInCurrency2(Document document) {
         if (document.getChangeRate() == null || document.getChangeRate().getIdChangeRate() == 1) {
             return null;
@@ -47,6 +79,18 @@ public class DocumentUtils {
         }
         Double rate = document.getChangeRate().getRate();
         return rate != null ? document.getTotalToPay() * rate : null;
+    }
+
+    public LocalDate calculateDeadline(LocalDate docDate, Integer delay){//TODO implementar método
+        LocalDate deadline;
+        if(delay != null) {
+            deadline = docDate.plusDays(delay);
+        }
+        else{
+            deadline=docDate;
+        }
+
+        return deadline;
     }
 }
 

@@ -1,6 +1,7 @@
 package com.frederic.clienttra.dto.read;
 
 import com.frederic.clienttra.enums.DocumentStatus;
+import com.frederic.clienttra.enums.DocumentType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,4 +20,5 @@ public class DocumentForListDTO {
     private Double totalNet;
     private String currency;
     private DocumentStatus status;
+    private DocumentType type;
 }

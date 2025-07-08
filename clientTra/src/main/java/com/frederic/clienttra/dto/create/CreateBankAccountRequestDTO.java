@@ -1,7 +1,7 @@
 package com.frederic.clienttra.dto.create;
 
 import com.frederic.clienttra.dto.bases.BaseBankAccountDTO;
-import com.frederic.clienttra.utils.validators.ValidIban;
+import com.frederic.clienttra.validators.ValidIban;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

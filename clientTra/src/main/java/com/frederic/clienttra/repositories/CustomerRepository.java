@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
-    List<Customer> findByOwnerCompanyIdCompanyAndEnabledTrue(Integer ownerId);
     List<CustomerListProjection> findByOwnerCompanyAndEnabled(Company ownerCompany, boolean enabled);
     Optional<Customer> findByOwnerCompanyAndIdCustomer(Company ownerCompany, Integer id);
+    Optional<Customer> findByOwnerCompanyAndIdCompany(Company ownerCompany, Integer idCompany);
 
     @Query("""
         SELECT c.idCustomer AS idCustomer,

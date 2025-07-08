@@ -1,5 +1,8 @@
 package com.frederic.clienttra.projections;
 
+import com.frederic.clienttra.enums.DocumentStatus;
+import com.frederic.clienttra.enums.DocumentType;
+
 import java.time.LocalDate;
 
 public interface DocumentListProjection {
@@ -9,5 +12,6 @@ public interface DocumentListProjection {
     LocalDate getDocDate();
     Double getTotalNet();
     String getCurrency();
-    String getDocType();
+    DocumentType getDocType();
+    DocumentStatus getStatus();
 }

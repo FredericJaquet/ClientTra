@@ -6,13 +6,18 @@ import com.frederic.clienttra.dto.read.OrderListDTO;
 import com.frederic.clienttra.dto.update.UpdateItemRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateOrderRequestDTO;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.entities.Document;
 import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
-import com.frederic.clienttra.exceptions.AccessDeniedException;
+import com.frederic.clienttra.enums.DocumentStatus;
+import com.frederic.clienttra.enums.DocumentType;
+import com.frederic.clienttra.exceptions.CantModifyPaidInvoiceException;
 import com.frederic.clienttra.exceptions.OrderNotFoundException;
 import com.frederic.clienttra.mappers.ItemMapper;
 import com.frederic.clienttra.mappers.OrderMapper;
+import com.frederic.clienttra.projections.OrderListProjection;
 import com.frederic.clienttra.repositories.OrderRepository;
+import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,47 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final ItemMapper itemMapper;
+    private final DocumentUtils documentUtils;
+
+    @Transactional(readOnly = true)
+    public OrderDetailsDTO getOrderDetails(Integer idCompany, Integer idOrder) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
+                .orElseThrow(OrderNotFoundException::new);
+        if (!order.getOwnerCompany().equals(owner) || !order.getCompany().getIdCompany().equals(idCompany)) {
+            throw new OrderNotFoundException();
+        }
+        return orderMapper.toDetailsDto(order);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderListDTO> getOrders(Integer idCompany) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<OrderListProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(owner, idCompany);
+
+        return orderMapper.toListDtosFromProjection(orders);
+    }
+
+    @Transactional(readOnly = true)//Esto sirve para enviar los pedidos a un documento.
+    public List<OrderListDTO> getOrdersByIdsAndOwner(List<Integer> orderIds, Company owner) {
+        List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(orderIds, owner);
+
+        if (orders.size() != orderIds.size()) {
+            throw new OrderNotFoundException();
+        }
+
+        return orderMapper.toListDtosFromEntities(orders);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderListDTO> getPendingOrders(Integer idCompany) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<OrderListProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(owner, idCompany);
+
+        return orderMapper.toListDtosFromProjection(orders);
+    }
 
     @Transactional
     public OrderDetailsDTO createOrder(Integer idCompany, CreateOrderRequestDTO dto) {
@@ -61,6 +107,17 @@ public class OrderService {
 
         Order entity = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
                 .orElseThrow(OrderNotFoundException::new);
+
+        List<Document> documents=entity.getDocuments();
+
+        //Comprobar que el pedido no pertenezca a una factura ya pagada.
+        for(Document document : documents){
+            if(document.getDocType().equals(DocumentType.INV_PROV) || document.getDocType().equals(DocumentType.INV_CUST)){
+                if(!document.getStatus().equals(DocumentStatus.PENDING)){
+                    throw new CantModifyPaidInvoiceException();
+                }
+            }
+        }
 
         // Validar que la orden pertenece a la empresa correcta
         if (!entity.getOwnerCompany().equals(owner) || !entity.getCompany().getIdCompany().equals(idCompany)) {
@@ -119,51 +176,17 @@ public class OrderService {
             item.setTotal(lineTotal);
             totalOrder += lineTotal;
         }
-        entity.setTotal(totalOrder);
-
+        if(Math.abs(entity.getTotal() - totalOrder) > 0.01) {//TODO Comprobar que esto funciona.
+            entity.setTotal(totalOrder);
+            if (entity.getDocuments() != null) {
+                for(Document document : entity.getDocuments()) {
+                    documentUtils.calculateTotals(document);
+                }
+            }
+        }
         orderRepository.save(entity);
 
         return orderMapper.toDetailsDto(entity);
-    }
-
-    @Transactional(readOnly = true)
-    public OrderDetailsDTO getOrderDetails(Integer idCompany, Integer idOrder) {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-        Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
-                .orElseThrow(OrderNotFoundException::new);
-        if (!order.getOwnerCompany().equals(owner) || !order.getCompany().getIdCompany().equals(idCompany)) {
-            throw new OrderNotFoundException();
-        }
-        return orderMapper.toDetailsDto(order);
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrderListDTO> getOrders(Integer idCompany) {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-
-        List<Order> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(owner, idCompany);
-
-        return orderMapper.toListDtos(orders);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Order> getOrdersByIdsAndOwner(List<Integer> orderIds, Company owner) {
-        List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(orderIds, owner);
-
-        if (orders.size() != orderIds.size()) {
-            throw new OrderNotFoundException();
-        }
-
-        return orders;
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrderListDTO> getPendingOrders(Integer idCompany) {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-
-        List<Order> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(owner, idCompany);
-
-        return orderMapper.toListDtos(orders);
     }
 
     @Transactional
@@ -175,5 +198,13 @@ public class OrderService {
             throw new OrderNotFoundException();
         }
         orderRepository.delete(order);
+    }
+
+    @Transactional
+    public void markOrdersAsBilled(List<Order> orders){
+        if (orders == null || orders.isEmpty()) {
+            return;
+        }
+        orders.forEach(order -> order.setBilled(true));
     }
 }

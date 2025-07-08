@@ -7,6 +7,7 @@ import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.ChangeRate;
 import com.frederic.clienttra.entities.Document;
 import com.frederic.clienttra.entities.Order;
+import com.frederic.clienttra.projections.DocumentListProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class DocumentMapper {
 
         List<OrderListDTO> orders = entity.getOrders() == null ? List.of() :
                 entity.getOrders().stream()
-                        .map(orderMapper::toListDto)
+                        .map(orderMapper::toListDtosFromEntity)
                         .collect(Collectors.toList());
 
         DocumentMinimalDTO parentDto = null;
@@ -71,6 +72,25 @@ public class DocumentMapper {
         return dto;
     }
 
+    public List<DocumentForListDTO> toListDtosFromProjection(List<DocumentListProjection> entities){
+        return entities.stream()
+                .map(this::toListDtoFromProjection)
+                .toList();
+    }
+
+    public DocumentForListDTO toListDtoFromProjection(DocumentListProjection entity){
+        return DocumentForListDTO.builder()
+                .idDocument(entity.getIdDocument())
+                .comName(entity.getComName())
+                .docNumber(entity.getDocNumber())
+                .docDate(entity.getDocDate())
+                .totalNet(entity.getTotalNet())
+                .currency(entity.getCurrency())
+                .type(entity.getDocType())
+                .status(entity.getStatus())
+                .build();
+    }
+
     public DocumentMinimalDTO toMinimalDto(Document entity) {
         return DocumentMinimalDTO.builder()
                 .idDocument(entity.getIdDocument())
@@ -88,8 +108,8 @@ public class DocumentMapper {
 
         entity.setDocNumber(dto.getDocNumber());
         entity.setDocDate(dto.getDocDate());
-        entity.setDocType(dto.getDocType());   // enum
-        entity.setStatus(dto.getStatus());     // enum
+        entity.setDocType(dto.getDocType());
+        entity.setStatus(dto.getStatus());
         entity.setLanguage(dto.getLanguage());
         entity.setVatRate(dto.getVatRate());
         entity.setWithholding(dto.getWithholding());

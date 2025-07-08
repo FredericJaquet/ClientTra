@@ -1,4 +1,4 @@
-package com.frederic.clienttra.utils.validators;
+package com.frederic.clienttra.validators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

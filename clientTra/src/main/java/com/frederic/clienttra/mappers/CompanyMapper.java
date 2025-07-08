@@ -9,7 +9,7 @@ import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.exceptions.InvalidEmailException;
 import com.frederic.clienttra.exceptions.InvalidLegalNameException;
 import com.frederic.clienttra.exceptions.InvalidVatNumberException;
-import com.frederic.clienttra.utils.validators.EmailValidator;
+import com.frederic.clienttra.validators.EmailValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
