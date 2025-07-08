@@ -28,6 +28,25 @@ public class CustomerController {//TODO Crear endpoints para clientes habilitado
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
+    @GetMapping
+    public ResponseEntity<List<CustomerForListDTO>> getAllCustomersEnabled(@RequestParam boolean enabled){
+        return ResponseEntity.ok(customerService.getAllCustomersEnabled(enabled));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDetailsDTO> getCustomerById(@PathVariable int id) {
+        return ResponseEntity.ok(customerService.getCustomerById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomerForListDTO>> searchCustomers(@RequestParam String input) {
+        return ResponseEntity.ok(customerService.searchByNameOrVat(input));
+    }
+
+    @GetMapping("/minimal-list")
+    public ResponseEntity<List<BaseCompanyMinimalDTO>> getMinimalCustomers() {
+        return ResponseEntity.ok(customerService.getMinimalCustomerList());
+    }
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
@@ -39,11 +58,6 @@ public class CustomerController {//TODO Crear endpoints para clientes habilitado
         return ResponseEntity
                 .created(URI.create("/api/customers/" + newId))
                 .body(new GenericResponseDTO("customer.created.success"));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDetailsDTO> getCustomerById(@PathVariable int id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
     @PatchMapping("/{id}")
@@ -60,13 +74,4 @@ public class CustomerController {//TODO Crear endpoints para clientes habilitado
         return ResponseEntity.ok(new GenericResponseDTO("customer.deleted.success"));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<CustomerForListDTO>> searchCustomers(@RequestParam String input) {
-        return ResponseEntity.ok(customerService.searchByNameOrVat(input));
-    }
-
-    @GetMapping("/minimal-list")
-    public ResponseEntity<List<BaseCompanyMinimalDTO>> getMinimalCustomers() {
-        return ResponseEntity.ok(customerService.getMinimalCustomerList());
-    }
 }

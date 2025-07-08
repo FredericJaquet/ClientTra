@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<Customer> findByOwnerCompanyIdCompanyAndEnabledTrue(Integer ownerId);
-    List<Customer> findByOwnerCompanyAndEnabledTrue(Company ownerCompany);
+    List<CustomerListProjection> findByOwnerCompanyAndEnabled(Company ownerCompany, boolean enabled);
     Optional<Customer> findByOwnerCompanyAndIdCustomer(Company ownerCompany, Integer id);
 
     @Query("""

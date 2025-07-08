@@ -43,6 +43,16 @@ public class ProviderServiceImpl implements  ProviderService{
         return dtos;
     }
 
+    public List<ProviderForListDTO> getAllProvidersEnabled(boolean enabled){
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findByOwnerCompanyAndEnabled(owner, enabled));
+        List<ProviderForListDTO> dtos=providerMapper.toProviderForListDTOS(entities);
+        dtos.sort(Comparator.comparing(ProviderForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+
+        return dtos;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public ProviderDetailsDTO getProviderById(int id) {
@@ -51,6 +61,27 @@ public class ProviderServiceImpl implements  ProviderService{
                 .orElseThrow(ProviderNotFoundException::new);
 
         return providerMapper.toProviderDetailsDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProviderForListDTO> searchByNameOrVat(String input) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        String query = "%" + input + "%";
+
+        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByComNameOrLegalNameOrVatNumber(owner,query));
+        List<ProviderForListDTO> dtos=providerMapper.toProviderForListDTOS(entities);
+        dtos.sort(Comparator.comparing(ProviderForListDTO::getComName, Comparator.nullsLast((String.CASE_INSENSITIVE_ORDER))));
+
+        return dtos;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<BaseCompanyMinimalDTO> getMinimalProviderList() {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        List<ProviderMinimalProjection> entities = providerRepository.findMinimalListByOwnerCompany(owner);
+        return providerMapper.toMinimalDTOs(entities);
     }
 
     @Transactional
@@ -95,24 +126,4 @@ public class ProviderServiceImpl implements  ProviderService{
         providerRepository.save(entity);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<ProviderForListDTO> searchByNameOrVat(String input) {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-        String query = "%" + input + "%";
-
-        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByComNameOrLegalNameOrVatNumber(owner,query));
-        List<ProviderForListDTO> dtos=providerMapper.toProviderForListDTOS(entities);
-        dtos.sort(Comparator.comparing(ProviderForListDTO::getComName, Comparator.nullsLast((String.CASE_INSENSITIVE_ORDER))));
-
-        return dtos;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<BaseCompanyMinimalDTO> getMinimalProviderList() {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-        List<ProviderMinimalProjection> entities = providerRepository.findMinimalListByOwnerCompany(owner);
-        return providerMapper.toMinimalDTOs(entities);
-    }
 }

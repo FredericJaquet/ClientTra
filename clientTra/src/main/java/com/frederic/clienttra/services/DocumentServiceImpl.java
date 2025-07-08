@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DocumentServiceImpl {//TODO Separar bien la lógica por Endpoints antes de llegar aquí
 
-    private final OrderService orderService;
+    /*private final OrderService orderService;
     private final CompanyService companyService;
     private final ChangeRateService changeRateService;
     private final BankAccountService bankAccountService;
@@ -70,6 +70,6 @@ public class DocumentServiceImpl {//TODO Separar bien la lógica por Endpoints a
         }
 
         return documentMapper.toDto(entity);
-    }
+    }*/
 
 }

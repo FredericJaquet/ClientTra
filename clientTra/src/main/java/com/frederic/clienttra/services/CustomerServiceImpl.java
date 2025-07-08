@@ -39,6 +39,25 @@ public class CustomerServiceImpl implements CustomerService {
         return dtos;
     }
 
+    public List<CustomerForListDTO> getAllCustomersEnabled(boolean enabled){
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findByOwnerCompanyAndEnabled(owner, enabled));
+        List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
+        dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+
+        return dtos;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public CustomerDetailsDTO getCustomerById(int id) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
+                .orElseThrow(CustomerNotFoundException::new);
+        return customerMapper.toCustomerDetailsDTO(entity);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<CustomerForListDTO> searchByNameOrVat(String input) {
@@ -54,11 +73,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional(readOnly = true)
     @Override
-    public CustomerDetailsDTO getCustomerById(int id) {
+    public List<BaseCompanyMinimalDTO> getMinimalCustomerList() {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
-                .orElseThrow(CustomerNotFoundException::new);
-        return customerMapper.toCustomerDetailsDTO(entity);
+        List<CustomerMinimalProjection> entities = customerRepository.findMinimalListByOwnerCompany(owner);
+        return customerMapper.toMinimalDTOs(entities);
     }
 
     @Transactional
@@ -107,13 +125,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(entity);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<BaseCompanyMinimalDTO> getMinimalCustomerList() {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-        List<CustomerMinimalProjection> entities = customerRepository.findMinimalListByOwnerCompany(owner);
-        return customerMapper.toMinimalDTOs(entities);
-    }
 
 }
 

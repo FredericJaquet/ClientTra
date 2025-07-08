@@ -9,10 +9,11 @@ import java.util.List;
 
 public interface ProviderService {
     List<ProviderForListDTO> getAllProviders();
+    List<ProviderForListDTO> getAllProvidersEnabled(boolean enabled);
     ProviderDetailsDTO getProviderById(int id);
+    List<ProviderForListDTO> searchByNameOrVat(String query);
+    List<BaseCompanyMinimalDTO> getMinimalProviderList();
     int createProvider(CreateProviderRequestDTO dto);
     void updateProvider(int id, UpdateProviderRequestDTO dto);
     void disableProvider(int id);
-    List<ProviderForListDTO> searchByNameOrVat(String query);
-    List<BaseCompanyMinimalDTO> getMinimalProviderList();
 }

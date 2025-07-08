@@ -22,28 +22,24 @@ public class CustomerInvoiceController {
     private final DocumentUtils documentUtils;
     private static final DocumentType DOC_TYPE = DocumentType.INV_CUST;
 
-    // 🔹 Obtener TODAS las facturas de cliente
     @GetMapping
     public ResponseEntity<List<DocumentForListDTO>> getAllCustomerInvoices() {
         List<DocumentForListDTO> result = documentService.getAllDocumentsByType(DOC_TYPE);
         return ResponseEntity.ok(result);
     }
 
-    // 🔹 Obtener facturas de cliente por idCustomer
     @GetMapping("/by-customer/{idCustomer}")
     public ResponseEntity<List<DocumentForListDTO>> getCustomerInvoicesByCustomer(@PathVariable Integer idCustomer) {
         List<DocumentForListDTO> result = documentService.getDocumentsByCustomerId(DOC_TYPE, idCustomer);
         return ResponseEntity.ok(result);
     }
 
-    // 🔹 Obtener facturas de cliente por estado
     @GetMapping("/by-status")
     public ResponseEntity<List<DocumentForListDTO>> getCustomerInvoicesByStatus(@RequestParam DocumentStatus status) {
         List<DocumentForListDTO> result = documentService.getDocumentsByStatus(DOC_TYPE, status);
         return ResponseEntity.ok(result);
     }
 
-    // 🔹 Obtener facturas de cliente por cliente Y estado
     @GetMapping("/by-customer/{idCustomer}/by-status")
     public ResponseEntity<List<DocumentForListDTO>> getCustomerInvoicesByCustomerAndStatus(
             @PathVariable Integer idCustomer,
@@ -52,7 +48,6 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(result);
     }
 
-    // 🔹 Crear nueva factura de cliente
     @PostMapping("/create/{idCompany}")
     public ResponseEntity<DocumentDTO> createCustomerInvoice(@PathVariable Integer idCompany,
                                                              @RequestBody CreateDocumentRequestDTO dto) {
@@ -60,7 +55,6 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(created);
     }
 
-    // 🔹 Obtener el último número de factura
     @GetMapping("/last-number")
     public ResponseEntity<String> getLastCustomerInvoiceNumber() {
         String lastNumber = documentService.getLastDocumentNumber(DOC_TYPE);
