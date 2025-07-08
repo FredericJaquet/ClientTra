@@ -2,6 +2,6 @@ package com.frederic.clienttra.exceptions;
 
 public class InvalidOrderPriceException extends RuntimeException{
     public InvalidOrderPriceException(){
-        super("invalid.order.price_required");
+        super("validation.order.price_required");
     }
 }

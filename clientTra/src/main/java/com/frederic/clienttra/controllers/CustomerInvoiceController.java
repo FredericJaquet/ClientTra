@@ -1,5 +1,6 @@
 package com.frederic.clienttra.controllers;
 
+import com.frederic.clienttra.dto.GenericResponseDTO;
 import com.frederic.clienttra.dto.create.CreateDocumentRequestDTO;
 import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
@@ -30,7 +31,7 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping
+    @GetMapping("/{idDocument}")
     public ResponseEntity<DocumentDTO> getCustomerInvoiceById(@PathVariable Integer idDocument){
         DocumentDTO dto = customerInvoiceService.getDocumentById(DOC_TYPE, idDocument);
         return ResponseEntity.ok(dto);
@@ -63,15 +64,24 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(created);
     }
 
-    @PostMapping("modify-to-new-version/{idDocument}")
+    @PostMapping("modify-to-new-version/{idDocument}")//USo POST porque aquí no actualizamos, sino que creamos un doc nuevo
     public ResponseEntity<DocumentDTO> modifyDocumentToCustomerInvoice(@PathVariable Integer idDocument, @RequestBody CreateDocumentRequestDTO dto){
 
-        return ResponseEntity.ok(null);
+        DocumentDTO modified = documentService.updateDocument(idDocument,dto);
+
+        return ResponseEntity.ok(modified);
     }
 
     @GetMapping("/last-number")
     public ResponseEntity<String> getLastCustomerInvoiceNumber() {
         String lastNumber = documentService.getLastDocumentNumber(DOC_TYPE);
         return ResponseEntity.ok(lastNumber);
+    }
+
+    @DeleteMapping("/delete/{idDocument}")
+    public ResponseEntity<GenericResponseDTO> deleteCustomerInvoice(@PathVariable Integer idDocument){
+        documentService.deleteDocumentSoft(idDocument);
+
+        return ResponseEntity.ok(new GenericResponseDTO("invoice.deleted.success"));
     }
 }
