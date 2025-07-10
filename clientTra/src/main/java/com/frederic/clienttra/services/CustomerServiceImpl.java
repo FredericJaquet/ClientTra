@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerForListDTO> getAllCustomers() {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner));
+        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner, true));
         List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
         dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
@@ -42,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerForListDTO> getAllCustomersEnabled(boolean enabled){
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findByOwnerCompanyAndEnabled(owner, enabled));
+        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner, enabled));
         List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
         dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 

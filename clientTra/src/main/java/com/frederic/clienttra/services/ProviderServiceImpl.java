@@ -36,7 +36,7 @@ public class ProviderServiceImpl implements  ProviderService{
     @Override
     public List<ProviderForListDTO> getAllProviders() {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByOwnerCompany(owner));
+        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByOwnerCompany(owner, true));
         List<ProviderForListDTO> dtos=providerMapper.toProviderForListDTOS(entities);
         dtos.sort(Comparator.comparing(ProviderForListDTO::getComName, Comparator.nullsLast((String.CASE_INSENSITIVE_ORDER))));
 
@@ -46,7 +46,7 @@ public class ProviderServiceImpl implements  ProviderService{
     public List<ProviderForListDTO> getAllProvidersEnabled(boolean enabled){
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findByOwnerCompanyAndEnabled(owner, enabled));
+        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByOwnerCompany(owner, enabled));
         List<ProviderForListDTO> dtos=providerMapper.toProviderForListDTOS(entities);
         dtos.sort(Comparator.comparing(ProviderForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 

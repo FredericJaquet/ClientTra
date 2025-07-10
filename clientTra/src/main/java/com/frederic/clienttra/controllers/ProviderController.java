@@ -28,7 +28,7 @@ public class ProviderController {
         return ResponseEntity.ok(providerService.getAllProviders());
     }
 
-    @GetMapping
+    @GetMapping("/enabled")
     public ResponseEntity<List<ProviderForListDTO>> getAllProvidersEnabled(@RequestParam boolean enabled){
         return ResponseEntity.ok(providerService.getAllProvidersEnabled(enabled));
     }

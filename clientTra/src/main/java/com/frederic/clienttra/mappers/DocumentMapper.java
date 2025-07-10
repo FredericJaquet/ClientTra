@@ -44,8 +44,8 @@ public class DocumentMapper {
                 .docType(entity.getDocType())
                 .status(entity.getStatus())
                 .language(entity.getLanguage())
-                .vatRate(entity.getVatRate())
-                .withholding(entity.getWithholding())
+                .vatRate(entity.getVatRate()*100)
+                .withholding(entity.getWithholding()*100)
                 .totalNet(entity.getTotalNet())
                 .totalVat(entity.getTotalVat())
                 .totalGross(entity.getTotalGross())
@@ -111,8 +111,8 @@ public class DocumentMapper {
         entity.setDocType(dto.getDocType());
         entity.setStatus(dto.getStatus());
         entity.setLanguage(dto.getLanguage());
-        entity.setVatRate(dto.getVatRate());
-        entity.setWithholding(dto.getWithholding());
+        entity.setVatRate(dto.getVatRate()/100);
+        entity.setWithholding(dto.getWithholding()/100);
         entity.setTotalNet(dto.getTotalNet());
         entity.setTotalVat(dto.getTotalVat());
         entity.setTotalGross(dto.getTotalGross());
@@ -147,7 +147,7 @@ public class DocumentMapper {
             entity.setDocDate(dto.getDocDate());
         }
         if (dto.getStatus() != null) {
-            entity.setStatus(dto.getStatus());     // enum
+            entity.setStatus(dto.getStatus());
         }
         if (dto.getLanguage() != null) {
             entity.setLanguage(dto.getLanguage());
@@ -191,6 +191,5 @@ public class DocumentMapper {
         entity.setDocumentParent(documentParent);
         entity.setOrders(orders);
     }
-
 
 }
