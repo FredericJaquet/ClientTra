@@ -12,9 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
-    List<CustomerListProjection> findByOwnerCompanyAndEnabled(Company ownerCompany, boolean enabled);
     Optional<Customer> findByOwnerCompanyAndIdCustomer(Company ownerCompany, Integer id);
-    Optional<Customer> findByOwnerCompanyAndIdCompany(Company ownerCompany, Integer idCompany);
+    Optional<Customer> findByOwnerCompanyAndCompany(Company ownerCompany, Company company);
 
     @Query("""
         SELECT c.idCustomer AS idCustomer,
@@ -25,9 +24,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
                c.enabled AS enabled
         FROM Customer c
         JOIN c.company co
-        WHERE c.ownerCompany = :owner AND c.enabled = true
+        WHERE c.ownerCompany = :owner AND c.enabled = :enabled
     """)
-    List<CustomerListProjection> findListByOwnerCompany(@Param("owner") Company owner);
+    List<CustomerListProjection> findListByOwnerCompany(@Param("owner") Company owner, @Param("enabled") Boolean enabled);
 
     @Query("""
         SELECT c.idCustomer AS idCustomer,

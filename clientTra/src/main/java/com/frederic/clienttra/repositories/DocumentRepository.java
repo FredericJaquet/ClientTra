@@ -45,7 +45,8 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
             d.docDate AS docDate,
             d.totalNet AS totalNet,
             d.currency AS currency,
-            d.docType AS docType
+            d.docType AS docType,
+            d.status AS status
         FROM Document d
         JOIN d.company c
         WHERE d.ownerCompany = :ownerCompany
@@ -97,12 +98,20 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     List<DocumentListProjection> findListByDocTypeIdCompanyStatusAndOwnerCompany(@Param("docType") DocumentType docType, @Param("idCompany") Integer idCompany, @Param("status") DocumentStatus status, @Param("ownerCompany") Company ownerCompany  );
 
     // 2. Buscar un documento específico por ownerCompany e idDocument
-    Optional<Document> findByOwnerCompanyIdDocumentAndDocType(Company ownerCompany, Integer idDocument, DocumentType docType);
+    Optional<Document> findByOwnerCompanyAndIdDocumentAndDocType(Company ownerCompany, Integer idDocument, DocumentType docType);
 
     // 2. Buscar un documento específico por ownerCompany e idDocument
     Optional<Document> findByOwnerCompanyAndIdDocument(Company ownerCompany, Integer idDocument);
 
     // 3. Buscar el último número de documento para secuencialidad, por ownerCompany y docType
+    @Query("""
+        SELECT d.docNumber
+        FROM Document d
+        WHERE d.ownerCompany = :ownerCompany
+          AND d.docType = :docType
+        ORDER BY d.docNumber DESC
+        LIMIT 1
+    """)
     Optional<String> findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(Company ownerCompany, DocumentType docType);
 
 

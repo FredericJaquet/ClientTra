@@ -57,15 +57,7 @@ public class DocumentUtils {
         document.setTotalToPay(totalToPay);
     }
 
-    public Double caculateTotalNet(List<Order> orders){
-        double totalNet=0.0;
-        for(Order order : orders){
-            totalNet=totalNet+ order.getTotal();
-        }
-        return totalNet;
-    }
-
-    public Double calculateTotalGrossInCurrency2(Document document) {
+    public Double calculateTotalGrossInCurrency2(Document document) {//TODO Tendremos que ver como y donde utilizar esto
         if (document.getChangeRate() == null || document.getChangeRate().getIdChangeRate() == 1) {
             return null;
         }
@@ -81,7 +73,7 @@ public class DocumentUtils {
         return rate != null ? document.getTotalToPay() * rate : null;
     }
 
-    public LocalDate calculateDeadline(LocalDate docDate, Integer delay){//TODO implementar método
+    public LocalDate calculateDeadline(LocalDate docDate, Integer delay){
         LocalDate deadline;
         if(delay != null) {
             deadline = docDate.plusDays(delay);

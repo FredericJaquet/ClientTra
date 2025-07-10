@@ -18,18 +18,14 @@ public class CreateDocumentRequestDTO {
 
     @NotBlank(message="validation.document.doc_number_required")
     private String docNumber;
-
     @NotNull(message="validation.document.doc_date_required")
     private LocalDate docDate;
-
     @NotBlank(message="validation.document.doc_type_required")
     private DocumentType docType;
-
     @NotBlank(message="validation.document.status_required")
-    private DocumentStatus status;
+    private DocumentStatus status;//TODO Pensar si hace falta
 
     private String language = "es";
-
     private Double vatRate = 0.21;
     private Double withholding = 0.15;
 
@@ -43,7 +39,7 @@ public class CreateDocumentRequestDTO {
 
     private String noteDelivery;
     private String notePayment;
-    private LocalDate deadline;
+    private LocalDate deadline;//TODO no sé si hace falta, casí que lo mejor es quitarlo de aquí y actualizar la Entity O simplemente lo omitimos en la creación.
 
     private Integer idChangeRate;
     private Integer idBankAccount;

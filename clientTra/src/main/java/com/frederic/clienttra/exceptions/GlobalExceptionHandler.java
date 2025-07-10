@@ -113,14 +113,18 @@ public class GlobalExceptionHandler {
             InvalidOrderDateException.class,
             InvalidOrderPriceException.class,
             CantCreateDocumentWithoutOrdersException.class,
-            CantModifyPaidInvoiceException.class
+            CantModifyPaidInvoiceException.class,
+            CantIncludeOrderAlreadyBilledException.class,
+            CantIncludeOrderAlreadyBilledException.class,
+            CantIncludeOrderAlreadyBilledException.class,
+            InvalidVatRateException.class,
+            InvalidWithholdingException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidInput(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Datos inválidos o conflicto con la operación.", request.getRequestURI());
     }
 
     // --- Generic (Last chance) ---
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), "Ha ocurrido un error inesperado.", request.getRequestURI());

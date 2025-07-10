@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS documents (
   total_to_pay         DOUBLE NOT NULL DEFAULT 0,
   currency             VARCHAR(10) NOT NULL DEFAULT '€',
   note_delivery        VARCHAR(100),
-  note_payment         VARCHAR(100),
+  note_payment         VARCHAR(255),
   deadline             DATE,
   id_company           INT,
   id_change_rate       INT NOT NULL DEFAULT 1,

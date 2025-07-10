@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
-public class CustomerController {//TODO Crear endpoints para clientes habilitados y deshabilitados
+public class CustomerController {
 
     private final CustomerService customerService;
 
@@ -28,7 +28,7 @@ public class CustomerController {//TODO Crear endpoints para clientes habilitado
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
-    @GetMapping
+    @GetMapping("/enabled")
     public ResponseEntity<List<CustomerForListDTO>> getAllCustomersEnabled(@RequestParam boolean enabled){
         return ResponseEntity.ok(customerService.getAllCustomersEnabled(enabled));
     }

@@ -3,7 +3,6 @@ package com.frederic.clienttra.services;
 import com.frederic.clienttra.dto.create.CreateDocumentRequestDTO;
 import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
-import com.frederic.clienttra.dto.update.UpdateDocumentRequestDTO;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -80,7 +80,7 @@ public class CustomerInvoiceService implements DocumentService{
     public DocumentDTO getDocumentById(DocumentType type, Integer id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        Document entity = documentRepository.findByOwnerCompanyIdDocumentAndDocType(owner, id, type)
+        Document entity = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, id, type)
                 .orElseThrow(DocumentNotFoundException::new);
 
         return documentMapper.toDto(entity);
@@ -88,7 +88,7 @@ public class CustomerInvoiceService implements DocumentService{
 
     @Transactional
     @Override
-    public DocumentDTO createDocument(Integer idCompany, CreateDocumentRequestDTO dto, DocumentType DOC_TYPE) {
+    public DocumentDTO createDocument(Integer idCompany, CreateDocumentRequestDTO dto, DocumentType docType) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         String notePayment=null;
         String currency=null;
@@ -104,11 +104,21 @@ public class CustomerInvoiceService implements DocumentService{
             throw new CantCreateDocumentWithoutOrdersException();
         }
 
+        //Verificar que los % son correctos
+        if(dto.getVatRate()<1){
+            throw new InvalidVatRateException();
+        }
+        if(dto.getWithholding()<1){
+            throw new InvalidWithholdingException();
+        }
+
+        Company orderCompany = getCompany(idCompany, orders, parent);
+
         Company company=companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
 
         //2. Campos calculados
-        Customer customer=customerRepository.findByOwnerCompanyAndIdCompany(owner,orders.getFirst().getCompany().getIdCompany())
+        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 
         notePayment = documentUtils.generateNotePayment(dto.getDocDate(), customer, bankAccount);
@@ -118,6 +128,7 @@ public class CustomerInvoiceService implements DocumentService{
         dto.setCurrency(currency);
         deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
         dto.setDeadline(deadline);
+        dto.setDocType(docType);
 
         // 3. Crear entidad
         Document entity = documentMapper.toEntity(dto, changeRate, bankAccount, parent, orders);
@@ -138,7 +149,7 @@ public class CustomerInvoiceService implements DocumentService{
 
     @Transactional
     @Override
-    public DocumentDTO updateDocument(Integer idDocument, CreateDocumentRequestDTO dto) {//TODO Falta este. IMPORTANTE: Comprobar que está en estado PENDING
+    public DocumentDTO updateDocument(Integer idDocument, CreateDocumentRequestDTO dto) {
 
         Company owner = companyService.getCurrentCompanyOrThrow();
         Document entityParent = documentRepository.findByOwnerCompanyAndIdDocument(owner,idDocument)
@@ -173,11 +184,32 @@ public class CustomerInvoiceService implements DocumentService{
 
     @Transactional
     @Override
-    public void deleteDocumentSoft(Integer id) {
+    public void softDeleteDocument(Integer id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Document entity = documentRepository.findByOwnerCompanyAndIdDocument(owner, id)
                 .orElseThrow(DocumentNotFoundException::new);
         entity.setStatus(DocumentStatus.DELETED);
         documentRepository.save(entity);
     }
+
+    private static Company getCompany(Integer idCompany, List<Order> orders, Document parent) {
+        Company orderCompany= orders.getFirst().getCompany();
+
+        for(Order order : orders){
+            // Verifica si el pedido ya está vinculado a otra factura activa
+            if (order.getBilled() != null && order.getBilled()) {
+                // Busca si el pedido está en la factura "padre"
+                boolean isPartOfModifiedInvoice = parent != null && parent.getOrders().contains(order);
+
+                if (!isPartOfModifiedInvoice) {
+                    throw new CantIncludeOrderAlreadyBilledException();
+                }
+            }
+            if(!Objects.equals(orderCompany.getIdCompany(), idCompany)){
+                throw new OrderDoNotBelowToCompanyException();
+            }
+        }
+        return orderCompany;
+    }
+
 }

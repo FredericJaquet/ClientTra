@@ -11,6 +11,7 @@ import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
+import com.frederic.clienttra.exceptions.CantCreateOrderWithoutItemsException;
 import com.frederic.clienttra.exceptions.CantModifyPaidInvoiceException;
 import com.frederic.clienttra.exceptions.OrderNotFoundException;
 import com.frederic.clienttra.mappers.ItemMapper;
@@ -88,6 +89,9 @@ public class OrderService {
         // Asocia cada línea al pedido y calcula totales
         double totalOrder = 0.0;
         List<Item> items = order.getItems();
+        if(items.isEmpty()){
+            throw new CantCreateOrderWithoutItemsException();
+        }
         for (Item item : items) {
             item.setOrder(order);
             double discount = item.getDiscount() != null ? item.getDiscount() : 0.0;

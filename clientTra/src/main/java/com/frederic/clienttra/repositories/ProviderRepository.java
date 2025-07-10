@@ -13,7 +13,6 @@ import java.util.Optional;
 
 public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     Optional<Provider> findByOwnerCompanyAndIdProvider(Company ownerCompany, Integer id);
-    List<ProviderListProjection> findByOwnerCompanyAndEnabled(Company ownerCompany, boolean enabled);
 
     @Query("""
         SELECT p.idProvider AS idProvider,
@@ -24,9 +23,9 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
                p.enabled AS enabled
         FROM Provider p
         JOIN p.company co
-        WHERE p.ownerCompany = :owner AND p.enabled = true
+        WHERE p.ownerCompany = :owner AND p.enabled = :enabled
     """)
-    List<ProviderListProjection> findListByOwnerCompany(@Param("owner") Company owner);
+    List<ProviderListProjection> findListByOwnerCompany(@Param("owner") Company owner, @Param("enabled") boolean enabled);
 
     @Query("""
         SELECT p.idProvider AS idProvider,

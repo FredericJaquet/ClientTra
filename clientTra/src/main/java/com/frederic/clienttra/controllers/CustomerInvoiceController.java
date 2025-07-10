@@ -22,7 +22,6 @@ public class CustomerInvoiceController {
 
     private final DocumentService documentService;
     private final CustomerInvoiceService customerInvoiceService;
-    private final DocumentUtils documentUtils;
     private static final DocumentType DOC_TYPE = DocumentType.INV_CUST;
 
     @GetMapping
@@ -31,7 +30,7 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{idDocument}")
+    @GetMapping("/by-id/{idDocument}")
     public ResponseEntity<DocumentDTO> getCustomerInvoiceById(@PathVariable Integer idDocument){
         DocumentDTO dto = customerInvoiceService.getDocumentById(DOC_TYPE, idDocument);
         return ResponseEntity.ok(dto);
@@ -64,7 +63,7 @@ public class CustomerInvoiceController {
         return ResponseEntity.ok(created);
     }
 
-    @PostMapping("modify-to-new-version/{idDocument}")//USo POST porque aquí no actualizamos, sino que creamos un doc nuevo
+    @PostMapping("modify-to-new-version/{idDocument}")//Uso POST porque aquí no actualizamos, sino que creamos un doc nuevo
     public ResponseEntity<DocumentDTO> modifyDocumentToCustomerInvoice(@PathVariable Integer idDocument, @RequestBody CreateDocumentRequestDTO dto){
 
         DocumentDTO modified = documentService.updateDocument(idDocument,dto);
@@ -80,7 +79,7 @@ public class CustomerInvoiceController {
 
     @DeleteMapping("/delete/{idDocument}")
     public ResponseEntity<GenericResponseDTO> deleteCustomerInvoice(@PathVariable Integer idDocument){
-        documentService.deleteDocumentSoft(idDocument);
+        documentService.softDeleteDocument(idDocument);
 
         return ResponseEntity.ok(new GenericResponseDTO("invoice.deleted.success"));
     }
