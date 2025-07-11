@@ -31,7 +31,7 @@ public class SchemeService {
     private final SchemeMapper schemeMapper;
     private final SchemeLineMapper schemeLineMapper;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<SchemeDTO> getAllSchemes(Integer idCompany){
         Company owner = companyService.getCurrentCompanyOrThrow();
 
@@ -40,7 +40,7 @@ public class SchemeService {
         return schemeMapper.toDtos(entities);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public SchemeDTO getScheme(Integer idCompany, Integer idScheme){
         Company owner = companyService.getCurrentCompanyOrThrow();
 

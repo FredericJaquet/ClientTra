@@ -1,6 +1,7 @@
 package com.frederic.clienttra.repositories;
 
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.entities.Customer;
 import com.frederic.clienttra.entities.Provider;
 import com.frederic.clienttra.projections.ProviderListProjection;
 import com.frederic.clienttra.projections.ProviderMinimalProjection;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     Optional<Provider> findByOwnerCompanyAndIdProvider(Company ownerCompany, Integer id);
+    Optional<Provider> findByOwnerCompanyAndCompany(Company ownerCompany, Company company);
 
     @Query("""
         SELECT p.idProvider AS idProvider,

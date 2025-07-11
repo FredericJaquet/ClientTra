@@ -1,13 +1,13 @@
 package com.frederic.clienttra.mappers;
 
+import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
 import com.frederic.clienttra.dto.read.*;
-import com.frederic.clienttra.dto.create.CreateDocumentRequestDTO;
-import com.frederic.clienttra.dto.update.UpdateDocumentRequestDTO;
 import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.ChangeRate;
 import com.frederic.clienttra.entities.Document;
 import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.projections.DocumentListProjection;
+import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +21,7 @@ public class DocumentMapper {
     private final ChangeRateMapper changeRateMapper;
     private final BankAccountMapper bankAccountMapper;
     private final OrderMapper orderMapper;
+    private final DocumentUtils documentUtils;
 
     public DocumentDTO toDto(Document entity) {
         if (entity == null) {
@@ -54,6 +55,7 @@ public class DocumentMapper {
                 .currency(entity.getCurrency())
                 .noteDelivery(entity.getNoteDelivery())
                 .notePayment(entity.getNotePayment())
+                .noteComment(entity.getNoteComment())
                 .deadline(entity.getDeadline())
                 .changeRate(changeRateMapper.toDto(entity.getChangeRate()))
                 .bankAccount(bankAccountMapper.toBankAccountDTO(entity.getBankAccount()))
@@ -99,7 +101,7 @@ public class DocumentMapper {
                 .build();
     }
 
-    public Document toEntity(CreateDocumentRequestDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {
+    public Document toEntity(BaseDocumentDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {
         if (dto == null) {
             return null;
         }
@@ -113,14 +115,10 @@ public class DocumentMapper {
         entity.setLanguage(dto.getLanguage());
         entity.setVatRate(dto.getVatRate()/100);
         entity.setWithholding(dto.getWithholding()/100);
-        entity.setTotalNet(dto.getTotalNet());
-        entity.setTotalVat(dto.getTotalVat());
-        entity.setTotalGross(dto.getTotalGross());
-        entity.setTotalWithholding(dto.getTotalWithholding());
-        entity.setTotalToPay(dto.getTotalToPay());
         entity.setCurrency(dto.getCurrency());
         entity.setNoteDelivery(dto.getNoteDelivery());
         entity.setNotePayment(dto.getNotePayment());
+        entity.setNoteComment(dto.getNoteComment());
         entity.setDeadline(dto.getDeadline());
 
         if (changeRate != null) {
@@ -139,7 +137,7 @@ public class DocumentMapper {
         return entity;
     }
 
-    public void updateEntity(Document entity, UpdateDocumentRequestDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {//Usamos un CreateDocumentRequestDTO, porque no vamos a actualizar, sino crear un documento nuevo
+    public void updateEntity(Document entity, BaseDocumentDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {
         if (dto.getDocNumber() != null) {
             entity.setDocNumber(dto.getDocNumber());
         }
@@ -153,25 +151,10 @@ public class DocumentMapper {
             entity.setLanguage(dto.getLanguage());
         }
         if (dto.getVatRate() != null) {
-            entity.setVatRate(dto.getVatRate());
+            entity.setVatRate(dto.getVatRate()/100);
         }
         if (dto.getWithholding() != null) {
-            entity.setWithholding(dto.getWithholding());
-        }
-        if (dto.getTotalNet() != null) {
-            entity.setTotalNet(dto.getTotalNet());
-        }
-        if (dto.getTotalVat() != null) {
-            entity.setTotalVat(dto.getTotalVat());
-        }
-        if (dto.getTotalGross() != null) {
-            entity.setTotalGross(dto.getTotalGross());
-        }
-        if (dto.getTotalWithholding() != null) {
-            entity.setTotalWithholding(dto.getTotalWithholding());
-        }
-        if (dto.getTotalToPay() != null) {
-            entity.setTotalToPay(dto.getTotalToPay());
+            entity.setWithholding(dto.getWithholding()/100);
         }
         if (dto.getCurrency() != null) {
             entity.setCurrency(dto.getCurrency());
@@ -182,6 +165,9 @@ public class DocumentMapper {
         if (dto.getNotePayment() != null) {
             entity.setNotePayment(dto.getNotePayment());
         }
+        if(dto.getNoteComment() != null){
+            entity.setNoteComment(dto.getNoteComment());
+        }
         if (dto.getDeadline() != null) {
             entity.setDeadline(dto.getDeadline());
         }
@@ -190,6 +176,7 @@ public class DocumentMapper {
         entity.setBankAccount(bankAccount);
         entity.setDocumentParent(documentParent);
         entity.setOrders(orders);
+        documentUtils.calculateTotals(entity);
     }
 
 }
