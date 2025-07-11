@@ -161,6 +161,7 @@ CREATE TABLE IF NOT EXISTS documents (
   currency             VARCHAR(10) NOT NULL DEFAULT '€',
   note_delivery        VARCHAR(100),
   note_payment         VARCHAR(255),
+  note_comment	       VARCHAR(1000),
   deadline             DATE,
   id_company           INT,
   id_change_rate       INT NOT NULL DEFAULT 1,
