@@ -36,6 +36,7 @@ public class DocumentDTO {
 
     private String noteDelivery;
     private String notePayment;
+    private String noteComment;
     private LocalDate deadline;
 
     private ChangeRateDTO changeRate;

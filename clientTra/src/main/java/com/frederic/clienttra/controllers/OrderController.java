@@ -22,7 +22,6 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<List<OrderListDTO>> getOrders(@PathVariable Integer idCompany) {
         List<OrderListDTO> orders = orderService.getOrders(idCompany);
         return ResponseEntity.ok(orders);
@@ -36,7 +35,6 @@ public class OrderController {
     }
 
     @GetMapping("/{idOrder}")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<OrderDetailsDTO> getOrder(@PathVariable Integer idCompany,
                                                     @PathVariable Integer idOrder) {
         OrderDetailsDTO order = orderService.getOrderDetails(idCompany, idOrder);

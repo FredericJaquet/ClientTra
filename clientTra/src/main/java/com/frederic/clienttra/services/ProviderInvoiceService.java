@@ -9,10 +9,7 @@ import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.exceptions.*;
 import com.frederic.clienttra.mappers.DocumentMapper;
 import com.frederic.clienttra.projections.DocumentListProjection;
-import com.frederic.clienttra.repositories.CompanyRepository;
-import com.frederic.clienttra.repositories.CustomerRepository;
-import com.frederic.clienttra.repositories.DocumentRepository;
-import com.frederic.clienttra.repositories.OrderRepository;
+import com.frederic.clienttra.repositories.*;
 import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +21,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerInvoiceService implements DocumentService{
+public class ProviderInvoiceService implements DocumentService{
 
     private final DocumentMapper documentMapper;
     private final DocumentRepository documentRepository;
@@ -33,7 +30,7 @@ public class CustomerInvoiceService implements DocumentService{
     private final CompanyService companyService;
     private final OrderService orderService;
     private final CompanyRepository companyRepository;
-    private final CustomerRepository customerRepository;
+    private final ProviderRepository providerRepository;
     private final OrderRepository orderRepository;
     private final DocumentUtils documentUtils;
 
@@ -41,7 +38,9 @@ public class CustomerInvoiceService implements DocumentService{
     @Override
     public List<DocumentForListDTO> getAllDocumentsByType(DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         List<DocumentListProjection> entities = documentRepository.findListByDocTypeAndOwnerCompany(type, owner);
+
         return documentMapper.toListDtosFromProjection(entities);
     }
 
@@ -49,7 +48,9 @@ public class CustomerInvoiceService implements DocumentService{
     @Override
     public List<DocumentForListDTO> getDocumentsByCompanyId(DocumentType type, Integer idCompany) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         List<DocumentListProjection> entities = documentRepository.findListByDocTypeIdCompanyAndOwnerCompany(type, idCompany, owner);
+
         return documentMapper.toListDtosFromProjection(entities);
     }
 
@@ -57,7 +58,9 @@ public class CustomerInvoiceService implements DocumentService{
     @Override
     public List<DocumentForListDTO> getDocumentsByStatus(DocumentType type, DocumentStatus status) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         List<DocumentListProjection> entities = documentRepository.findListByDocTypeStatusAndOwnerCompany(type, status, owner);
+
         return documentMapper.toListDtosFromProjection(entities);
     }
 
@@ -73,24 +76,17 @@ public class CustomerInvoiceService implements DocumentService{
     @Override
     public DocumentDTO getDocumentById(DocumentType type, Integer id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         Document entity = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, id, type)
                 .orElseThrow(DocumentNotFoundException::new);
+
         return documentMapper.toDto(entity);
-    }
-
-    @Transactional(readOnly = true)
-    public String getLastDocumentNumber(DocumentType type) {
-        Company owner = companyService.getCurrentCompanyOrThrow();
-
-        return documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type)
-                .orElseThrow(LastNumberNotFoundException::new);
     }
 
     @Transactional
     @Override
     public DocumentDTO createDocument(Integer idCompany, BaseDocumentDTO dto, DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        String notePayment=null;
         String currency=null;
         LocalDate deadline=null;
 
@@ -118,23 +114,20 @@ public class CustomerInvoiceService implements DocumentService{
                 .orElseThrow(CompanyNotFoundException::new);
 
         //2. Campos calculados
-        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
-                .orElseThrow(CustomerNotFoundException::new);
-
-        notePayment = documentUtils.generateNotePayment(dto.getDocDate(), customer, bankAccount);
+        Provider provider=providerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
+                .orElseThrow(ProviderNotFoundException::new);
 
         currency = changeRate.getCurrency1();
-        deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
+        deadline = documentUtils.calculateDeadline(dto.getDocDate(), provider.getDuedate());
+
 
         // 3. Crear entidad
         Document entity = documentMapper.toEntity(dto, changeRate, bankAccount, parent, orders);
         entity.setOwnerCompany(owner);
         entity.setCompany(company);
-        entity.setNotePayment(notePayment);
         entity.setCurrency(currency);
         entity.setDeadline(deadline);
         entity.setDocType(type);
-        entity.setStatus(DocumentStatus.PENDING);
 
         //4. Calcular los totales
         documentUtils.calculateTotals(entity);
@@ -151,16 +144,15 @@ public class CustomerInvoiceService implements DocumentService{
     @Transactional
     @Override
     public DocumentDTO updateDocument(Integer idDocument, BaseDocumentDTO dto, DocumentType type) {
-
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Document entityParent = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, idDocument, type)
+        Document entityParent = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner,idDocument, type)
                 .orElseThrow(DocumentNotFoundException::new);
 
         if(entityParent.getStatus().equals(DocumentStatus.MODIFIED)){
             throw new CantModifyDocumentAlreadyModified();
         }
 
-        if(entityParent.getDocType().equals(DocumentType.INV_CUST)){
+        if(entityParent.getDocType().equals(DocumentType.INV_PROV)){
             if(!entityParent.getStatus().equals(DocumentStatus.PENDING)){
                 throw new CantModifyPaidInvoiceException();
             }
@@ -171,7 +163,7 @@ public class CustomerInvoiceService implements DocumentService{
         dto.setIdDocumentParent(entityParent.getIdDocument());
         Integer idCompany=entityParent.getCompany().getIdCompany();
 
-        return createDocument(idCompany,dto,DocumentType.INV_CUST);
+        return createDocument(idCompany,dto,DocumentType.INV_PROV);
     }
 
     @Transactional
@@ -203,5 +195,4 @@ public class CustomerInvoiceService implements DocumentService{
         }
         return orderCompany;
     }
-
 }

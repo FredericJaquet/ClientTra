@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerInvoiceService implements DocumentService{
+public class QuoteService implements DocumentService{
 
     private final DocumentMapper documentMapper;
     private final DocumentRepository documentRepository;
@@ -90,7 +90,6 @@ public class CustomerInvoiceService implements DocumentService{
     @Override
     public DocumentDTO createDocument(Integer idCompany, BaseDocumentDTO dto, DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        String notePayment=null;
         String currency=null;
         LocalDate deadline=null;
 
@@ -121,26 +120,20 @@ public class CustomerInvoiceService implements DocumentService{
         Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 
-        notePayment = documentUtils.generateNotePayment(dto.getDocDate(), customer, bankAccount);
-
         currency = changeRate.getCurrency1();
+
         deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
 
         // 3. Crear entidad
         Document entity = documentMapper.toEntity(dto, changeRate, bankAccount, parent, orders);
         entity.setOwnerCompany(owner);
         entity.setCompany(company);
-        entity.setNotePayment(notePayment);
         entity.setCurrency(currency);
         entity.setDeadline(deadline);
         entity.setDocType(type);
-        entity.setStatus(DocumentStatus.PENDING);
 
         //4. Calcular los totales
         documentUtils.calculateTotals(entity);
-
-        // 5. Marcar los pedidos como facturados (antes de guardar el documento)
-        orderService.markOrdersAsBilled(orders);
 
         // 6. Guardar el documento
         Document newEntity = documentRepository.save(entity);
@@ -151,27 +144,42 @@ public class CustomerInvoiceService implements DocumentService{
     @Transactional
     @Override
     public DocumentDTO updateDocument(Integer idDocument, BaseDocumentDTO dto, DocumentType type) {
-
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Document entityParent = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, idDocument, type)
+
+        Document entity = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, idDocument, type)
                 .orElseThrow(DocumentNotFoundException::new);
 
-        if(entityParent.getStatus().equals(DocumentStatus.MODIFIED)){
-            throw new CantModifyDocumentAlreadyModified();
+        ChangeRate changeRate = changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner);
+        BankAccount bankAccount = dto.getIdBankAccount() != null ? bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner) : null;
+        List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(dto.getOrderIds(), owner);
+
+        if(orders.isEmpty()) {
+            throw new CantCreateDocumentWithoutOrdersException();
         }
 
-        if(entityParent.getDocType().equals(DocumentType.INV_CUST)){
-            if(!entityParent.getStatus().equals(DocumentStatus.PENDING)){
-                throw new CantModifyPaidInvoiceException();
-            }
-            entityParent.setStatus(DocumentStatus.MODIFIED);
-            documentRepository.save(entityParent);
+        Company orderCompany = orders.getFirst().getCompany();
+        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
+                .orElseThrow(CustomerNotFoundException::new);
+
+        if (dto.getVatRate() < 1) {
+            throw new InvalidVatRateException();
+        }
+        if (dto.getWithholding() < 1) {
+            throw new InvalidWithholdingException();
         }
 
-        dto.setIdDocumentParent(entityParent.getIdDocument());
-        Integer idCompany=entityParent.getCompany().getIdCompany();
+        documentMapper.updateEntity(entity, dto, changeRate, bankAccount, null, orders);
 
-        return createDocument(idCompany,dto,DocumentType.INV_CUST);
+        String notePayment=documentUtils.generateNotePayment(dto.getDocDate(),customer,bankAccount);
+        String currency = changeRate.getCurrency1();
+        LocalDate deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
+        entity.setNotePayment(notePayment);
+        entity.setCurrency(currency);
+        entity.setDeadline(deadline);
+
+        Document newEntity = documentRepository.save(entity);
+
+        return documentMapper.toDto(newEntity);
     }
 
     @Transactional
@@ -203,5 +211,4 @@ public class CustomerInvoiceService implements DocumentService{
         }
         return orderCompany;
     }
-
 }

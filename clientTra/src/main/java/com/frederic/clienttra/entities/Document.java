@@ -53,6 +53,8 @@ public class Document {
     private String noteDelivery;
     @Column(length = 255)
     private String notePayment;
+    @Column(length = 1000)
+    private String noteComment;
     @Column
     private LocalDate deadline;
     @ManyToOne(fetch = FetchType.LAZY)
