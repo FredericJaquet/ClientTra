@@ -24,8 +24,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class QuoteService implements DocumentService{
-
+public class PurchaseOrderService implements DocumentService{
     private final DocumentMapper documentMapper;
     private final DocumentRepository documentRepository;
     private final BankAccountService bankAccountService;

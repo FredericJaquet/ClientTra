@@ -6,7 +6,6 @@ import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.projections.DocumentListProjection;
 import com.frederic.clienttra.projections.DocumentMinimalProjection;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,13 +24,14 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
             d.docDate AS docDate,
             d.totalNet AS totalNet,
             d.currency AS currency,
+            d.status AS status,
             d.docType AS docType
         FROM Document d
         JOIN d.company c
         WHERE d.ownerCompany = :ownerCompany
           AND d.docType = :docType
           AND c.idCompany = :idCompany
-          AND d.status NOT IN ('MODIFIED')
+          AND d.status NOT IN ('MODIFIED','DELETED')
         ORDER BY d.docDate DESC, d.docNumber DESC
     """)
     List<DocumentListProjection> findListByDocTypeIdCompanyAndOwnerCompany(@Param("docType") DocumentType docType,@Param("idCompany") Integer idCompany,@Param("ownerCompany") Company ownerCompany  );
@@ -52,7 +52,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
         WHERE d.ownerCompany = :ownerCompany
           AND d.docType = :docType
           AND d.status = :status
-          AND d.status NOT IN ('MODIFIED')
+          AND d.status NOT IN ('MODIFIED','DELETED')
         ORDER BY d.docDate DESC, d.docNumber DESC
     """)
     List<DocumentListProjection> findListByDocTypeStatusAndOwnerCompany(@Param("docType") DocumentType docType, @Param("status") DocumentStatus status, @Param("ownerCompany") Company ownerCompany  );
@@ -66,12 +66,13 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
             d.docDate AS docDate,
             d.totalNet AS totalNet,
             d.currency AS currency,
+            d.status AS status,
             d.docType AS docType
         FROM Document d
         JOIN d.company c
         WHERE d.ownerCompany = :ownerCompany
           AND d.docType = :docType
-          AND d.status NOT IN ('MODIFIED')
+          AND d.status NOT IN ('MODIFIED','DELETED')
         ORDER BY d.docDate DESC, d.docNumber DESC
     """)
     List<DocumentListProjection> findListByDocTypeAndOwnerCompany(@Param("docType") DocumentType docType, @Param("ownerCompany") Company ownerCompany  );
@@ -85,6 +86,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
             d.docDate AS docDate,
             d.totalNet AS totalNet,
             d.currency AS currency,
+            d.status AS status,
             d.docType AS docType
         FROM Document d
         JOIN d.company c
@@ -92,7 +94,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
           AND d.docType = :docType
           AND d.status = :status
           AND c.idCompany = :idCompany
-          AND d.status NOT IN ('MODIFIED')
+          AND d.status NOT IN ('MODIFIED','DELETED')
         ORDER BY d.docDate DESC, d.docNumber DESC
     """)
     List<DocumentListProjection> findListByDocTypeIdCompanyStatusAndOwnerCompany(@Param("docType") DocumentType docType, @Param("idCompany") Integer idCompany, @Param("status") DocumentStatus status, @Param("ownerCompany") Company ownerCompany  );
@@ -123,7 +125,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
         FROM Document d
         WHERE d.ownerCompany = :ownerCompany
           AND d.docType = :docType
-          AND d.status NOT IN ('MODIFIED')
+          AND d.status NOT IN ('MODIFIED','DELETED')
         ORDER BY d.docNumber DESC
     """)
     List<DocumentMinimalProjection> findMinimalListByOwnerCompanyAndDocType(@Param("ownerCompany") Company ownerCompany,@Param("docType") String docType);

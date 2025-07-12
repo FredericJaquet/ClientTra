@@ -7,7 +7,7 @@ import com.frederic.clienttra.dto.read.DocumentForListDTO;
 import com.frederic.clienttra.dto.update.UpdateDocumentRequestDTO;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
-import com.frederic.clienttra.services.QuoteService;
+import com.frederic.clienttra.services.PurchaseOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/quotes")
+@RequestMapping("/api/pos")
 @RequiredArgsConstructor
-public class QuoteController {
+public class PurchaseOrderController {
 
-    private final QuoteService documentService;
-    private static final DocumentType DOC_TYPE = DocumentType.QUOTE;
+    private final PurchaseOrderService documentService;
+    private static final DocumentType DOC_TYPE =  DocumentType.PO;
 
     @GetMapping
     public ResponseEntity<List<DocumentForListDTO>> getAllQuotes() {
@@ -61,7 +61,7 @@ public class QuoteController {
     @PostMapping("/create/{idCompany}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<DocumentDTO> createQuote(@PathVariable Integer idCompany,
-                                                             @Valid @RequestBody CreateDocumentRequestDTO dto) {
+                                                   @Valid @RequestBody CreateDocumentRequestDTO dto) {
         DocumentDTO created = documentService.createDocument(idCompany, dto, DOC_TYPE);
         return ResponseEntity.ok(created);
     }
