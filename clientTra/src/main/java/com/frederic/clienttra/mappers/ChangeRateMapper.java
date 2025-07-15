@@ -5,8 +5,10 @@ import com.frederic.clienttra.dto.create.CreateChangeRateRequestDTO;
 import com.frederic.clienttra.dto.read.ChangeRateDTO;
 import com.frederic.clienttra.dto.update.UpdateChangeRateRequestDTO;
 import com.frederic.clienttra.entities.ChangeRate;
+import com.frederic.clienttra.entities.Company;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,7 @@ public class ChangeRateMapper {
     public List<ChangeRateDTO> toDtos(List<ChangeRate> entities) {
         return entities.stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ChangeRateDTO toDto(ChangeRate entity) {
@@ -45,6 +47,22 @@ public class ChangeRateMapper {
                 .rate(dto.getRate())
                 .date(dto.getDate())
                 .build();
+    }
+
+    public ChangeRate toEntity(CreateChangeRateRequestDTO dto, Company ownerCompany) {
+        return ChangeRate.builder()
+                .currency1(dto.getCurrency1())
+                .currency2(dto.getCurrency2())
+                .rate(dto.getRate())
+                .date(dto.getDate())
+                .ownerCompany(ownerCompany)
+                .build();
+    }
+
+    public List<ChangeRate> toEntities(List<CreateChangeRateRequestDTO> dtos, Company ownercompany){
+        return dtos.stream()
+                .map(dto -> toEntity(dto, ownercompany))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void updateEntity(ChangeRate entity, UpdateChangeRateRequestDTO dto) {

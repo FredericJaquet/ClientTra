@@ -1,16 +1,17 @@
 package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
+import com.frederic.clienttra.dto.create.CreateOrderRequestDTO;
+import com.frederic.clienttra.dto.demo.DemoCompanyDTO;
+import com.frederic.clienttra.dto.demo.DemoDocumentDTO;
 import com.frederic.clienttra.dto.read.*;
-import com.frederic.clienttra.entities.BankAccount;
-import com.frederic.clienttra.entities.ChangeRate;
-import com.frederic.clienttra.entities.Document;
-import com.frederic.clienttra.entities.Order;
+import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.projections.DocumentListProjection;
 import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class DocumentMapper {
         List<OrderListDTO> orders = entity.getOrders() == null ? List.of() :
                 entity.getOrders().stream()
                         .map(orderMapper::toListDtosFromEntity)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toCollection(ArrayList::new));
 
         DocumentMinimalDTO parentDto = null;
         if (entity.getDocumentParent() != null) {
@@ -77,7 +78,7 @@ public class DocumentMapper {
     public List<DocumentForListDTO> toListDtosFromProjection(List<DocumentListProjection> entities){
         return entities.stream()
                 .map(this::toListDtoFromProjection)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public DocumentForListDTO toListDtoFromProjection(DocumentListProjection entity){
@@ -135,6 +136,34 @@ public class DocumentMapper {
         }
 
         return entity;
+    }
+
+    public Document toEntity(DemoDocumentDTO dto, Company ownerCompany, Company company){
+        List<Order> orders = new ArrayList<>(orderMapper.toEntities(dto.getOrders(), ownerCompany, company));
+
+        return Document.builder()
+                .docNumber(dto.getDocNumber())
+                .docDate(dto.getDocDate())
+                .docType(dto.getDocType())
+                .status(dto.getStatus())
+                .language(dto.getLanguage())
+                .vatRate(dto.getVatRate())
+                .withholding(dto.getWithholding())
+                .totalNet(dto.getTotalNet())
+                .totalVat(dto.getTotalVat())
+                .totalGross(dto.getTotalGross())
+                .totalWithholding(dto.getTotalWithholding())
+                .totalToPay(dto.getTotalToPay())
+                .currency(dto.getCurrency())
+                .noteDelivery(dto.getNoteDelivery())
+                .notePayment(dto.getNotePayment())
+                .noteComment(dto.getNoteComment())
+                .deadline(dto.getDeadline())
+                .changeRate(ownerCompany.getChangeRates().get(0))
+                .bankAccount(ownerCompany.getBankAccounts().get(0))
+                .orders(orders)
+                .ownerCompany(ownerCompany)
+                .build();
     }
 
     public void updateEntity(Document entity, BaseDocumentDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {

@@ -1,0 +1,38 @@
+{
+  "vatNumber": "ESB12345678",
+  "comName": "Test Company",
+  "legalName": "Test Company",
+  "email": "testcompany@example.com",
+  "web": "https://www.testcompany.com",
+
+  "addresses":
+  [
+    {
+      "street": "Calle Falsa Demo",
+      "stNumber": "123 demo",
+      "apt": "1A",
+      "cp": "28080",
+      "city": "Madrid",
+      "state": "Madrid",
+      "country": "España"
+    }
+  ],
+  "bankAccounts":
+  [
+    {
+      "iban": "ES9121000418450200051332",
+      "swift": "DEMOBBXXX",
+      "branch": "Oficina Central",
+      "holder": "Test Company S.L."
+    }
+  ],
+  "changeRates":
+  [
+    {
+      "currency1": "€",
+      "currency2": "€",
+      "rate": 1.0,
+      "date": "2025-01-01"
+    }
+  ]
+}

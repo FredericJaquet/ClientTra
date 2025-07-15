@@ -72,11 +72,18 @@ public class Document {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_owner_company", nullable = false)
     private Company ownerCompany;
-    @ManyToMany
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "document_orders",
             joinColumns = @JoinColumn(name = "id_document"),
             inverseJoinColumns = @JoinColumn(name = "id_order")
     )
     private List<Order> orders = new ArrayList<>();
+
+    public void addOrder(Order order){
+        if(orders==null){
+            orders = new ArrayList();
+        }
+        orders.add(order);
+    }
 }

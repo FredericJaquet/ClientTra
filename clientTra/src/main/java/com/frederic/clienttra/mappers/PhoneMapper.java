@@ -9,7 +9,9 @@ import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.Phone;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class PhoneMapper {
@@ -21,7 +23,7 @@ public class PhoneMapper {
                          .phoneNumber(p.getPhoneNumber())
                          .kind(p.getKind())
                          .build())
-                 .toList();
+                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public PhoneDTO toPhoneDTO(Phone phone){

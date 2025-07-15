@@ -1,0 +1,481 @@
+[
+{
+  "docNumber": "2025-1.001",
+  "docDate": "2025-07-13",
+  "docType": "INV_CUST",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 68,
+  "totalVat": 14.28,
+  "totalGross": 82.28,
+  "totalWithholding": 10.2,
+  "totalToPay": 72.08,
+  "currency": "string",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 3 days",
+  "notePayment": "",
+  "noteComment": "",
+  "deadline": "2025-08-12",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "bankAccount": {
+    "idBankAccount": 1,
+   },
+  "orders": [
+    {
+      "descrip": "Order 1 - Customer 1",
+      "dateOrder": "2025-07-08",
+      "pricePerUnit": 0.06,
+      "units": "word",
+      "total": 36,
+      "billed": true,
+      "fieldName": "Medical",
+      "sourceLanguage": "en",
+      "targetLanguage": "es",
+      "items": [
+        {
+          "descrip": "Line 1 Order 1 - Customer 1",
+          "qty": 100,
+          "discount": 0,
+          "total": 6
+        },
+        {
+          "descrip": "Line 2 Order 1 - Customer 1",
+          "qty": 500,
+          "discount": 0.5,
+          "total": 15
+        },
+        {
+          "descrip": "Line 3 Order 1 - Customer 1",
+          "qty": 1000,
+          "discount": 0.75,
+          "total":  15
+        }
+      ]
+    },
+    {
+      "descrip": "Order 2 - Customer 1",
+      "dateOrder": "2025-07-10",
+      "pricePerUnit": 0.04,
+      "units": "palabra",
+      "total": 32,
+      "billed": true,
+      "fieldName": "Industry",
+      "sourceLanguage": "es",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Line 1 Order 2 - Customer 1",
+          "qty": 400,
+          "discount": 0,
+          "total": 16
+        },
+        {
+          "descrip": "Line 2 Order 2 - Customer 1",
+          "qty": 800,
+          "discount": 0.5,
+          "total": 16
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-1.Q01",
+  "docDate": "2025-07-03",
+  "docType": "QUOTE",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 320,
+  "totalVat": 67.20,
+  "totalGross": 387.20,
+  "totalWithholding": 48.0,
+  "totalToPay": 315.12,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 4 days",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "bankAccount": {
+    "idBankAccount": 1,
+   },
+  "orders": [
+    {
+      "descrip": "Order 3 - Customer 1",
+      "dateOrder": "2025-07-11",
+      "pricePerUnit": 1,
+      "units": "€",
+      "total": 320,
+      "billed": false,
+      "fieldName": "Industry",
+      "sourceLanguage": "es",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Line 1 Order 3 - Customer 1",
+          "qty": 320,
+          "discount": 0,
+          "total": 320
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-1.002",
+  "docDate": "2025-07-31",
+  "docType": "INV_CUST",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 72,
+  "totalVat": 15.12,
+  "totalGross": 87.12,
+  "totalWithholding": 10.8,
+  "totalToPay": 76.32,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 1 day",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "bankAccount": {
+    "idBankAccount": 1,
+   },
+  "orders": [
+    {
+      "descrip": "Order 1 - Customer 2",
+      "dateOrder": "2025-06-08",
+      "pricePerUnit": 0.06,
+      "units": "palabra",
+      "total": 72,
+      "billed": true,
+      "fieldName": "Construction",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Line 1 Order 1 - Customer 2",
+          "qty": 200,
+          "discount": 0,
+          "total": 12
+        },
+        {
+          "descrip": "Line 2 Order 1 - Customer 2",
+          "qty": 1500,
+          "discount": 0.5,
+          "total": 45
+        },
+        {
+          "descrip": "Line 3 Order 1 - Customer 2",
+          "qty": 1000,
+          "discount": 0.75,
+          "total":  15
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-1.Q02",
+  "docDate": "2025-07-23",
+  "docType": "QUOTE",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 70,
+  "totalVat": 14.70,
+  "totalGross": 84.70,
+  "totalWithholding": 10.50,
+  "totalToPay": 74.20,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 1 day",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "bankAccount": {
+    "idBankAccount": 1,
+   },
+  "orders": [
+    {
+      "descrip": "Order 2 - Customer 2",
+      "dateOrder": "2025-06-18",
+      "pricePerUnit": 35,
+      "units": "Hora",
+      "total": 70,
+      "billed": false,
+      "fieldName": "Interpretation",
+      "sourceLanguage": "es",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Line 1 Order 2 - Customer 2",
+          "qty": 2,
+          "discount": 0,
+          "total": 70
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-2.PROV001",
+  "docDate": "2025-07-31",
+  "docType": "INV_PROV",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 68,
+  "totalVat": 14.28,
+  "totalGross": 82.28,
+  "totalWithholding": 10.20,
+  "totalToPay": 72.08,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 4 days",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "orders": [
+    {
+      "descrip": "Order 1 - Provider 1",
+      "dateOrder": "2025-07-09",
+      "pricePerUnit": 0.06,
+      "units": "mot",
+      "total": 36,
+      "billed": true,
+      "fieldName": "Chemistry",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Ligne 1 Commande 1 - Fournisseur 1",
+          "qty": 100,
+          "discount": 0,
+          "total": 6
+        },
+        {
+          "descrip": "Ligne 2 Commande 1 - Fournisseur 1",
+          "qty": 500,
+          "discount": 0.5,
+          "total": 15
+        },
+        {
+          "descrip": "Ligne 3 Commande 1 - Fournisseur 1",
+          "qty": 1000,
+          "discount": 0.75,
+          "total": 15
+        }
+      ]
+    },
+    {
+      "descrip": "Order 2 - Provider 1",
+      "dateOrder": "2025-07-15",
+      "pricePerUnit": 32,
+      "units": "Heure",
+      "total": 32,
+      "billed": true,
+      "fieldName": "Industry",
+      "sourceLanguage": "es",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Ligne 1 Commande 2 - Fournisseur 1",
+          "qty": 1,
+          "discount": 0,
+          "total": 32
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-1.PO01",
+  "docDate": "2025-07-24",
+  "docType": "PO",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 70,
+  "totalVat": 14.70,
+  "totalGross": 84.70,
+  "totalWithholding": 10.50,
+  "totalToPay": 74.20,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 1 day",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "orders": [
+    {
+      "descrip": "Order 3 - Provider 1",
+      "dateOrder": "2025-06-18",
+      "pricePerUnit": 1,
+      "units": "€",
+      "total": 70,
+      "billed": false,
+      "fieldName": "Interpretation",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Ligne 1 Commande 3 - Fournisseur 1",
+          "qty": 70,
+          "discount": 0,
+          "total": 70
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-2.PROV002",
+  "docDate": "2025-07-31",
+  "docType": "INV_PROV",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 116,
+  "totalVat": 24.36,
+  "totalGross": 140.36,
+  "totalWithholding": 17.40,
+  "totalToPay": 122.96,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 1 day",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "orders": [
+    {
+      "descrip": "Order 1 - Provider 2",
+      "dateOrder": "2025-07-12",
+      "pricePerUnit": 0.06,
+      "units": "word",
+      "total": 36,
+      "billed": true,
+      "fieldName": "Construction",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "items": [
+        {
+          "descrip": "Line 1 Order 1 - Provider 2",
+          "qty": 100,
+          "discount": 0,
+          "total": 6
+        },
+        {
+          "descrip": "Line 2 Order 1 - Provider 2",
+          "qty": 500,
+          "discount": 0.5,
+          "total": 15
+        },
+        {
+          "descrip": "Line 3 Order 1 - Provider 2",
+          "qty": 1000,
+          "discount": 0.75,
+          "total": 15
+        }
+      ]
+    },
+    {
+      "descrip": "Order 2 - Provider 2",
+      "dateOrder": "2025-07-18",
+      "pricePerUnit": 40,
+      "units": "Hour",
+      "total": 80,
+      "billed": true,
+      "fieldName": "Interpretation",
+      "sourceLanguage": "es",
+      "targetLanguage": "en",
+      "items": [
+        {
+          "descrip": "Line 1 Order 2 - Provider 2",
+          "qty": 2,
+          "discount": 0,
+          "total": 80
+        }
+      ]
+    }
+  ]
+},
+{
+  "docNumber": "2025-1.PO02",
+  "docDate": "2025-07-04",
+  "docType": "PO",
+  "status": "PENDING",
+  "language": "es",
+  "vatRate": 0.21,
+  "withholding": 0.15,
+  "totalNet": 60,
+  "totalVat": 12.60,
+  "totalGross": 72.60,
+  "totalWithholding": 9.00,
+  "totalToPay": 63.60,
+  "currency": "€",
+  "totalGrossInCurrency2": 0.0,
+  "totalToPayInCurrency2": 0.0,
+  "noteDelivery": "DeadLine - 1 day",
+  "notePayment": "",
+  "noteComment": "",
+  "changeRate": {
+    "idChangeRate": 1,
+  },
+  "orders": [
+    {
+      "descrip": "Order 3 - Provider 2",
+      "dateOrder": "2025-06-22",
+      "pricePerUnit": 1,
+      "units": "€",
+      "total": 60,
+      "billed": false,
+      "fieldName": "General",
+      "sourceLanguage": "fr",
+      "targetLanguage": "en",
+      "items": [
+        {
+          "descrip": "Line 1 Order 3 - Provider 2",
+          "qty": 60,
+          "discount": 0,
+          "total": 60
+        }
+      ]
+    }
+  ]
+}
+]
+
+
+

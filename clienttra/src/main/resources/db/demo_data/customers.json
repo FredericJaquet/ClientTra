@@ -1,0 +1,451 @@
+[
+  {
+    "vatNumber": "ES12345678A",
+    "comName": "Cliente de prueba 1",
+    "legalName": "Cliente de prueba 1 SL",
+    "email": "cliente@clientedeprueba1.com",
+    "web": "www.clientedeprueba1.com",
+    "contactPersons": [
+      {
+        "firstname": "Laura",
+        "middlename": "Pérez",
+        "lastname": "Pérez",
+        "role": "Project Manager",
+        "email": "laura@clientedeprueba1.com"
+      }
+    ],
+    "phones":[
+      {
+        "phoneNumber": "1234567689",
+        "kind": "Fijo"
+      }
+    ],
+    "addresses": [
+      {
+        "street": "Gran Vía",
+        "stNumber": "45",
+        "cp": "28013",
+        "city": "Madrid",
+        "state": "Madrid",
+        "country": "España"
+      }
+    ],
+    "bankAccounts": [
+    {
+      "iban": "ES123456789123",
+      "swift": "ESBBCC",
+      "branch": "Banc Sabadell",
+      "holder": "cliente2"
+    }
+  ],
+    "schemes":[
+    {
+      "schemeName": "Scheme Cliente1",
+      "price": 0.04,
+      "units": "words",
+      "fieldName": "Industry",
+      "sourceLanguage": "Spanish",
+      "targetLanguage": "French",
+      "schemeLines": [
+        {
+          "descrip": "No Match",
+          "discount": 0.0
+        },
+        {
+          "descrip": "50-95%",
+          "discount": 0.5
+        },
+        {
+          "descrip": "100%",
+          "discount": 0.9
+        }
+      ]
+    }
+  ],
+    "documents":[
+    {
+      "docNumber": "2025-1.001",
+      "docDate": "2025-07-13",
+      "docType": "INV_CUST",
+      "status": "PENDING",
+      "language": "es",
+      "vatRate": 0.21,
+      "withholding": 0.15,
+      "totalNet": 68,
+      "totalVat": 14.28,
+      "totalGross": 82.28,
+      "totalWithholding": 10.2,
+      "totalToPay": 72.08,
+      "currency": "string",
+      "noteDelivery": "DeadLine - 3 days",
+      "notePayment": "",
+      "noteComment": "",
+      "deadline": "2025-08-12",
+      "orders": [
+        {
+          "descrip": "Order 1 - Customer 1",
+          "dateOrder": "2025-07-08",
+          "pricePerUnit": 0.06,
+          "units": "word",
+          "total": 36,
+          "billed": true,
+          "fieldName": "Medical",
+          "sourceLanguage": "en",
+          "targetLanguage": "es",
+          "items": [
+            {
+              "descrip": "Line 1 Order 1 - Customer 1",
+              "qty": 100,
+              "discount": 0,
+              "total": 6
+            },
+            {
+              "descrip": "Line 2 Order 1 - Customer 1",
+              "qty": 500,
+              "discount": 0.5,
+              "total": 15
+            },
+            {
+              "descrip": "Line 3 Order 1 - Customer 1",
+              "qty": 1000,
+              "discount": 0.75,
+              "total":  15
+            }
+          ]
+        },
+        {
+          "descrip": "Order 2 - Customer 1",
+          "dateOrder": "2025-07-10",
+          "pricePerUnit": 0.04,
+          "units": "palabra",
+          "total": 32,
+          "billed": true,
+          "fieldName": "Industry",
+          "sourceLanguage": "es",
+          "targetLanguage": "fr",
+          "items": [
+            {
+              "descrip": "Line 1 Order 2 - Customer 1",
+              "qty": 400,
+              "discount": 0,
+              "total": 16
+            },
+            {
+              "descrip": "Line 2 Order 2 - Customer 1",
+              "qty": 800,
+              "discount": 0.5,
+              "total": 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "docNumber": "2025-1.Q01",
+       "docDate": "2025-07-03",
+      "docType": "QUOTE",
+      "status": "PENDING",
+      "language": "es",
+      "vatRate": 0.21,
+      "withholding": 0.15,
+      "totalNet": 320,
+      "totalVat": 67.20,
+      "totalGross": 387.20,
+      "totalWithholding": 48.0,
+      "totalToPay": 315.12,
+      "currency": "€",
+      "noteDelivery": "DeadLine - 4 days",
+      "notePayment": "",
+      "noteComment": "",
+      "orders": [
+        {
+          "descrip": "Order 3 - Customer 1",
+          "dateOrder": "2025-07-11",
+          "pricePerUnit": 1,
+          "units": "€",
+          "total": 320,
+          "billed": false,
+          "fieldName": "Industry",
+          "sourceLanguage": "es",
+          "targetLanguage": "fr",
+          "items": [
+            {
+              "descrip": "Line 1 Order 3 - Customer 1",
+              "qty": 320,
+              "discount": 0,
+              "total": 320
+            }
+          ]
+        }
+      ]
+    }
+  ],
+    "orders":[
+      {
+        "descrip": "Order 4 - Customer 1",
+        "dateOrder": "2025-07-15",
+        "units": "word",
+        "pricePerUnit": 0.06,
+        "total": 36,
+        "billed": false,
+        "fieldName": "Medical",
+        "sourceLanguage": "en",
+        "targetLanguage": "es",
+        "items": [
+          {
+            "descrip": "Line 1 Order 4 - Customer 1",
+            "qty": 100,
+            "discount": 0,
+            "total": 6
+          },
+          {
+            "descrip": "Line 2 Order 4 - Customer 1",
+            "qty": 500,
+            "discount": 0.5,
+            "total": 15
+          },
+          {
+            "descrip": "Line 3 Order 4 - Customer 1",
+            "qty": 1000,
+            "discount": 0.75,
+            "total":  15
+          }
+        ]
+      },
+      {
+        "descrip": "Order 5 - Customer 1",
+        "dateOrder": "2025-07-10",
+        "pricePerUnit": 0.04,
+        "units": "palabra",
+        "total": 32,
+        "billed": false,
+        "fieldName": "Industry",
+        "sourceLanguage": "es",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Line 1 Order 5 - Customer 1",
+            "qty": 400,
+            "discount": 0,
+            "total": 16
+          },
+          {
+            "descrip": "Line 2 Order 5 - Customer 1",
+            "qty": 800,
+            "discount": 0.5,
+            "total": 16
+          }
+        ]
+      },
+      {
+        "descrip": "Order 6 - Customer 1",
+        "dateOrder": "2025-07-11",
+        "pricePerUnit": 1,
+        "units": "€",
+        "total": 320,
+        "billed": false,
+        "fieldName": "Industry",
+        "sourceLanguage": "es",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Line 1 Order 6 - Customer 1",
+            "qty": 320,
+            "discount": 0,
+            "total": 320
+          }
+        ]
+      }
+    ],
+    "defaultLanguage": "es",
+    "defaultVAT": 0.21,
+    "defaultWithholding": 0.15,
+    "invoicingMethod": "laura@clientedeprueba1.com",
+    "payMethod": "BankTransfer",
+    "duedate": 30,
+    "europe": true
+  },
+  {
+    "vatNumber": "ES789456123A",
+    "comName": "Cliente de prueba 2",
+    "legalName": "Cliente de prueba 2 SL",
+    "email": "cliente@clientedeprueba2.com",
+    "web": "www.clientedeprueba2.com",
+    "contactPersons": [
+      {
+        "firstname": "Arnold",
+        "middlename": "VanDam",
+        "role": "Project Manager",
+        "email": "arnold@clientedeprueba2.com"
+      }
+    ],
+    "phones": [
+      {
+        "phoneNumber": "987654321",
+        "kind": "Movíl"
+      }
+    ],
+    "addresses": [
+      {
+        "street": "Avenida falsa",
+        "stNumber": "32",
+        "apt": "1B",
+        "cp": "09003",
+        "city": "Burgos",
+        "state": "Burgos",
+        "country": "España"
+      }
+    ],
+    "documents": [
+      {
+        "docNumber": "2025-1.002",
+        "docDate": "2025-07-31",
+        "docType": "INV_CUST",
+        "status": "PENDING",
+        "language": "es",
+        "vatRate": 0.21,
+        "withholding": 0.15,
+        "totalNet": 72,
+        "totalVat": 15.12,
+        "totalGross": 87.12,
+        "totalWithholding": 10.8,
+        "totalToPay": 76.32,
+        "currency": "€",
+        "noteDelivery": "DeadLine - 1 day",
+        "notePayment": "",
+        "noteComment": "",
+        "orders": [
+          {
+            "descrip": "Order 1 - Customer 2",
+            "dateOrder": "2025-06-08",
+            "pricePerUnit": 0.06,
+            "units": "palabra",
+            "total": 72,
+            "billed": true,
+            "fieldName": "Construction",
+            "sourceLanguage": "en",
+            "targetLanguage": "fr",
+            "items": [
+              {
+                "descrip": "Line 1 Order 1 - Customer 2",
+                "qty": 200,
+                "discount": 0,
+                "total": 12
+              },
+              {
+                "descrip": "Line 2 Order 1 - Customer 2",
+                "qty": 1500,
+                "discount": 0.5,
+                "total": 45
+              },
+              {
+                "descrip": "Line 3 Order 1 - Customer 2",
+                "qty": 1000,
+                "discount": 0.75,
+                "total": 15
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "docNumber": "2025-1.Q02",
+        "docDate": "2025-07-23",
+        "docType": "QUOTE",
+        "status": "PENDING",
+        "language": "es",
+        "vatRate": 0.21,
+        "withholding": 0.15,
+        "totalNet": 70,
+        "totalVat": 14.70,
+        "totalGross": 84.70,
+        "totalWithholding": 10.50,
+        "totalToPay": 74.20,
+        "currency": "€",
+        "noteDelivery": "DeadLine - 1 day",
+        "notePayment": "",
+        "noteComment": "",
+        "orders": [
+          {
+            "descrip": "Order 2 - Customer 2",
+            "dateOrder": "2025-06-18",
+            "pricePerUnit": 35,
+            "units": "Hora",
+            "total": 70,
+            "billed": false,
+            "fieldName": "Interpretation",
+            "sourceLanguage": "es",
+            "targetLanguage": "fr",
+            "items": [
+              {
+                "descrip": "Line 1 Order 2 - Customer 2",
+                "qty": 2,
+                "discount": 0,
+                "total": 70
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "orders": [
+      {
+        "descrip": "Order 3 - Customer 2",
+        "dateOrder": "2025-06-08",
+        "pricePerUnit": 0.06,
+        "units": "palabra",
+        "total": 72,
+        "billed": false,
+        "fieldName": "Construction",
+        "sourceLanguage": "en",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Line 1 Order 3 - Customer 2",
+            "qty": 200,
+            "discount": 0,
+            "total": 12
+          },
+          {
+            "descrip": "Line 2 Order 3 - Customer 2",
+            "qty": 1500,
+            "discount": 0.5,
+            "total": 45
+          },
+          {
+            "descrip": "Line 3 Order 3 - Customer 2",
+            "qty": 1000,
+            "discount": 0.75,
+            "total":  15
+          }
+        ]
+      },
+      {
+        "descrip": "Order 4 - Customer 2",
+        "dateOrder": "2025-06-18",
+        "pricePerUnit": 35,
+        "units": "Hora",
+        "total": 70,
+        "billed": false,
+        "fieldName": "Interpretation",
+        "sourceLanguage": "es",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Line 1 Order 4 - Customer 2",
+            "qty": 2,
+            "discount": 0,
+            "total": 70
+          }
+        ]
+      }
+    ],
+    "defaultLanguage": "es",
+    "defaultVAT": 0.21,
+    "defaultWithholding": 0.15,
+    "invoicingMethod": "arnold@clientedeprueba2.com",
+    "payMethod": "BankTransfer",
+    "duedate": 45,
+    "europe": true
+  }
+]

@@ -33,7 +33,7 @@ public class RegistrationRequestDTO {
     @NotBlank(message = "validation.password.required")
     private String adminPassword;
     private String preferredLanguage;
-    private String preferredTheme;
-    private Boolean darkMode;
+    private String preferredTheme;//Todo yo quitaría esto
+    private Boolean darkMode;//Todo yo quitaría esto
 
 }

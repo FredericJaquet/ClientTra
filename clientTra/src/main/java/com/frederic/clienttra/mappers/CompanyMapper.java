@@ -1,6 +1,7 @@
 package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.create.CreateBaseCompanyRequestDTO;
+import com.frederic.clienttra.dto.demo.DemoCompanyDTO;
 import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.dto.update.UpdateBaseCompanyRequestDTO;
@@ -13,9 +14,11 @@ import com.frederic.clienttra.validators.EmailValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +28,9 @@ public class CompanyMapper {
     private final BankAccountMapper bankAccountMapper;
     private final UserMapper userMapper;
     private final ContactPersonMapper contactPersonMapper;
+    private final DocumentMapper documentMapper;
+    private final SchemeMapper schemeMapper;
+    private final OrderMapper orderMapper;
 
     public CompanyOwnerDTO toCompanyOwnerDTO(Company entity) {
         return CompanyOwnerDTO.builder()
@@ -43,13 +49,13 @@ public class CompanyMapper {
     }
 
     public Company toEntity(CreateBaseCompanyRequestDTO dto) {
-        Company company = new Company();
-
-        company.setVatNumber(dto.getVatNumber());
-        company.setComName(dto.getComName());
-        company.setLegalName(dto.getLegalName());
-        company.setEmail(dto.getEmail());
-        company.setWeb(dto.getWeb());
+        Company company = Company.builder()
+                .comName(dto.getComName())
+                .legalName(dto.getLegalName())
+                .vatNumber(dto.getVatNumber())
+                .email(dto.getEmail())
+                .web(dto.getWeb())
+                .build();
 
         safeMapToEntity(dto.getPhones(), phoneMapper::toEntity)
                 .forEach(company::addPhone);
@@ -60,6 +66,40 @@ public class CompanyMapper {
         safeMapToEntity(dto.getContactPersons(), contactPersonMapper::toEntity)
                 .forEach(company::addContactPerson);
         return company;
+    }
+
+    public Company toEntity(DemoCompanyDTO dto, Company ownerCompany) {
+        Company company = Company.builder()
+                            .comName(dto.getComName())
+                            .legalName(dto.getLegalName())
+                            .vatNumber(dto.getVatNumber())
+                            .email(dto.getEmail())
+                            .web(dto.getWeb())
+                            .ownerCompany(ownerCompany)
+                            .build();
+
+        safeMapToEntity(dto.getDocuments(), docDto -> documentMapper.toEntity(docDto, ownerCompany, company))
+                .forEach(company::addDocument);
+        safeMapToEntity(dto.getOrders(), orderDto -> orderMapper.toEntity(orderDto, ownerCompany, company))
+                .forEach(company::addOrder);
+        safeMapToEntity(dto.getSchemes(), schemeDto -> schemeMapper.toEntity(schemeDto, ownerCompany))
+                .forEach(company::addScheme);
+        safeMapToEntity(dto.getPhones(), phoneMapper::toEntity)
+                .forEach(company::addPhone);
+        safeMapToEntity(dto.getAddresses(), addressMapper::toEntity)
+                .forEach(company::addAddress);
+        safeMapToEntity(dto.getBankAccounts(), bankAccountMapper::toEntity)
+                .forEach(company::addBankAccount);
+        safeMapToEntity(dto.getContactPersons(), contactPersonMapper::toEntity)
+                .forEach(company::addContactPerson);
+
+        return company;
+    }
+
+    public List<Company> toEntities(List<DemoCompanyDTO> dtos, Company ownerCompany){
+        return dtos.stream()
+                .map(dto -> toEntity(dto, ownerCompany))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void updateEntity(Company entity, UpdateBaseCompanyRequestDTO dto){
@@ -132,7 +172,7 @@ public class CompanyMapper {
                 list.stream()
                         .filter(Objects::nonNull)
                         .map(mapper)
-                        .toList();
+                        .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private <T, R> List<R> safeMapToEntity(List<T> list, Function<T, R> mapper) {
@@ -140,7 +180,7 @@ public class CompanyMapper {
                 list.stream()
                         .filter(Objects::nonNull)
                         .map(mapper)
-                        .toList();
+                        .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }

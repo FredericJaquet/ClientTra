@@ -6,13 +6,9 @@ import com.frederic.clienttra.dto.read.UserSelfDTO;
 import com.frederic.clienttra.dto.update.UpdatePasswordRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateSelfRequestDTO;
 import com.frederic.clienttra.entities.Company;
-import com.frederic.clienttra.entities.Plan;
-import com.frederic.clienttra.entities.Role;
 import com.frederic.clienttra.entities.User;
 import com.frederic.clienttra.exceptions.*;
 import com.frederic.clienttra.mappers.UserMapper;
-import com.frederic.clienttra.repositories.PlanRepository;
-import com.frederic.clienttra.repositories.RoleRepository;
 import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
@@ -22,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PlanRepository planRepository;
     private final CompanyService companyService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -109,18 +102,9 @@ public class UserService {
     public UserForAdminDTO createUser(CreateUserRequestDTO dto) {
         Company currentCompany = companyService.getCurrentCompany()
                 .orElseThrow(UserNotAuthenticatedException::new);
-        Role role = roleRepository.findById(dto.getIdRole())
-                .orElseThrow(RoleNotFoundException::new);
-        Plan plan = planRepository.findById(dto.getIdPlan())
-                .orElseThrow(RoleNotFoundException::new);
 
-        User user = new User();
-        user.setUserName(dto.getUsername());
-        user.setPasswd(passwordEncoder.encode(dto.getPassword()));
-        user.setEmail(dto.getEmail());
+        User user = userMapper.toEntity(dto);
         user.setCompany(currentCompany);
-        user.setRole(role);
-        user.setPlan(plan);
 
         userRepository.save(user);
 

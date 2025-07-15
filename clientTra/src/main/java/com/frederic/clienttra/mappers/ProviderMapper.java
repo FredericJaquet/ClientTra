@@ -1,16 +1,20 @@
 package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.create.CreateProviderRequestDTO;
+import com.frederic.clienttra.dto.demo.DemoCompanyDTO;
 import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
 import com.frederic.clienttra.dto.read.ProviderDetailsDTO;
 import com.frederic.clienttra.dto.read.ProviderForListDTO;
 import com.frederic.clienttra.dto.update.UpdateProviderRequestDTO;
+import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Provider;
 import com.frederic.clienttra.projections.ProviderListProjection;
 import com.frederic.clienttra.projections.ProviderMinimalProjection;
+import com.frederic.clienttra.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -21,10 +25,12 @@ import java.util.stream.Collectors;
 public class ProviderMapper {
 
     private final AddressMapper addressMapper;
+    private final CompanyMapper companyMapper;
     private final PhoneMapper phoneMapper;
     private final BankAccountMapper bankAccountMapper;
     private final ContactPersonMapper contactPersonMapper;
     private final SchemeMapper schemeMapper;
+    private final CompanyRepository companyRepository;
 
     public List<ProviderForListDTO> toProviderForListDTOS(List<ProviderListProjection> entities){
         return entities.stream()
@@ -36,7 +42,7 @@ public class ProviderMapper {
                         .web(p.getWeb())
                         .enabled(p.getEnabled())
                         .build())
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ProviderDetailsDTO toProviderDetailsDTO(Provider entity){
@@ -73,6 +79,28 @@ public class ProviderMapper {
                 .build();
     }
 
+    public Provider toEntity(DemoCompanyDTO dto, Company ownerCompany){
+        Company company = companyMapper.toEntity(dto,ownerCompany);
+        Company savedCompany =  companyRepository.save(company);
+
+        return Provider.builder()
+                .duedate(dto.getDuedate())
+                .defaultLanguage(dto.getDefaultLanguage())
+                .defaultVat(dto.getDefaultVAT())
+                .defaultWithholding(dto.getDefaultWithholding())
+                .europe(dto.getEurope())
+                .enabled(true)
+                .company(savedCompany)
+                .ownerCompany(ownerCompany)
+                .build();
+    }
+
+    public List<Provider> toEntities(List<DemoCompanyDTO> dtos, Company ownerCompany){
+        return dtos.stream()
+                .map(dto -> toEntity(dto, ownerCompany))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public void updateEntity(Provider entity, UpdateProviderRequestDTO dto){
         if (dto.getDuedate() != null) {
             entity.setDuedate(dto.getDuedate());
@@ -105,7 +133,7 @@ public class ProviderMapper {
     public List<BaseCompanyMinimalDTO> toMinimalDTOs(List<ProviderMinimalProjection> entities){
         return entities.stream()
                 .map(this::toMinimalDTO)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private <T, R> List<R> safeMapToDTO(List<T> list, Function<T, R> mapper) {
@@ -113,7 +141,7 @@ public class ProviderMapper {
                 list.stream()
                         .filter(Objects::nonNull)
                         .map(mapper)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }
