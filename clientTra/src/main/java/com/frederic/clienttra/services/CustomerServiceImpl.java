@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer entity = customerMapper.toEntity(dto);
         entity.setCompany(savedCompany);
         entity.setOwnerCompany(owner);
-        entity.setEnabled(true);
+        //entity.setEnabled(true);
 
         Customer customerSaved=customerRepository.save(entity);
 

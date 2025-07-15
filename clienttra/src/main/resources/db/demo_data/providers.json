@@ -1,0 +1,494 @@
+[
+  {
+    "vatNumber": "FR123456789",
+    "comName": "Fournisseur de test 1",
+    "legalName": "Fournisseur de test 1 SL",
+    "email": "fournisseur@fournisseurdetest1.com",
+    "web": "www.fournisseurdetest1.com",
+    "contactPersons": [
+      {
+        "firstname": "Pasacale",
+        "middlename": "Boeynaems",
+        "role": "Founder",
+        "email": "pascale@fournisseurdetest1.com"
+      }
+    ],
+    "phones": [
+      {
+        "phoneNumber": "1592678483",
+        "kind": "Kilebo"
+      }
+    ],
+    "addresses": [
+      {
+        "street": "Rue Jolie",
+        "stNumber": "153",
+        "cp": "4460",
+        "city": "Liège",
+        "state": "Liège",
+        "country": "Belgium"
+      }
+    ],
+    "bankAccounts": [
+      {
+        "iban": "BE123789453261",
+        "swift": "BEBBBBXX",
+        "branch": "BBL",
+        "holder": "Pascale Boeynaems"
+      }
+    ],
+    "schemes": [
+      {
+        "schemeName": "Scheme Fournisseur1",
+        "price": 0.06,
+        "units": "mots",
+        "fieldName": "Chemistry",
+        "sourceLanguage": "English",
+        "targetLanguage": "French",
+        "schemeLines": [
+          {
+            "descrip": "No Match",
+            "discount": 0.0
+          },
+          {
+            "descrip": "50-75%",
+            "discount": 0.5
+          },
+          {
+            "descrip": "75-99%",
+            "discount": 0.75
+          },
+          {
+            "descrip": "100%",
+            "discount": 0.9
+          }
+        ]
+      }
+    ],
+    "documents": [
+      {
+        "docNumber": "2025-2.PROV001",
+        "docDate": "2025-07-31",
+        "docType": "INV_PROV",
+        "status": "PENDING",
+        "language": "es",
+        "vatRate": 0.21,
+        "withholding": 0.15,
+        "totalNet": 68,
+        "totalVat": 14.28,
+        "totalGross": 82.28,
+        "totalWithholding": 10.20,
+        "totalToPay": 72.08,
+        "currency": "€",
+        "noteDelivery": "DeadLine - 4 days",
+        "notePayment": "",
+        "noteComment": "",
+        "changeRate": {
+          "idChangeRate": 1
+        },
+        "orders": [
+          {
+            "descrip": "Order 1 - Provider 1",
+            "dateOrder": "2025-07-09",
+            "pricePerUnit": 0.06,
+            "units": "mot",
+            "total": 36,
+            "billed": true,
+            "fieldName": "Chemistry",
+            "sourceLanguage": "en",
+            "targetLanguage": "fr",
+            "items": [
+              {
+                "descrip": "Ligne 1 Commande 1 - Fournisseur 1",
+                "qty": 100,
+                "discount": 0,
+                "total": 6
+              },
+              {
+                "descrip": "Ligne 2 Commande 1 - Fournisseur 1",
+                "qty": 500,
+                "discount": 0.5,
+                "total": 15
+              },
+              {
+                "descrip": "Ligne 3 Commande 1 - Fournisseur 1",
+                "qty": 1000,
+                "discount": 0.75,
+                "total": 15
+              }
+            ]
+          },
+          {
+            "descrip": "Order 2 - Provider 1",
+            "dateOrder": "2025-07-15",
+            "pricePerUnit": 32,
+            "units": "Heure",
+            "total": 32,
+            "billed": true,
+            "fieldName": "Industry",
+            "sourceLanguage": "es",
+            "targetLanguage": "fr",
+            "items": [
+              {
+                "descrip": "Ligne 1 Commande 2 - Fournisseur 1",
+                "qty": 1,
+                "discount": 0,
+                "total": 32
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "docNumber": "2025-1.PO01",
+        "docDate": "2025-07-24",
+        "docType": "PO",
+        "status": "PENDING",
+        "language": "es",
+        "vatRate": 0.21,
+        "withholding": 0.15,
+        "totalNet": 70,
+        "totalVat": 14.70,
+        "totalGross": 84.70,
+        "totalWithholding": 10.50,
+        "totalToPay": 74.20,
+        "currency": "€",
+        "noteDelivery": "DeadLine - 1 day",
+        "notePayment": "",
+        "noteComment": "",
+        "changeRate": {
+          "idChangeRate": 1
+        },
+        "orders": [
+          {
+            "descrip": "Order 3 - Provider 1",
+            "dateOrder": "2025-06-18",
+            "pricePerUnit": 1,
+            "units": "€",
+            "total": 70,
+            "billed": false,
+            "fieldName": "Interpretation",
+            "sourceLanguage": "en",
+            "targetLanguage": "fr",
+            "items": [
+              {
+                "descrip": "Ligne 1 Commande 3 - Fournisseur 1",
+                "qty": 70,
+                "discount": 0,
+                "total": 70
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "orders": [
+      {
+        "descrip": "Order 4 - Provider 1",
+        "dateOrder": "2025-07-09",
+        "pricePerUnit": 0.06,
+        "units": "mot",
+        "total": 36,
+        "billed": false,
+        "fieldName": "Chemistry",
+        "sourceLanguage": "en",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Ligne 1 Commande 4 - Fournisseur 1",
+            "qty": 100,
+            "discount": 0,
+            "total": 6
+          },
+          {
+            "descrip": "Ligne 2 Commande 4 - Fournisseur 1",
+            "qty": 500,
+            "discount": 0.5,
+            "total": 15
+          },
+          {
+            "descrip": "Ligne 3 Commande 4 - Fournisseur 1",
+            "qty": 1000,
+            "discount": 0.75,
+            "total": 15
+          }
+        ]
+      },
+      {
+        "descrip": "Order 5 - Provider 1",
+        "dateOrder": "2025-07-15",
+        "pricePerUnit": 32,
+        "units": "Heure",
+        "total": 32,
+        "billed": false,
+        "fieldName": "Industry",
+        "sourceLanguage": "es",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Ligne 1 Commande 5 - Fournisseur 1",
+            "qty": 1,
+            "discount": 0,
+            "total": 32
+          }
+        ]
+      },
+      {
+        "descrip": "Order 6 - Provider 1",
+        "dateOrder": "2025-06-18",
+        "pricePerUnit": 1,
+        "units": "€",
+        "total": 70,
+        "billed": false,
+        "fieldName": "Interpretation",
+        "sourceLanguage": "en",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Ligne 1 Commande 6 - Fournisseur 1",
+            "qty": 70,
+            "discount": 0,
+            "total": 70
+          }
+        ]
+      }
+    ],
+    "defaultLanguage": "fr",
+    "defaultVAT": 0.0,
+    "defaultWithholding": 0.0,
+    "duedate": 60,
+    "europe": true
+  },
+  {
+    "vatNumber": "UK123456789",
+    "comName": "Provider test 2",
+    "legalName": "Provider test 2 SL",
+    "email": "provider@Providertest2.com",
+    "web": "www.providertest2.com",
+    "contactPersons": [
+      {
+        "firstname": "John",
+        "middlename": "Lewis",
+        "role": "Founder",
+        "email": "john@Providertest2.com"
+      }
+    ],
+    "phones": [
+      {
+        "phoneNumber": "789456789",
+        "kind": "English Phone"
+      }
+    ],
+    "addresses": [
+      {
+        "street": "Street Buckingham",
+        "stNumber": "2",
+        "cp": "UH23RT",
+        "city": "London",
+        "state": "London",
+        "country": "United Kingdom"
+      }
+    ],
+    "bankAccounts": [
+      {
+        "iban": "UK748591623",
+        "swift": "UKFKCXX",
+        "branch": "Bank Of Scotland",
+        "holder": "John Lewis"
+      }
+    ],
+    "documents": [
+      {
+        "docNumber": "2025-2.PROV002",
+        "docDate": "2025-07-31",
+        "docType": "INV_PROV",
+        "status": "PENDING",
+        "language": "es",
+        "vatRate": 0.21,
+        "withholding": 0.15,
+        "totalNet": 116,
+        "totalVat": 24.36,
+        "totalGross": 140.36,
+        "totalWithholding": 17.40,
+        "totalToPay": 122.96,
+        "currency": "€",
+        "noteDelivery": "DeadLine - 1 day",
+        "notePayment": "",
+        "noteComment": "",
+        "changeRate": {
+          "idChangeRate": 1
+        },
+        "orders": [
+          {
+            "descrip": "Order 1 - Provider 2",
+            "dateOrder": "2025-07-12",
+            "pricePerUnit": 0.06,
+            "units": "word",
+            "total": 36,
+            "billed": true,
+            "fieldName": "Construction",
+            "sourceLanguage": "en",
+            "targetLanguage": "fr",
+            "items": [
+              {
+                "descrip": "Line 1 Order 1 - Provider 2",
+                "qty": 100,
+                "discount": 0,
+                "total": 6
+              },
+              {
+                "descrip": "Line 2 Order 1 - Provider 2",
+                "qty": 500,
+                "discount": 0.5,
+                "total": 15
+              },
+              {
+                "descrip": "Line 3 Order 1 - Provider 2",
+                "qty": 1000,
+                "discount": 0.75,
+                "total": 15
+              }
+            ]
+          },
+          {
+            "descrip": "Order 2 - Provider 2",
+            "dateOrder": "2025-07-18",
+            "pricePerUnit": 40,
+            "units": "Hour",
+            "total": 80,
+            "billed": true,
+            "fieldName": "Interpretation",
+            "sourceLanguage": "es",
+            "targetLanguage": "en",
+            "items": [
+              {
+                "descrip": "Line 1 Order 2 - Provider 2",
+                "qty": 2,
+                "discount": 0,
+                "total": 80
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "docNumber": "2025-1.PO02",
+        "docDate": "2025-07-04",
+        "docType": "PO",
+        "status": "PENDING",
+        "language": "es",
+        "vatRate": 0.21,
+        "withholding": 0.15,
+        "totalNet": 60,
+        "totalVat": 12.60,
+        "totalGross": 72.60,
+        "totalWithholding": 9.00,
+        "totalToPay": 63.60,
+        "currency": "€",
+        "noteDelivery": "DeadLine - 1 day",
+        "notePayment": "",
+        "noteComment": "",
+        "changeRate": {
+          "idChangeRate": 1
+        },
+        "orders": [
+          {
+            "descrip": "Order 3 - Provider 2",
+            "dateOrder": "2025-06-22",
+            "pricePerUnit": 1,
+            "units": "€",
+            "total": 60,
+            "billed": false,
+            "fieldName": "General",
+            "sourceLanguage": "fr",
+            "targetLanguage": "en",
+            "items": [
+              {
+                "descrip": "Line 1 Order 3 - Provider 2",
+                "qty": 60,
+                "discount": 0,
+                "total": 60
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "orders": [
+      {
+        "descrip": "Order 4 - Provider 2",
+        "dateOrder": "2025-07-12",
+        "pricePerUnit": 0.06,
+        "units": "word",
+        "total": 36,
+        "billed": false,
+        "fieldName": "Construction",
+        "sourceLanguage": "en",
+        "targetLanguage": "fr",
+        "items": [
+          {
+            "descrip": "Line 1 Order 4 - Provider 2",
+            "qty": 100,
+            "discount": 0,
+            "total": 6
+          },
+          {
+            "descrip": "Line 2 Order 4 - Provider 2",
+            "qty": 500,
+            "discount": 0.5,
+            "total": 15
+          },
+          {
+            "descrip": "Line 3 Order 4 - Provider 2",
+            "qty": 1000,
+            "discount": 0.75,
+            "total": 15
+          }
+        ]
+      },
+      {
+        "descrip": "Order 5 - Provider 2",
+        "dateOrder": "2025-07-18",
+        "pricePerUnit": 40,
+        "units": "Hour",
+        "total": 80,
+        "billed": false,
+        "fieldName": "Interpretation",
+        "sourceLanguage": "es",
+        "targetLanguage": "en",
+        "items": [
+          {
+            "descrip": "Line 1 Order 5 - Provider 2",
+            "qty": 2,
+            "discount": 0,
+            "total": 80
+          }
+        ]
+      },
+      {
+        "descrip": "Order 6 - Provider 2",
+        "dateOrder": "2025-06-22",
+        "pricePerUnit": 1,
+        "units": "€",
+        "total": 60,
+        "billed": false,
+        "fieldName": "General",
+        "sourceLanguage": "fr",
+        "targetLanguage": "en",
+        "items": [
+          {
+            "descrip": "Line 1 Order 6 - Provider 2",
+            "qty": 60,
+            "discount": 0,
+            "total": 60
+          }
+        ]
+      }
+    ],
+    "defaultLanguage": "en",
+    "defaultVAT": 0.0,
+    "defaultWithholding": 0.0,
+    "duedate": 60,
+    "europe": false
+  }
+]

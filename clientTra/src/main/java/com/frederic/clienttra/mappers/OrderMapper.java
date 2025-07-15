@@ -4,6 +4,8 @@ import com.frederic.clienttra.dto.bases.BaseOrderDTO;
 import com.frederic.clienttra.dto.read.OrderDetailsDTO;
 import com.frederic.clienttra.dto.read.OrderListDTO;
 import com.frederic.clienttra.dto.update.UpdateOrderRequestDTO;
+import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.exceptions.InvalidOrderDescriptionException;
 import com.frederic.clienttra.exceptions.InvalidOrderPriceException;
@@ -11,13 +13,15 @@ import com.frederic.clienttra.projections.OrderListProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class OrderMapper {
      private final ItemMapper itemMapper;
-     private final CompanyMapper companyMapper;
+     private final MinimalCompanyMapper companyMapper;
 
     public OrderDetailsDTO toDetailsDto(Order entity){
         return OrderDetailsDTO.builder()
@@ -39,7 +43,7 @@ public class OrderMapper {
     public List<OrderDetailsDTO> toDetailsDto(List<Order> entities){
         return entities.stream()
                 .map(this::toDetailsDto)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public OrderListDTO toListDtosFromProjection(OrderListProjection entity){
@@ -65,13 +69,13 @@ public class OrderMapper {
     public List<OrderListDTO> toListDtosFromProjection(List<OrderListProjection> entities){
         return entities.stream()
                 .map(this::toListDtosFromProjection)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public List<OrderListDTO> toListDtosFromEntities(List<Order> entities){
         return entities.stream()
                 .map(this::toListDtosFromEntity)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Order toEntity(BaseOrderDTO dto){
@@ -92,7 +96,38 @@ public class OrderMapper {
     public List<Order> toEntities(List<? extends BaseOrderDTO> dtos){//TODO este probablemente nunca se use, pero si actualizar varios pedidos a la vez (para marcar como pagado)
         return dtos.stream()
                 .map(this::toEntity)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Order toEntity(BaseOrderDTO dto, Company ownerCompany, Company company){
+        List<Item> items = new ArrayList<>(itemMapper.toEntities(dto.getItems()));
+
+        Order order = Order.builder()
+                .descrip(dto.getDescrip())
+                .dateOrder(dto.getDateOrder())
+                .pricePerUnit(dto.getPricePerUnit())
+                .units(dto.getUnits())
+                .total(dto.getTotal())
+                .billed(false)
+                .fieldName(dto.getFieldName())
+                .sourceLanguage(dto.getSourceLanguage())
+                .targetLanguage(dto.getTargetLanguage())
+                .items(items)
+                .company(company)
+                .ownerCompany(ownerCompany)
+                .build();
+
+        for(Item item: order.getItems()){
+            item.setOrder(order);
+        }
+
+        return order;
+    }
+
+    public List<Order> toEntities(List<? extends BaseOrderDTO> dtos, Company ownerCompany, Company company){
+        return dtos.stream()
+                .map(dto -> toEntity(dto, ownerCompany, company))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void updateEntity(Order entity, UpdateOrderRequestDTO dto){

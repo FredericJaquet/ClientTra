@@ -1,8 +1,27 @@
+DROP TABLE IF EXISTS document_orders;
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS document_details;
+DROP TABLE IF EXISTS documents;
+DROP TABLE IF EXISTS scheme_lines;
+DROP TABLE IF EXISTS Schemes;
+DROP TABLE IF EXISTS providers;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS plans;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS bank_accounts;
+DROP TABLE IF EXISTS contact_persons;
+DROP TABLE IF EXISTS phones;
+DROP TABLE IF EXISTS addresses;
+DROP TABLE IF EXISTS change_rates;
+DROP TABLE IF EXISTS companies;
+
 CREATE TABLE IF NOT EXISTS companies (
   id_company           INT AUTO_INCREMENT PRIMARY KEY,
-  vat_number           VARCHAR(25) NOT NULL,
+  vat_number           VARCHAR(25),
   com_name             VARCHAR(100),
-  legal_name           VARCHAR(100) NOT NULL,
+  legal_name           VARCHAR(100),
   email                VARCHAR(100),
   web                  VARCHAR(100),
   logo_path            VARCHAR(255),
@@ -212,5 +231,5 @@ CREATE TABLE IF NOT EXISTS items (
 
 -- Datos iniciales
 INSERT INTO roles (role_name) VALUES ('ROLE_ADMIN'), ('ROLE_ACCOUNTING'), ('ROLE_USER');
-INSERT INTO plans (plan_name) VALUES ('FREEMIUM'), ('PREMIUM');
-INSERT INTO change_rates value ('€','€',1);
+INSERT INTO plans (plan_name) VALUES ('FREEMIUM'), ('PREMIUM'), ('TEST');
+INSERT INTO change_rates value ('€','€',1,'2025-01-01',1);

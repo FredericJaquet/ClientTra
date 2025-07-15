@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class CreateProviderRequestDTO extends CreateBaseCompanyRequestDTO {
 
-    private Integer idProvider;
     private String defaultLanguage="es";
     private Double defaultVAT=0.21;
     private Double defaultWithholding=0.15;

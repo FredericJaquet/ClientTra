@@ -2,14 +2,14 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseContactPersonDTO;
 import com.frederic.clienttra.dto.create.CreateContactPersonRequestDTO;
-import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.read.ContactPersonDTO;
 import com.frederic.clienttra.dto.update.UpdateContactPersonRequestDTO;
-import com.frederic.clienttra.entities.BankAccount;
 import com.frederic.clienttra.entities.ContactPerson;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ContactPersonMapper {
@@ -24,7 +24,7 @@ public class ContactPersonMapper {
                         .role(p.getRole())
                         .email(p.getEmail())
                         .build())
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ContactPersonDTO toContactPersonDTO(ContactPerson contact){

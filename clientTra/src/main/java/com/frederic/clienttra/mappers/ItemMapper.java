@@ -7,6 +7,7 @@ import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,7 +28,7 @@ public class ItemMapper {
     public List<ItemDTO> toDtos(List<Item> entities){
         return entities.stream()
                 .map(this::toDto)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Item toEntity(BaseItemDTO dto){
@@ -42,7 +43,7 @@ public class ItemMapper {
     public List<Item> toEntities(List<? extends BaseItemDTO> dtos){
         return dtos.stream()
                 .map(this::toEntity)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }

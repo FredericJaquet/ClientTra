@@ -96,7 +96,7 @@ public class ProviderServiceImpl implements  ProviderService{
         Provider entity = providerMapper.toEntity(dto);
         entity.setCompany(savedCompany);
         entity.setOwnerCompany(owner);
-        entity.setEnabled(true);
+        //entity.setEnabled(true);
 
         Provider providerSaved = providerRepository.save(entity);
 

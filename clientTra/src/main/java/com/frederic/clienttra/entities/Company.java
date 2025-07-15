@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Company {
+public class Company {//TODO Añadir el ChangeRate, ya que hemos incluido un idOwnerCompany al ChangeRate
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +50,8 @@ public class Company {
     private List<ContactPerson> contactPersons=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankAccount> bankAccounts=new ArrayList<>();
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChangeRate> changeRates=new ArrayList<>();
     @OneToMany(mappedBy = "company")
     private List<User> users=new ArrayList<>();
     @OneToMany(mappedBy = "company")
@@ -60,15 +62,15 @@ public class Company {
     private List<Provider> providers=new ArrayList<>();
     @OneToMany(mappedBy = "ownerCompany")
     private List<Provider> ownedProviders=new ArrayList<>();
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scheme> schemes=new ArrayList<>();
     @OneToMany(mappedBy = "ownerCompany")
     private List<Scheme> ownedSchemes=new ArrayList<>();
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents=new ArrayList<>();
     @OneToMany(mappedBy = "ownerCompany")
     private List<Document> ownedDocuments=new ArrayList<>();
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders=new ArrayList<>();
     @OneToMany(mappedBy = "ownerCompany")
     private List<Order> ownedOrders=new ArrayList<>();
@@ -103,6 +105,38 @@ public class Company {
         }
         contactPersons.add(contact);
         contact.setCompany(this);
+    }
+
+    public void addDocument(Document document){
+        if(documents == null){
+            documents = new ArrayList<>();
+        }
+        documents.add(document);
+        document.setCompany(this);
+    }
+
+    public void addOrder(Order order){
+        if(orders == null){
+            orders = new ArrayList<>();
+        }
+        orders.add(order);
+        order.setCompany(this);
+    }
+
+    public void addScheme(Scheme scheme){
+        if(schemes == null) {
+            schemes = new ArrayList<>();
+        }
+        schemes.add(scheme);
+        scheme.setCompany(this);
+    }
+
+    public void addChangeRate(ChangeRate changeRate){
+        if(changeRates == null){
+            changeRates = new ArrayList<>();
+        }
+        changeRates.add(changeRate);
+        changeRate.setOwnerCompany(this);
     }
 
 

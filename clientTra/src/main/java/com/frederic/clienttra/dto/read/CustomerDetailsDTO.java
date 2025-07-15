@@ -3,11 +3,12 @@ package com.frederic.clienttra.dto.read;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class CustomerDetailsDTO extends BaseCompanyDTO {
+public class CustomerDetailsDTO extends BaseCompanyDTO {//TODO aquí faltan cosas... No me imprime los datos de este DTO...
 
     private Integer idCustomer;
     private String invoicingMethod;

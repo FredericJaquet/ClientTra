@@ -2,14 +2,15 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseBankAccountDTO;
 import com.frederic.clienttra.dto.create.CreateBankAccountRequestDTO;
-import com.frederic.clienttra.dto.read.AddressDTO;
 import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
-import com.frederic.clienttra.entities.Address;
 import com.frederic.clienttra.entities.BankAccount;
+import com.frederic.clienttra.entities.Company;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -25,7 +26,7 @@ public class BankAccountMapper {
                         .branch(p.getBranch())
                         .holder(p.getHolder())
                         .build())
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public BankAccountDTO toBankAccountDTO(BankAccount bankAccount){
@@ -54,6 +55,27 @@ public class BankAccountMapper {
                 .holder(dto.getHolder())
                 .branch(dto.getBranch())
                 .build();
+    }
+
+    public List<BankAccount> toEntities(List< ? extends BaseBankAccountDTO> dtos){
+        return dtos.stream().map(this::toEntity)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public BankAccount toEntity(BaseBankAccountDTO dto, Company company) {
+        return BankAccount.builder()
+                .iban(dto.getIban())
+                .swift(dto.getSwift())
+                .holder(dto.getHolder())
+                .branch(dto.getBranch())
+                .company(company)
+                .build();
+    }
+
+    public List<BankAccount> toEntities(List< ? extends BaseBankAccountDTO> dtos, Company company){
+        return dtos.stream()
+                .map(dto -> toEntity(dto, company))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void updateEntity(BankAccount entity, UpdateBankAccountRequestDTO dto) {

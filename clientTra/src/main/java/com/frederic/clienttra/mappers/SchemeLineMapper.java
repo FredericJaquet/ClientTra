@@ -7,6 +7,7 @@ import com.frederic.clienttra.entities.Scheme;
 import com.frederic.clienttra.entities.SchemeLine;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -18,7 +19,7 @@ public class SchemeLineMapper {
     public List<SchemeLineDTO> toDtos(List<SchemeLine> entities) {
         return entities.stream()
                 .map(this::toDto)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public SchemeLineDTO toDto(SchemeLine entity) {
@@ -38,7 +39,7 @@ public class SchemeLineMapper {
     public List<SchemeLine> toEntities(List<? extends BaseSchemeLineDTO> dtos) {
         return dtos.stream()
                 .map(this::toEntity)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void updateEntities(Scheme entity, List<UpdateSchemeLineRequestDTO> dtos){

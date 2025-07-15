@@ -1,0 +1,23 @@
+[
+ {
+    "userName": "admin_test",
+    "passwd": "admin_testPass",
+    "email": "admin_test@example.com",
+    "idRole": 1,
+    "planName": 3
+  },  
+  {
+    "userName": "accounting_test",
+    "passwd": "accounting_testPass",
+    "email": "accounting_test@example.com",
+    "idRole": 2
+    "planName": 3
+  },
+  {
+    "userName": "user_test",
+    "passwd": "user_testPass",
+    "email": "user_test@example.com",
+    "roleName": 3,
+    "planName": 3
+  }
+]

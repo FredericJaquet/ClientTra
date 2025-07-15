@@ -5,9 +5,11 @@ import com.frederic.clienttra.dto.read.AddressDTO;
 import com.frederic.clienttra.dto.create.CreateAddressRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateAddressRequestDTO;
 import com.frederic.clienttra.entities.Address;
+import com.frederic.clienttra.entities.Company;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
@@ -27,7 +29,7 @@ public class AddressMapper {
                         .state(p.getState())
                         .country(p.getCountry())
                         .build())
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public AddressDTO toAddressDTO(Address address){
@@ -65,6 +67,30 @@ public class AddressMapper {
                 .state(dto.getState())
                 .country(dto.getCountry())
                 .build();
+    }
+
+    public List<Address> toEntities(List< ? extends BaseAddressDTO> dtos){
+        return dtos.stream().map(this::toEntity)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Address toEntity(BaseAddressDTO dto, Company company) {
+        return Address.builder()
+                .street(dto.getStreet())
+                .stNumber(dto.getStNumber())
+                .apt(dto.getApt())
+                .cp(dto.getCp())
+                .city(dto.getCity())
+                .state(dto.getState())
+                .country(dto.getCountry())
+                .company(company)
+                .build();
+    }
+
+    public List<Address> toEntities(List< ? extends BaseAddressDTO> dtos, Company company){
+        return dtos.stream()
+                .map(dto -> toEntity(dto, company))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void updateEntity(Address entity, UpdateAddressRequestDTO dto) {
