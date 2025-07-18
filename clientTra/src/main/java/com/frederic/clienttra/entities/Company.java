@@ -50,15 +50,15 @@ public class Company {//TODO Añadir el ChangeRate, ya que hemos incluido un idO
     private List<ContactPerson> contactPersons=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankAccount> bankAccounts=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ownerCompany")
     private List<ChangeRate> changeRates=new ArrayList<>();
     @OneToMany(mappedBy = "company")
     private List<User> users=new ArrayList<>();
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Customer> customers=new ArrayList<>();
     @OneToMany(mappedBy = "ownerCompany")
     private List<Customer> ownedCustomers=new ArrayList<>();
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Provider> providers=new ArrayList<>();
     @OneToMany(mappedBy = "ownerCompany")
     private List<Provider> ownedProviders=new ArrayList<>();
@@ -137,6 +137,14 @@ public class Company {//TODO Añadir el ChangeRate, ya que hemos incluido un idO
         }
         changeRates.add(changeRate);
         changeRate.setOwnerCompany(this);
+    }
+
+    public void addUser(User user){
+        if(users == null){
+            users = new ArrayList<>();
+        }
+        users.add(user);
+        user.setCompany(this);
     }
 
 

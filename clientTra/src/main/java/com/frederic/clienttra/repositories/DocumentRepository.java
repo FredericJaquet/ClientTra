@@ -15,6 +15,8 @@ import java.util.Optional;
 
 public interface DocumentRepository extends JpaRepository<Document, Integer> {
 
+    List<Document> findAllByOwnerCompany(Company ownerCompany);
+
     // 1. Lista con detalle para el frontend según tipo documento y empresa cliente/proveedor
     @Query("""
         SELECT

@@ -52,6 +52,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User getCurrentUserEntity() {
+        int idUser = SecurityUtils.getCurrentUserId();
+
+        User user = userRepository.findById(idUser)
+                .orElseThrow(UserNotFoundException::new);
+
+        return user;
+    }
+
+    @Transactional(readOnly = true)
     public Optional<UserForAdminDTO> getUserById(Integer id) {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
 
