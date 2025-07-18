@@ -232,4 +232,4 @@ CREATE TABLE IF NOT EXISTS items (
 -- Datos iniciales
 INSERT INTO roles (role_name) VALUES ('ROLE_ADMIN'), ('ROLE_ACCOUNTING'), ('ROLE_USER');
 INSERT INTO plans (plan_name) VALUES ('FREEMIUM'), ('PREMIUM'), ('TEST');
-INSERT INTO change_rates value ('€','€',1,'2025-01-01',1);
+-- INSERT INTO change_rates value ('€','€',1,'2025-01-01',1);

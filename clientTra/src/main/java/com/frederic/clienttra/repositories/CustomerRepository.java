@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     Optional<Customer> findByOwnerCompanyAndIdCustomer(Company ownerCompany, Integer id);
     Optional<Customer> findByOwnerCompanyAndCompany(Company ownerCompany, Company company);
+    List<Customer> findAllByOwnerCompany(Company ownerCompany);
 
     @Query("""
         SELECT c.idCustomer AS idCustomer,

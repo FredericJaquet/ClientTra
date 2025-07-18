@@ -9,5 +9,7 @@ import java.util.Optional;
 
 public interface SchemeRepository extends JpaRepository<Scheme, Integer> {
     List<Scheme> findByOwnerCompanyAndCompany_idCompany(Company ownerCompany, Integer idCompany);
+    List<Scheme> findAllByOwnerCompany(Company ownerComapny);
     Optional<Scheme> findByOwnerCompanyAndIdScheme(Company owner, Integer idScheme);
+
 }

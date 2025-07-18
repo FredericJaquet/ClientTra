@@ -12,6 +12,7 @@ import com.frederic.clienttra.dto.demo.DemoCompanyDTO;
 import com.frederic.clienttra.dto.demo.DemoDocumentDTO;
 import com.frederic.clienttra.dto.demo.DemoOwnerCompanyDTO;
 import com.frederic.clienttra.entities.*;
+import com.frederic.clienttra.exceptions.CompanyNotFoundException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,12 @@ public class DemoDataService {
     private final BankAccountRepository bankAccountRepository;
     private final ChangeRateRepository changeRateRepository;
     private final CompanyRepository companyRepository;
+    private final ContactPersonRepository contactPersonRepository;
     private final CustomerRepository customerRepository;
+    private final DocumentRepository documentRepository;
+    private final OrderRepository orderRepository;
     private final ProviderRepository providerRepository;
+    private final SchemeRepository schemeRepository;
     private final UserRepository userRepository;
     private final AddressMapper addressMapper;
     private final BankAccountMapper bankAccountMapper;
@@ -41,6 +46,7 @@ public class DemoDataService {
     private final ObjectMapper objectMapper;
     private final ProviderMapper providerMapper;
     private final UserMapper userMapper;
+    private final CompanyService companyService;
 
     @Transactional
     public void loadData(CreateUserRequestDTO userDTO){
@@ -133,7 +139,6 @@ public class DemoDataService {
         List<Company> companyEntities = new ArrayList<>();
 
         for(Provider  entity:entities) {
-            System.out.println("DemoDataService linea 114: " + entity.getCompany().getOrders());
             companyEntities.add(entity.getCompany());
         }
 
@@ -141,6 +146,23 @@ public class DemoDataService {
 
         providerRepository.saveAll(entities);
     }
+
+    @Transactional
+    public void deleteDemoData() {
+        Company ownerCompany = companyService.getCurrentCompanyOrThrow();
+
+        List<Company> companies = companyRepository.findAllByOwnerCompany(ownerCompany);
+        // 2. Romper relaciones ManyToMany entre documentos y órdenes
+        for (Company company : companies) {
+            for (Document doc : company.getDocuments()) {
+                doc.getOrders().clear(); // ⚠️ Esto rompe la relación ManyToMany (tabla intermedia)
+                documentRepository.save(doc);
+            }
+        }
+
+        companyRepository.deleteAll(companies);
+    }
+
 
     private <T> T readJsonFromResource(String path, TypeReference<T> typeRef) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
@@ -158,6 +180,7 @@ public class DemoDataService {
             throw new RuntimeException("Error reading JSON from " + path, e);
         }
     }
+
 
 
 }

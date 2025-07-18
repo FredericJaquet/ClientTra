@@ -7,12 +7,10 @@ import com.frederic.clienttra.services.DemoDataService;
 import com.frederic.clienttra.services.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/registration")
@@ -33,5 +31,6 @@ public class RegistrationController {
         demoDataService.loadData(dto);
         return ResponseEntity.ok(new GenericResponseDTO("registration.created_with_demo.success"));
     }
+
 }
 
