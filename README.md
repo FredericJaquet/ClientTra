@@ -110,16 +110,24 @@ src/main/java/com/frederic/clienttra/
 
 ## 📌 Current Status
 
-* ✅ User, company, and client/provider management complete
-* ✅ Orders and customer invoices fully functional
-* 🧰 Document types remaining:
+✅ User, company, and client/provider management complete
 
-  * Provider invoices
-  * Quotes
-  * Purchase Orders
-* 🔮 Report generation and statistics planned
-* 🖥️ Frontend to be implemented (React planned)
+✅ Orders and all document types fully implemented:
 
+Customer invoices
+
+Provider invoices
+
+Quotes
+
+Purchase orders
+
+
+✅ Demo data loading and deletion functionality completed
+
+🔮 Report generation and statistics planned
+
+🖥️ Frontend to be implemented (React planned)
 ---
 
 ## 📒 License
