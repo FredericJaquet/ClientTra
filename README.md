@@ -14,7 +14,7 @@ Built with **Java 21**, **Spring Boot**, and **MySQL 8**, this project follows a
   * Clients & providers
   * Addresses, phones, bank accounts, contacts
   * Orders and order lines
-  * Customer invoices (25% of document system complete)
+  * Customer and provider invoices, quotes, POs
 * ✅ Soft delete for users and documents
 * ✅ Automatic calculation of due dates, taxes, totals, and currency conversion
 * ✅ Secure endpoints with JWT authentication and role checks
