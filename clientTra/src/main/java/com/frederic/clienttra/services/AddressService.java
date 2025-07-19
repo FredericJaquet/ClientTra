@@ -37,10 +37,10 @@ public class AddressService {
         ownerValidator.checkOwner(idCompany);
 
         List<Address> entities = new ArrayList<>(addressRepository.findByCompany_IdCompany(idCompany));
-        List<AddressDTO> customers=addressMapper.toAddressDTOList(entities);
-        customers.sort(Comparator.comparing(AddressDTO::getCity, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+        List<AddressDTO> dtos=addressMapper.toAddressDTOList(entities);
+        dtos.sort(Comparator.comparing(AddressDTO::getCity, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
-        return addressMapper.toAddressDTOList(entities);
+        return dtos;
     }
 
     @Transactional(readOnly = true)
