@@ -14,7 +14,7 @@ Built with **Java 21**, **Spring Boot**, and **MySQL 8**, this project follows a
   * Clients & providers
   * Addresses, phones, bank accounts, contacts
   * Orders and order lines
-  * Customer invoices (25% of document system complete)
+  * Customer and provider invoices, quotes, POs
 * ✅ Soft delete for users and documents
 * ✅ Automatic calculation of due dates, taxes, totals, and currency conversion
 * ✅ Secure endpoints with JWT authentication and role checks
@@ -110,16 +110,24 @@ src/main/java/com/frederic/clienttra/
 
 ## 📌 Current Status
 
-* ✅ User, company, and client/provider management complete
-* ✅ Orders and customer invoices fully functional
-* 🧰 Document types remaining:
+✅ User, company, and client/provider management complete
 
-  * Provider invoices
-  * Quotes
-  * Purchase Orders
-* 🔮 Report generation and statistics planned
-* 🖥️ Frontend to be implemented (React planned)
+✅ Orders and all document types fully implemented:
 
+Customer invoices
+
+Provider invoices
+
+Quotes
+
+Purchase orders
+
+
+✅ Demo data loading and deletion functionality completed
+
+🔮 Report generation and statistics planned
+
+🖥️ Frontend to be implemented (React planned)
 ---
 
 ## 📒 License
