@@ -52,7 +52,7 @@ public class PhoneService {
         ownerValidator.checkOwner(idCompany);
 
         Phone entity = phoneRepository.findByIdPhoneAndCompany_idCompany(idPhone, idCompany)
-                .orElseThrow(AddressNotFoundException::new);
+                .orElseThrow(PhoneNotFoundException::new);
         phoneRepository.delete(entity);
     }
 

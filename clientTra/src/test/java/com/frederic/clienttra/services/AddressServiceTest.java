@@ -39,6 +39,7 @@ class AddressServiceTest {
     private AddressValidator addressValidator;
     @InjectMocks
     private AddressService addressService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -57,7 +58,6 @@ class AddressServiceTest {
         a2.setCity("Madrid");
         Address a3 = new Address();
         a3.setCity(null);
-
         List<Address> entities = Arrays.asList(a2, a3, a1);
 
         when(addressRepository.findByCompany_IdCompany(idCompany)).thenReturn(entities);
@@ -68,8 +68,9 @@ class AddressServiceTest {
         dto2.setCity("Madrid");
         AddressDTO dto3 = new AddressDTO();
         dto3.setCity(null);
+        List<AddressDTO> dtos = Arrays.asList(dto2,dto3,dto1);
 
-        when(addressMapper.toAddressDTOList(entities)).thenReturn(Arrays.asList(dto2, dto3, dto1)); // simulo conversion
+        when(addressMapper.toAddressDTOList(entities)).thenReturn(dtos); // simulo conversion
 
         // El método retorna lista ordenada por city (ignora nulls)
         List<AddressDTO> result = addressService.getAllAddresses(idCompany);
