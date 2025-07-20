@@ -70,8 +70,7 @@ class CreateAddressRequestDTOValidationTest extends AbstractValidationTest {
         CreateAddressRequestDTO dto = baseBuilder().build();
         dto.setCity("");  // Campo inválido
 
-        Set<ConstraintViolation<CreateAddressRequestDTO>> violations =
-                validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
+        Set<ConstraintViolation<CreateAddressRequestDTO>> violations = validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
@@ -87,8 +86,7 @@ class CreateAddressRequestDTOValidationTest extends AbstractValidationTest {
         CreateAddressRequestDTO dto = baseBuilder().build();
         dto.setCountry("");  // Campo inválido
 
-        Set<ConstraintViolation<CreateAddressRequestDTO>> violations =
-                validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
+        Set<ConstraintViolation<CreateAddressRequestDTO>> violations = validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
@@ -104,8 +102,7 @@ class CreateAddressRequestDTOValidationTest extends AbstractValidationTest {
         CreateAddressRequestDTO dto = baseBuilder().build();
         dto.setCp("");  // Campo inválido
 
-        Set<ConstraintViolation<CreateAddressRequestDTO>> violations =
-                validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
+        Set<ConstraintViolation<CreateAddressRequestDTO>> violations = validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
@@ -121,8 +118,7 @@ class CreateAddressRequestDTOValidationTest extends AbstractValidationTest {
         CreateAddressRequestDTO dto = baseBuilder().build();
         dto.setStreet("");  // Campo inválido
 
-        Set<ConstraintViolation<CreateAddressRequestDTO>> violations =
-                validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
+        Set<ConstraintViolation<CreateAddressRequestDTO>> violations = validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
@@ -138,15 +134,12 @@ class CreateAddressRequestDTOValidationTest extends AbstractValidationTest {
         CreateAddressRequestDTO dto = baseBuilder().build();
         dto.setStNumber("");  // Campo inválido
 
-        Set<ConstraintViolation<CreateAddressRequestDTO>> violations =
-                validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
+        Set<ConstraintViolation<CreateAddressRequestDTO>> violations = validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
 
         assertThat(message).isEqualTo("El número de calle es un campo obligatorio."); // mensaje definido en messages_fr.properties
     }
-
-
 
 }
