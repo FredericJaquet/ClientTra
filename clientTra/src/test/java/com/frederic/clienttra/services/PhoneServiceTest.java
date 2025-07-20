@@ -203,7 +203,7 @@ public class PhoneServiceTest {
 
     // --- updatePhone ---
     @Test
-    void updatePhone_sholdUpdateAndReturnDTO_whenPhoneFound(){
+    void updatePhone_shouldUpdateAndReturnDTO_whenPhoneFound(){
         int idCompany = 1;
         int idPhone = 10;
 
