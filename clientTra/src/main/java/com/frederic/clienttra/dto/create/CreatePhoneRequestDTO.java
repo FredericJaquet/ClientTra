@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreatePhoneRequestDTO implements BasePhoneDTO {
-    @NotBlank(message = "validation.phone.number_required")
+    @NotBlank(message = "{validation.phone.number_required}")
     private String phoneNumber;
     private String kind;
 }
