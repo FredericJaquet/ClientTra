@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidIban {
-    String message() default "IBAN no válido";
+    String message() default "{validation.bank_account.invalid_bank_account}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
