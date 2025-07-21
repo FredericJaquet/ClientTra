@@ -252,7 +252,7 @@ public class PhoneServiceTest {
 
         UpdatePhoneRequestDTO updateDto = new UpdatePhoneRequestDTO();
 
-        assertThatThrownBy(() -> phoneService.deletePhone(idCompany, idPhone))
+        assertThatThrownBy(() -> phoneService.updatePhone(idCompany, idPhone, updateDto))
                 .isInstanceOf(PhoneNotFoundException.class);
 
         verify(ownerValidator).checkOwner(idCompany);
