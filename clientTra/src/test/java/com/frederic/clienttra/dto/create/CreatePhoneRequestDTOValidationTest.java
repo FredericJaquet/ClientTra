@@ -21,7 +21,7 @@ public class CreatePhoneRequestDTOValidationTest extends AbstractValidationTest{
     void validDto_shouldHaveNoViolations(){
         CreatePhoneRequestDTO dto = baseBuilder().build();
 
-        Set<ConstraintViolation<CreatePhoneRequestDTO>> violations = validator.validate((dto));
+        Set<ConstraintViolation<CreatePhoneRequestDTO>> violations = validator.validate(dto);
         assertThat(violations).isEmpty();
     }
 
@@ -34,12 +34,12 @@ public class CreatePhoneRequestDTOValidationTest extends AbstractValidationTest{
     }
 
     @Test
-    void shouldReturnLocalizedValidationMessage_whePhoneNumberIsBlank(){
+    void shouldReturnLocalizedValidationMessage_whenPhoneNumberIsBlank(){
         LocaleContextHolder.setLocale(new Locale("es"));
 
         CreatePhoneRequestDTO dto = baseBuilder().phoneNumber("").build();
 
-        Set<ConstraintViolation<CreatePhoneRequestDTO>> violations = validator.validate((dto));
+        Set<ConstraintViolation<CreatePhoneRequestDTO>> violations = validator.validate(dto);
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();

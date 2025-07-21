@@ -111,7 +111,7 @@ public class PhoneServiceTest {
     }
 
     @Test
-    void getPhone_shouldThrowPhoneReturnPhoneNotFoundException_whenNotFound() {
+    void getPhone_shouldThrowPhoneNotFoundException_whenNotFound() {
         int idCompany = 1;
         int idPhone = 10;
 
@@ -147,7 +147,7 @@ public class PhoneServiceTest {
     }
 
     @Test
-    void deletePhone_shouldThrowPhoneReturnPhoneNotFoundException_whenNotFound(){
+    void deletePhone_shouldThrowPhoneNotFoundException_whenNotFound(){
         int idCompany = 1;
         int idPhone = 10;
 
@@ -242,7 +242,7 @@ public class PhoneServiceTest {
     }
 
     @Test
-    void updatePhone_shouldThrowPhoneReturnPhoneNotFoundException_whenNotFound() {
+    void updatePhone_shouldThrowPhoneNotFoundException_whenNotFound() {
         int idCompany = 1;
         int idPhone = 10;
 
