@@ -65,8 +65,11 @@ public class UserService {
     public Optional<UserForAdminDTO> getUserById(Integer id) {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
 
-        return userRepository.findByIdUserAndCompany_IdCompany(id, idCompany)
-                .map(userMapper::toAdminDTO);
+        User user = userRepository.findByIdUserAndCompany_IdCompany(id, idCompany)
+                .orElseThrow(UserNotFoundException::new);
+        UserForAdminDTO dto = userMapper.toAdminDTO(user);
+
+        return Optional.of(dto);
     }
 
     @Transactional
@@ -144,6 +147,7 @@ public class UserService {
 
         userRepository.save(user);
     }
+
     @Transactional
     public void changePassword(UpdatePasswordRequestDTO dto) {
         int userId = SecurityUtils.getCurrentUserId();
