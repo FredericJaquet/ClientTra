@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateContactPersonRequestDTO implements BaseContactPersonDTO {
-    @NotBlank(message = "validation.contact.firstname_required")
+    @NotBlank(message = "{validation.contact.firstname_required}")
     private String firstname;
-    @NotBlank(message = "validation.contact.middlename_required")
+    @NotBlank(message = "{validation.contact.middlename_required}")
     private String middlename;
     private String lastname;
     private String role;
-    @Email(message = "validation.email.invalid")
-    @Size(max = 100, message = "validation.email.too_long")
+    @Email(message = "{validation.email.invalid}")
+    @Size(max = 100, message = "{validation.email.too_long}")
     private String email;
 
 }

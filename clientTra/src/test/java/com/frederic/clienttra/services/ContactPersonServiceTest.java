@@ -170,8 +170,6 @@ public class ContactPersonServiceTest {
         ContactPerson entity = new ContactPerson();
         when(contactPersonMapper.toEntity(dto)).thenReturn(entity);
 
-        contactPersonService.createContactPerson(idCompany, dto);
-
         verify(ownerValidator).checkOwner(idCompany);
         verify(companyRepository).findByIdCompany(idCompany);
         verify(contactPersonMapper).toEntity(dto);
