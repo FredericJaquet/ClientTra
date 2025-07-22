@@ -15,12 +15,10 @@ import com.frederic.clienttra.mappers.UserMapper;
 import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
+import com.frederic.clienttra.testutils.SecurityTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
@@ -72,16 +70,6 @@ class UserServiceTest {
         );
     }
 
-    private void mockSecurityContextWithUser(CustomUserDetails currentUser) {
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(currentUser);
-
-        SecurityContext securityContext = mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        SecurityContextHolder.setContext(securityContext);
-    }
-
     @Test
     void getAllUsers_shouldReturnListSortedByName() {
         // given
@@ -126,7 +114,7 @@ class UserServiceTest {
 
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         User user = new User();
         user.setIdUser(idUser);
@@ -147,7 +135,7 @@ class UserServiceTest {
 
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.empty());
 
@@ -162,7 +150,7 @@ class UserServiceTest {
 
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         User user = new User();
         user.setIdUser(idUser);
@@ -179,7 +167,7 @@ class UserServiceTest {
 
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.empty());
 
@@ -196,7 +184,7 @@ class UserServiceTest {
         CustomUserDetails currentUser = new CustomUserDetails(
                 idUser, "username", "pass", true, null, idCompany, "en"
         );
-        mockSecurityContextWithUser(currentUser); // 👈 esto basta
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser); // 👈 esto basta
 
         // No hace falta mockear SecurityUtils.getCurrentUserCompanyId()
         // Porque ya lo saca de SecurityContextHolder
@@ -220,8 +208,6 @@ class UserServiceTest {
         assertThat(result.get().getUserName()).isEqualTo("Juan");
     }
 
-
-
     @Test
     void getUserById_shouldThrow_whenUserNotFound() {
         int idCompany = 1;
@@ -229,7 +215,7 @@ class UserServiceTest {
 
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(1, idCompany);
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         UserService userService = new UserService(userRepository, companyService, userMapper, passwordEncoder);
 
@@ -239,7 +225,6 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.getUserById(userId))
                 .isInstanceOf(UserNotFoundException.class);
     }
-
 
     @Test
     void deleteUserById_shouldDisableUser_whenValid() {
@@ -256,7 +241,7 @@ class UserServiceTest {
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.of(user));
         when(userRepository.countByCompany_IdCompanyAndRole_RoleName(idCompany, "ADMIN")).thenReturn(2);
@@ -288,7 +273,7 @@ class UserServiceTest {
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompanyWrong);
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.of(user));
 
@@ -309,7 +294,7 @@ class UserServiceTest {
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.of(user));
         when(userRepository.countByCompany_IdCompanyAndRole_RoleName(idCompany, "ADMIN")).thenReturn(1);
@@ -317,6 +302,30 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.deleteUserById(idUser))
                 .isInstanceOf(CantDeleteSelfException.class);
     }
+
+    @Test
+    void deleteUserById_shouldDisableUser_whenDeletingAnotherUserOfSameCompany() {
+        int idUserToDelete = 10;
+        int idCompany = 1;
+        int currentUserId = 20;
+
+        User userToDelete = new User();
+        userToDelete.setIdUser(idUserToDelete);
+        Company company = new Company();
+        company.setIdCompany(idCompany);
+        userToDelete.setCompany(company);
+
+        CustomUserDetails currentUser = getCurrentUser(currentUserId, idCompany);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
+
+        when(userRepository.findById(idUserToDelete)).thenReturn(Optional.of(userToDelete));
+
+        userService.deleteUserById(idUserToDelete);
+
+        assertThat(userToDelete.isEnabled()).isFalse();
+        verify(userRepository).save(userToDelete);
+    }
+
 
     @Test
     void reactivateUserById_shouldEnableUser_whenAuthorized() {
@@ -331,7 +340,7 @@ class UserServiceTest {
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompany);
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.of(user));
 
@@ -354,7 +363,7 @@ class UserServiceTest {
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = getCurrentUser(idUser, idCompanyWrong);
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(idUser)).thenReturn(Optional.of(user));
 
@@ -408,7 +417,7 @@ class UserServiceTest {
         User user = new User();
         user.setIdUser(userId);
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -439,7 +448,7 @@ class UserServiceTest {
         user.setIdUser(userId);
         user.setPasswd("encodedOldPass");
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("oldPass", "encodedOldPass")).thenReturn(true);
@@ -468,7 +477,7 @@ class UserServiceTest {
         user.setIdUser(userId);
         user.setPasswd("encodedOldPass");
 
-        mockSecurityContextWithUser(currentUser);
+        SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrongOldPass", "encodedOldPass")).thenReturn(false);

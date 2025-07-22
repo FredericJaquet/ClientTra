@@ -11,15 +11,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CreateUserRequestDTO {
-    @NotBlank(message = "validation.username.required")
+    @NotBlank(message = "{validation.username.required}")
     private String username;
-    @NotBlank(message = "validation.password.required")
+    @NotBlank(message = "{validation.password.required}")
     private String password;
-    @Email(message = "validation.email.invalid")
-    @Size(max = 100, message = "validation.email.too_long")
+    @Email(message = "{validation.email.invalid}")
+    @Size(max = 100, message = "{validation.email.too_long}")
     private String email;
-    @NotNull(message = "validation.role_id.required")
+    @NotNull(message = "{validation.role_id.required}")
     private Integer idRole;
-    @NotNull(message = "validation.plan_id.required")
+    @NotNull(message = "{validation.plan_id.required}")
     private Integer idPlan;
 }
