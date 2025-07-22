@@ -21,12 +21,13 @@ public class OwnerValidator {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Company company = companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
+
         // Si es empresa propietaria, debe ser igual al owner
         if (company.getOwnerCompany() == null) {
-            if (!company.equals(owner)) {
+            if (!company.getIdCompany().equals(owner.getIdCompany())) {
                 throw new CompanyNotFoundException();
             }
-        }else if (!company.getOwnerCompany().equals(owner)) {
+        }else if (!company.getOwnerCompany().getIdCompany().equals(owner.getIdCompany())) {
             throw new CompanyNotFoundException();
         }
     }

@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Company {//TODO Añadir el ChangeRate, ya que hemos incluido un idOwnerCompany al ChangeRate
+public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
