@@ -19,6 +19,7 @@ import com.frederic.clienttra.mappers.OrderMapper;
 import com.frederic.clienttra.projections.OrderListProjection;
 import com.frederic.clienttra.repositories.OrderRepository;
 import com.frederic.clienttra.utils.DocumentUtils;
+import com.frederic.clienttra.validators.OwnerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ItemMapper itemMapper;
     private final DocumentUtils documentUtils;
+    private final OwnerValidator ownerValidator;
 
     @Transactional(readOnly = true)
     public OrderDetailsDTO getOrderDetails(Integer idCompany, Integer idOrder) {
@@ -80,6 +82,8 @@ public class OrderService {
     public OrderDetailsDTO createOrder(Integer idCompany, CreateOrderRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Company company = companyService.getCompanyById(idCompany);
+
+        ownerValidator.checkOwner(idCompany);
 
         Order order = orderMapper.toEntity(dto);
         order.setOwnerCompany(owner);
