@@ -16,28 +16,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
     private Integer idUser;
-
     @Column(nullable = false, unique = true, length = 50)
     private String userName;
-
     @Column(nullable = false, length = 255)
     private String passwd;
-
     @Column(nullable = false, unique = true, length = 100)
     private String email;
-
     @Column(length = 10)
     private String preferredLanguage;
-
     @Column(length = 20)
     private String preferredTheme;
-
     @Column
     private boolean darkMode;
-
     @Column(nullable = false)
     private boolean enabled = true;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)
     private Company company;
