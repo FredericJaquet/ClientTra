@@ -51,6 +51,7 @@ public class CreateContactPersonRequestDTOValidationTest extends AbstractValidat
         Set<ConstraintViolation<CreateContactPersonRequestDTO>> violations = validator.validate(dto);
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("email"));
     }
+
     @Test
     void emailTooLong_shouldCauseViolation(){
         CreateContactPersonRequestDTO dto = baseBuilder().email("emailveryverymuchtoolongforthemaximumautorizedsize@emailveryverymuchtoolongforthemaximumautorizedsize.com").build();
@@ -66,7 +67,7 @@ public class CreateContactPersonRequestDTOValidationTest extends AbstractValidat
 
         CreateContactPersonRequestDTO dto = baseBuilder().firstname("").build();
 
-        Set<ConstraintViolation<CreateContactPersonRequestDTO>> violations = validator.validate(dto); // javax.validation.Validator (inyectado con @Autowired)
+        Set<ConstraintViolation<CreateContactPersonRequestDTO>> violations = validator.validate(dto);
 
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
