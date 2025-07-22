@@ -16,18 +16,18 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class CreateBaseCompanyRequestDTO {
-    @NotBlank(message = "validation.company.vat_number_required")
+    @NotBlank(message = "{validation.company.vat_number_required}")
     protected String vatNumber;
     protected String comName;
-    @NotBlank(message = "validation.company.legal_name_required")
+    @NotBlank(message = "{validation.company.legal_name_required}")
     protected String legalName;
-    @Email(message = "validation.email.invalid")
-    @Size(max = 100, message = "validation.email.too_long")
+    @Email(message = "{validation.email.invalid}")
+    @Size(max = 100, message = "{validation.email.too_long}")
     protected String email;
     protected String web;
     private List<CreateContactPersonRequestDTO> contactPersons;
     private List<CreatePhoneRequestDTO> phones;
-    @NotNull(message = "validation.company.address_required")
+    @NotNull(message = "{validation.company.address_required}")
     private List<CreateAddressRequestDTO> addresses;
     private List<CreateBankAccountRequestDTO> bankAccounts;
 }
