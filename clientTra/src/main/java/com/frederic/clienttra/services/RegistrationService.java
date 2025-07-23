@@ -4,6 +4,8 @@ import com.frederic.clienttra.dto.create.RegistrationActualCompanyRequestDTO;
 import com.frederic.clienttra.dto.create.RegistrationRequestDTO;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CompanyAlreadyExistsException;
+import com.frederic.clienttra.mappers.AddressMapper;
+import com.frederic.clienttra.mappers.ChangeRateMapper;
 import com.frederic.clienttra.repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.time.LocalDate;
 @Service
 @RequiredArgsConstructor
 public class RegistrationService {
+    private final AddressMapper addressMapper;
     private final CompanyService companyService;
     private final UserService userService;
     private final CompanyRepository companyRepository;
@@ -27,7 +30,6 @@ public class RegistrationService {
     private final PlanRepository planRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-
 
     @Transactional
     public void register(RegistrationRequestDTO dto) {
@@ -46,16 +48,7 @@ public class RegistrationService {
                 .ownerCompany(null)
                 .build();
 
-        Address address = Address.builder()
-                .street(dto.getAddress().getStreet())
-                .stNumber(dto.getAddress().getStNumber())
-                .apt(dto.getAddress().getApt())
-                .cp(dto.getAddress().getCp())
-                .city(dto.getAddress().getCity())
-                .state(dto.getAddress().getState())
-                .country(dto.getAddress().getCountry())
-                .company(company)
-                .build();
+        Address address = addressMapper.toEntity(dto.getAddress());
 
         ChangeRate changeRate = ChangeRate.builder()
                     .currency1("€")
@@ -116,16 +109,7 @@ public class RegistrationService {
                 .ownerCompany(null)
                 .build();
 
-        Address address = Address.builder()
-                .street(dto.getAddress().getStreet())
-                .stNumber(dto.getAddress().getStNumber())
-                .apt(dto.getAddress().getApt())
-                .cp(dto.getAddress().getCp())
-                .city(dto.getAddress().getCity())
-                .state(dto.getAddress().getState())
-                .country(dto.getAddress().getCountry())
-                .company(company)
-                .build();
+        Address address = addressMapper.toEntity(dto.getAddress());
 
         ChangeRate changeRate = ChangeRate.builder()
                 .currency1("€")
