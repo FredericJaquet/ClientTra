@@ -32,12 +32,9 @@ public class DemoDataService {
     private final BankAccountRepository bankAccountRepository;
     private final ChangeRateRepository changeRateRepository;
     private final CompanyRepository companyRepository;
-    private final ContactPersonRepository contactPersonRepository;
     private final CustomerRepository customerRepository;
     private final DocumentRepository documentRepository;
-    private final OrderRepository orderRepository;
     private final ProviderRepository providerRepository;
-    private final SchemeRepository schemeRepository;
     private final UserRepository userRepository;
     private final AddressMapper addressMapper;
     private final BankAccountMapper bankAccountMapper;
@@ -163,7 +160,6 @@ public class DemoDataService {
         companyRepository.deleteAll(companies);
     }
 
-
     private <T> T readJsonFromResource(String path, TypeReference<T> typeRef) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
             if (is == null) {
@@ -180,7 +176,5 @@ public class DemoDataService {
             throw new RuntimeException("Error reading JSON from " + path, e);
         }
     }
-
-
 
 }
