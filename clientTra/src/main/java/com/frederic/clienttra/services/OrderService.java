@@ -43,7 +43,7 @@ public class OrderService {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
                 .orElseThrow(OrderNotFoundException::new);
-        if (!order.getOwnerCompany().equals(owner) || !order.getCompany().getIdCompany().equals(idCompany)) {
+        if (!order.getCompany().getIdCompany().equals(idCompany)) {
             throw new OrderNotFoundException();
         }
         return orderMapper.toDetailsDto(order);
@@ -105,8 +105,8 @@ public class OrderService {
         }
         order.setTotal(totalOrder);
 
-        orderRepository.save(order);
-        return orderMapper.toDetailsDto(order);
+        Order savedOrder = orderRepository.save(order);
+        return orderMapper.toDetailsDto(savedOrder);
     }
 
     @Transactional
@@ -184,7 +184,7 @@ public class OrderService {
             item.setTotal(lineTotal);
             totalOrder += lineTotal;
         }
-        if(Math.abs(entity.getTotal() - totalOrder) > 0.01) {//TODO Comprobar que esto funciona.
+        if(Math.abs(entity.getTotal() - totalOrder) > 0.01) {
             entity.setTotal(totalOrder);
             if (entity.getDocuments() != null) {
                 for(Document document : entity.getDocuments()) {
@@ -192,9 +192,10 @@ public class OrderService {
                 }
             }
         }
-        orderRepository.save(entity);
 
-        return orderMapper.toDetailsDto(entity);
+        Order savedEntity = orderRepository.save(entity);
+
+        return orderMapper.toDetailsDto(savedEntity);
     }
 
     @Transactional

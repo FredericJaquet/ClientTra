@@ -1,7 +1,6 @@
 package com.frederic.clienttra.dto.update;
 
 import com.frederic.clienttra.dto.bases.BaseOrderDTO;
-import com.frederic.clienttra.dto.create.CreateItemRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UpdateOrderRequestDTO implements BaseOrderDTO {
-    //private Integer idorder;
     private String descrip;
     private LocalDate dateOrder;
     private Double pricePerUnit;
@@ -26,5 +24,9 @@ public class UpdateOrderRequestDTO implements BaseOrderDTO {
     private String sourceLanguage;
     private String targetLanguage;
     private List<UpdateItemRequestDTO> items;
+
+    public void addItem(UpdateItemRequestDTO item){//Used in Test
+        items.add(item);
+    }
 
 }

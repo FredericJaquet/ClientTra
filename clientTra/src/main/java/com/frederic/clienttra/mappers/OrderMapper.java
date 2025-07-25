@@ -40,7 +40,7 @@ public class OrderMapper {
                 .build();
     }
 
-    public List<OrderDetailsDTO> toDetailsDto(List<Order> entities){
+    public List<OrderDetailsDTO> toDetailsDtos(List<Order> entities){
         return entities.stream()
                 .map(this::toDetailsDto)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -164,7 +164,6 @@ public class OrderMapper {
         if(dto.getTargetLanguage() != null){
             entity.setTargetLanguage(dto.getTargetLanguage());
         }
-
     }
 
 }
