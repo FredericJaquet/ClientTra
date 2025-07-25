@@ -16,4 +16,5 @@ public class UpdateItemRequestDTO implements BaseItemDTO {
     private Double  qty;
     private Double discount;
     private Double total;
+
 }

@@ -55,7 +55,9 @@ class OwnerValidatorTest {
     void checkOwner_withCompanyNotBelongingToOwner_shouldThrowException() {
         Company strangerCompany = new Company();
         strangerCompany.setIdCompany(3);
-        strangerCompany.setOwnerCompany(new Company()); // otra empresa
+        Company strangerOwnerCompany = new Company();
+        strangerOwnerCompany.setIdCompany(2);
+        strangerCompany.setOwnerCompany(strangerOwnerCompany); // otra empresa
 
         when(companyService.getCurrentCompanyOrThrow()).thenReturn(owner);
         when(companyRepository.findByIdCompany(3)).thenReturn(Optional.of(strangerCompany));
