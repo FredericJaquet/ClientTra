@@ -34,14 +34,22 @@ public class CustomerInvoiceServiceTest {
 
     @Mock
     private DocumentMapper documentMapper;
-    @Mock private DocumentRepository documentRepository;
-    @Mock private ChangeRateService changeRateService;
-    @Mock private CompanyService companyService;
-    @Mock private OrderService orderService;
-    @Mock private CompanyRepository companyRepository;
-    @Mock private CustomerRepository customerRepository;
-    @Mock private OrderRepository orderRepository;
-    @Mock private DocumentUtils documentUtils;
+    @Mock
+    private DocumentRepository documentRepository;
+    @Mock
+    private ChangeRateService changeRateService;
+    @Mock
+    private CompanyService companyService;
+    @Mock
+    private OrderService orderService;
+    @Mock
+    private CompanyRepository companyRepository;
+    @Mock
+    private CustomerRepository customerRepository;
+    @Mock
+    private OrderRepository orderRepository;
+    @Mock
+    private DocumentUtils documentUtils;
 
     @Spy
     @InjectMocks
@@ -81,14 +89,14 @@ public class CustomerInvoiceServiceTest {
         order.setIdOrder(100);
         order.setCompany(customerCompany);
         order.setOwnerCompany(owner);
-        order.setBilled(null);
+        order.setBilled(false);
 
         Document entity = new Document();
         Document saved = new Document();
         DocumentDTO expectedDto = new DocumentDTO();
 
         when(companyService.getCurrentCompanyOrThrow()).thenReturn(owner);
-        when(changeRateService.getChangeRateByIdAndOwner(1, owner)).thenReturn(changeRate);
+        when(changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner)).thenReturn(changeRate);
         when(orderRepository.findAllByIdOrderInAndOwnerCompany(List.of(100), owner)).thenReturn(List.of(order));
         when(companyRepository.findByIdCompany(idTargetCompany)).thenReturn(Optional.of(targetCompany));
         when(customerRepository.findByOwnerCompanyAndCompany(owner, customerCompany)).thenReturn(Optional.of(customer));
@@ -341,14 +349,5 @@ public class CustomerInvoiceServiceTest {
 
         verify(documentRepository).save(doc);
     }
-
-
-
-
-
-
-
-
-
 
 }
