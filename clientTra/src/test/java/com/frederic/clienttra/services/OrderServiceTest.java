@@ -51,7 +51,6 @@ public class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
