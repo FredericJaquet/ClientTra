@@ -172,8 +172,6 @@ public class QuoteService implements DocumentService{
             entity.setOrders(orders);
         }
         if(dto.getDocDate() != null) {
-            String notePayment = documentUtils.generateNotePayment(dto.getDocDate(), customer, entity.getBankAccount());
-            entity.setNotePayment(notePayment);
             LocalDate deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
             entity.setDeadline(deadline);
         }

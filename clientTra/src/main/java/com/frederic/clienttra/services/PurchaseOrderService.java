@@ -9,10 +9,7 @@ import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.exceptions.*;
 import com.frederic.clienttra.mappers.DocumentMapper;
 import com.frederic.clienttra.projections.DocumentListProjection;
-import com.frederic.clienttra.repositories.CompanyRepository;
-import com.frederic.clienttra.repositories.CustomerRepository;
-import com.frederic.clienttra.repositories.DocumentRepository;
-import com.frederic.clienttra.repositories.OrderRepository;
+import com.frederic.clienttra.repositories.*;
 import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +28,7 @@ public class PurchaseOrderService implements DocumentService{
     private final ChangeRateService changeRateService;
     private final CompanyService companyService;
     private final CompanyRepository companyRepository;
-    private final CustomerRepository customerRepository;
+    private final ProviderRepository providerRepository;
     private final OrderRepository orderRepository;
     private final DocumentUtils documentUtils;
 
@@ -115,12 +112,12 @@ public class PurchaseOrderService implements DocumentService{
                 .orElseThrow(CompanyNotFoundException::new);
 
         //2. Campos calculados
-        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
+        Provider provider= providerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 
         currency = changeRate.getCurrency1();
 
-        deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
+        deadline = documentUtils.calculateDeadline(dto.getDocDate(), provider.getDuedate());
 
         // 3. Crear entidad
         Document entity = documentMapper.toEntity(dto, changeRate, bankAccount, parent, orders);
@@ -146,7 +143,7 @@ public class PurchaseOrderService implements DocumentService{
         Document entity = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, idDocument, type)
                 .orElseThrow(DocumentNotFoundException::new);
         Company orderCompany = entity.getCompany();
-        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
+        Provider provider= providerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 
         ChangeRate changeRate;
@@ -170,9 +167,7 @@ public class PurchaseOrderService implements DocumentService{
             entity.setOrders(orders);
         }
         if(dto.getDocDate() != null) {
-            String notePayment = documentUtils.generateNotePayment(dto.getDocDate(), customer, entity.getBankAccount());
-            entity.setNotePayment(notePayment);
-            LocalDate deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
+            LocalDate deadline = documentUtils.calculateDeadline(dto.getDocDate(), provider.getDuedate());
             entity.setDeadline(deadline);
         }
 
