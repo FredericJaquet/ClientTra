@@ -153,6 +153,7 @@ public class QuoteService implements DocumentService{
         ChangeRate changeRate;
 
         List<Order> orders;
+
         if(dto.getIdChangeRate()==null) {
             changeRate = entity.getChangeRate();
             String currency = changeRate.getCurrency1();
