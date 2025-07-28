@@ -1,48 +1,67 @@
 # ClientTra
 
-**ClientTra** is a backend system designed for translators and small businesses to manage clients, providers, orders, and financial documents such as invoices, quotes, and purchase orders.
+**ClientTra** is a backend system designed for freelance translators and small businesses to manage clients, providers, orders, and financial documents such as invoices, quotes, and purchase orders.
 
-Built with **Java 21**, **Spring Boot**, and **MySQL 8**, this project follows a clean and modular architecture, supporting multi-company use, multilingual capabilities, and role-based security.
+Built with **Java 21**, **Spring Boot 3**, and **MySQL 8**, the project follows a clean and modular architecture. It supports multi-company environments, multilingual capabilities, and role-based security.
 
 ---
 
 ## ✨ Features
+✅ Company and user registration with role and freemium plan assignment  
+✅ Full CRUD management for:
+ - Clients & providers
+ - Addresses, phone numbers, bank accounts, contacts
 
-* ✅ Company and user registration with roles and freemium plan assignment
-* ✅ Full management of:
-
-  * Clients & providers
-  * Addresses, phones, bank accounts, contacts
-  * Orders and order lines
-  * Customer and provider invoices, quotes, POs
-* ✅ Soft delete for users and documents
-* ✅ Automatic calculation of due dates, taxes, totals, and currency conversion
-* ✅ Secure endpoints with JWT authentication and role checks
-* ✅ Multi-language support (I18n ready)
-* ✅ Document versioning (via "MODIFIED" status)
+✅ Orders and order lines with automatic total and VAT calculation  
+✅ Customer and provider invoices, quotes, and purchase orders  
+✅ Soft delete system for users and documents  
+✅ Automatic tax, total, due date and currency conversion  
+✅ Document versioning via `"MODIFIED"` status  
+✅ Secure endpoints using JWT and role-based access  
+✅ I18n-ready (multi-language support)
 
 ---
 
 ## 📁 Project Structure
-
-```
 src/main/java/com/frederic/clienttra/
+
 ├── ClienttraApplication.java
-├── config             # Configuration files (CORS, WebSecurity, etc.)
-├── controllers        # REST controllers (User, Company, Document, etc.)
-├── dto                # DTOs for create/read/update operations
-├── entities           # JPA entities representing database tables
-├── enums              # Enums (DocumentType, Status, Roles, etc.)
-├── exceptions         # Custom exceptions
-├── mappers            # MapStruct mappers (entity ↔ DTO)
-├── projections        # Spring JPA projections for optimized queries
-├── repositories       # Spring Data JPA repositories
-├── security           # JWT auth, filters, security config
-├── services           # Business logic layer
-├── utils              # Helpers for calculations (e.g., DocumentUtils)
-├── validators         # Custom bean validators (IBAN, email, etc.)
-└── DataLoader.java    # Initial data setup for development
-```
+
+├── config # Configuration (CORS, WebSecurity, etc.)
+
+├── controllers # REST controllers
+
+├── dto # DTOs for create/read/update operations
+
+├── entities # JPA entities
+
+├── enums # DocumentType, Status, Role, etc.
+
+├── exceptions # Custom exceptions
+
+├── mappers # MapStruct mappers
+
+├── projections # Optimized JPA queries
+
+├── repositories # Spring Data JPA repositories
+
+├── security # JWT filters and auth
+
+├── services # Business logic
+
+├── utils # Calculation helpers (DocumentUtils, etc.)
+
+├── validators # Custom validators (IBAN, email, etc.)
+
+└── DataLoader.java # Initial development/demo data
+
+---
+
+## 🧪 Testing
+
+- ✅ Over **200 unit tests** implemented with JUnit and Mockito
+- ✅ Focused on core services, business rules, and security
+- ⚠️ Code coverage not exhaustive by choice (quality over quantity)
 
 ---
 
@@ -108,31 +127,45 @@ src/main/java/com/frederic/clienttra/
 
 ---
 
-## 📌 Current Status
+## 📌 Project Status
+✅ Backend completed (code, logic, security, tests)
 
-✅ User, company, and client/provider management complete
+✅ All document types implemented:
 
-✅ Orders and all document types fully implemented:
+   - Customer invoices
+   - Provider invoices
+   - Quotes
+   - Purchase Orders
 
-Customer invoices
+✅ Demo data loader + deletion functionality
 
-Provider invoices
+✅ Multicompany, multilanguage, multirole support
 
-Quotes
+✅ Testing coverage for all core services
 
-Purchase orders
+🔜 Reports/statistics module finalizing (ETA: July 2025)
 
+🧾 Documentation in progress (expected this week)
 
 ✅ Demo data loading and deletion functionality completed
 
-🔮 Report generation and statistics planned
+--- 
 
-🖥️ Frontend to be implemented (React planned)
+## 🖥️ Frontend to be implemented (React planned)
+Planned stack: React + TailwindCSS + shadcn/ui
+
+Responsive layout with sidebar navigation, dashboard, and modals
+
+Auth, charts, and real-time data planned for production phase
+
 ---
 
 ## 📒 License
 
-This project is currently under private development by [Frédéric Jaquet](https://github.com/your-username) and is not yet licensed for public or commercial use.
+This project is currently under private development by [Frédéric Jaquet](https://github.com/FredericJaquet) and is not yet licensed for public or commercial use.
+
+🧠 Important:
+The author explicitly prohibits the use of this codebase for AI model training or data extraction, whether partial or full, without written consent.
 
 ---
 
