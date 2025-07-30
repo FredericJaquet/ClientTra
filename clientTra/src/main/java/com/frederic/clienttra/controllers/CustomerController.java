@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * REST controller for managing customer companies.
+ * <p>
+ * Provides endpoints to list, search, retrieve, create, update, and disable customers.
+ * Only users with ADMIN or ACCOUNTING roles can modify customer data.
+ */
 @RestController
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
@@ -23,51 +29,110 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    /**
+     * Retrieves a full list of all customers.
+     *
+     * @return a list of {@link CustomerForListDTO}
+     */
     @GetMapping
     public ResponseEntity<List<CustomerForListDTO>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
+    /**
+     * Retrieves customers filtered by their "enabled" status.
+     *
+     * @param enabled boolean flag to filter enabled/disabled customers
+     * @return a list of {@link CustomerForListDTO}
+     */
     @GetMapping("/enabled")
-    public ResponseEntity<List<CustomerForListDTO>> getAllCustomersEnabled(@RequestParam boolean enabled){
+    public ResponseEntity<List<CustomerForListDTO>> getAllCustomersEnabled(@RequestParam boolean enabled) {
         return ResponseEntity.ok(customerService.getAllCustomersEnabled(enabled));
     }
 
+    /**
+     * Retrieves full details of a customer by ID.
+     *
+     * @param id the ID of the customer
+     * @return the corresponding {@link CustomerDetailsDTO}
+     */
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDetailsDTO> getCustomerById(@PathVariable int id) {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
+    /**
+     * Searches customers by their name or VAT number.
+     *
+     * @param input the search input string
+     * @return a list of matching {@link CustomerForListDTO}
+     */
     @GetMapping("/search")
     public ResponseEntity<List<CustomerForListDTO>> searchCustomers(@RequestParam String input) {
         return ResponseEntity.ok(customerService.searchByNameOrVat(input));
     }
 
+    /**
+     * Returns a minimal list of customers for dropdowns or selection inputs.
+     *
+     * @return a list of {@link BaseCompanyMinimalDTO}
+     */
     @GetMapping("/minimal-list")
     public ResponseEntity<List<BaseCompanyMinimalDTO>> getMinimalCustomers() {
         return ResponseEntity.ok(customerService.getMinimalCustomerList());
     }
+
+    /**
+     * Creates a new customer.
+     * Only users with ADMIN or ACCOUNTING roles are allowed.
+     *
+     * @param dto the request payload containing customer data
+     * @return a response with the location of the created customer and a success message
+     */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
         int newId = customerService.createCustomer(dto);
-        /*CustomerDetailsDTO created = customerService.getCustomerById(newId);//Esto es un ejemplo de como devolver el nuevo cliente creado
-        return ResponseEntity
-                .created(URI.create("/api/customers/" + newId))
-                .body(created);*/
+
+        /*
+         * Example if you want to return the full created object instead of a message:
+         *
+         * CustomerDetailsDTO created = customerService.getCustomerById(newId);
+         * return ResponseEntity
+         *     .created(URI.create("/api/customers/" + newId))
+         *     .body(created);
+         */
+
         return ResponseEntity
                 .created(URI.create("/api/customers/" + newId))
                 .body(new GenericResponseDTO("customer.created.success"));
     }
 
+    /**
+     * Updates an existing customer.
+     * Only users with ADMIN or ACCOUNTING roles are allowed.
+     * <p>
+     *
+     * @param id  the ID of the customer to update
+     * @param dto the update payload
+     * @return the updated {@link CustomerDetailsDTO}
+     */
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")//TODO ERROR, el error que lanza para access denied no es el correcto, es el generico.
+    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int id, @RequestBody UpdateCustomerRequestDTO dto) {
         customerService.updateCustomer(id, dto);
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
-    @DeleteMapping("/{id}")//TODO ERROR, el error que lanza para access denied no es el correcto, es el generico.
+    /**
+     * Disables (soft deletes) a customer by ID.
+     * Only users with ADMIN or ACCOUNTING roles are allowed.
+     * <p>
+     *
+     * @param id the ID of the customer to disable
+     * @return a success message wrapped in {@link GenericResponseDTO}
+     */
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> deleteCustomer(@PathVariable int id) {
         customerService.disableCustomer(id);
