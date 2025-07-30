@@ -2,7 +2,7 @@ package com.frederic.clienttra.services;
 
 import com.frederic.clienttra.dto.read.CashFlowReportDTO;
 import com.frederic.clienttra.dto.read.InvoiceSummaryForCashFlowReportDTO;
-import com.frederic.clienttra.dto.read.PartyReportDTO;
+import com.frederic.clienttra.dto.read.PartyForCashFlowReportDTO;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.mappers.CashFlowReportMapper;
@@ -25,13 +25,13 @@ public class CashFlowReportService {
 
     public CashFlowReportDTO generate(LocalDate initDate, LocalDate endDate, DocumentType type) {
         Company onwerCompany = companyService.getCurrentCompanyOrThrow();
-        List<InvoiceForCashFlowReportProjection> rawData = repository.findInvoicesForReport(initDate, endDate, onwerCompany.getIdCompany(), type);
+        List<InvoiceForCashFlowReportProjection> rawData = repository.findInvoicesForCashFlowReport(initDate, endDate, onwerCompany.getIdCompany(), type);
 
         // Agrupar por idCompany (cliente o proveedor)
         Map<Integer, List<InvoiceForCashFlowReportProjection>> groupedByCompany = rawData.stream()
                 .collect(Collectors.groupingBy(InvoiceForCashFlowReportProjection::getIdCompany));
 
-        List<PartyReportDTO> parties = new ArrayList<>();
+        List<PartyForCashFlowReportDTO> parties = new ArrayList<>();
         double grandTotalNet = 0.0;
 
         for (Map.Entry<Integer, List<InvoiceForCashFlowReportProjection>> entry : groupedByCompany.entrySet()) {
@@ -41,7 +41,7 @@ public class CashFlowReportService {
             // Obtener info básica del cliente/proveedor desde la primera factura
             InvoiceForCashFlowReportProjection first = companyInvoices.get(0);
 
-            PartyReportDTO dto = mapper.toPartyReportDTO(
+            PartyForCashFlowReportDTO dto = mapper.toPartyReportDTO(
                     companyId,
                     first.getLegalName(),
                     first.getVatNumber(),
@@ -72,4 +72,5 @@ public class CashFlowReportService {
                 .parties(parties)
                 .build();
     }
+
 }

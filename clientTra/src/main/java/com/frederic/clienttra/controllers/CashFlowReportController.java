@@ -18,19 +18,18 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class CashFlowReportController {
 
-    private final CashFlowReportService cashFlowReportService;
+    private final CashFlowReportService service;
 
     @GetMapping("/income")
     public ResponseEntity<CashFlowReportDTO> getIncomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate){
-        CashFlowReportDTO dto = cashFlowReportService.generate(initDate, endDate, DocumentType.INV_CUST);
+        CashFlowReportDTO dto = service.generate(initDate, endDate, DocumentType.INV_CUST);
         return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/outcome")
     public ResponseEntity<CashFlowReportDTO> getOutcomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate){
-        CashFlowReportDTO dto = cashFlowReportService.generate(initDate, endDate, DocumentType.INV_PROV);
+        CashFlowReportDTO dto = service.generate(initDate, endDate, DocumentType.INV_PROV);
         return ResponseEntity.ok(dto);
     }
-
 
 }
