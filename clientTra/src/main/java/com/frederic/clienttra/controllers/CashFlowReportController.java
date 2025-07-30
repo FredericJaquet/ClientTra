@@ -1,6 +1,5 @@
 package com.frederic.clienttra.controllers;
 
-
 import com.frederic.clienttra.dto.read.CashFlowReportDTO;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.services.CashFlowReportService;
@@ -13,6 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
+/**
+ * REST controller for generating cash flow reports.
+ * <p>
+ * Provides endpoints to generate income and outcome reports
+ * within a specified date range.
+ */
 @RestController
 @RequestMapping("/api/reports/cash-flow/")
 @RequiredArgsConstructor
@@ -20,14 +25,30 @@ public class CashFlowReportController {
 
     private final CashFlowReportService service;
 
+    /**
+     * Generates an income report (based on customer invoices) for the given date range.
+     *
+     * @param initDate the start date of the report
+     * @param endDate  the end date of the report
+     * @return a {@link CashFlowReportDTO} representing the income report
+     */
     @GetMapping("/income")
-    public ResponseEntity<CashFlowReportDTO> getIncomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate){
+    public ResponseEntity<CashFlowReportDTO> getIncomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate) {
+        // Uses DocumentType.INV_CUST to retrieve customer invoice data
         CashFlowReportDTO dto = service.generate(initDate, endDate, DocumentType.INV_CUST);
         return ResponseEntity.ok(dto);
     }
 
+    /**
+     * Generates an outcome report (based on provider invoices) for the given date range.
+     *
+     * @param initDate the start date of the report
+     * @param endDate  the end date of the report
+     * @return a {@link CashFlowReportDTO} representing the outcome report
+     */
     @GetMapping("/outcome")
-    public ResponseEntity<CashFlowReportDTO> getOutcomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate){
+    public ResponseEntity<CashFlowReportDTO> getOutcomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate) {
+        // Uses DocumentType.INV_PROV to retrieve provider invoice data
         CashFlowReportDTO dto = service.generate(initDate, endDate, DocumentType.INV_PROV);
         return ResponseEntity.ok(dto);
     }
