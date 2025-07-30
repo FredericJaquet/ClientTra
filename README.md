@@ -57,6 +57,23 @@ src/main/java/com/frederic/clienttra/
 
 ---
 
+## 🧭 Architecture Overview
+
+ClientTra follows a layered architecture that separates concerns clearly between web, service, and data layers:
+
+<img width="512" height="768" alt="Architecture" src="https://github.com/user-attachments/assets/eec2f2e7-8713-4f06-885c-fb68dfbb5f11" />
+
+This structure improves testability, scalability, and maintainability.  
+Each layer has a focused responsibility:
+
+- **Controllers**: Handle HTTP requests and map them to services.
+- **Services**: Contain business logic and orchestrate operations.
+- **DTOs/Mappers**: Decouple internal entities from API output.
+- **Repositories**: Interface with the database using JPA.
+- **Entities**: Represent persistent domain models.
+
+---
+
 ## 🧪 Testing
 
 - ✅ Over **200 unit tests** implemented with JUnit and Mockito
@@ -143,11 +160,9 @@ src/main/java/com/frederic/clienttra/
 
 ✅ Testing coverage for all core services
 
-🔜 Reports/statistics module finalizing (ETA: July 2025)
+✅ Reports: income, expenses, and pending payments
 
 🧾 Documentation in progress (expected this week)
-
-✅ Demo data loading and deletion functionality completed
 
 --- 
 
