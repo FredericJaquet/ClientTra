@@ -398,6 +398,4 @@ public class QuoteServiceTest {
         ).isInstanceOf(InvalidWithholdingException.class);
     }
 
-
-
 }

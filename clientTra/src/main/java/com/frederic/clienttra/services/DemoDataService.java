@@ -27,7 +27,8 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class DemoDataService {
+public class DemoDataService {// FIXME: Añadir test unitario/integración si esta función se mantiene en producción
+
     private final AddressRepository addressRepository;
     private final BankAccountRepository bankAccountRepository;
     private final ChangeRateRepository changeRateRepository;
