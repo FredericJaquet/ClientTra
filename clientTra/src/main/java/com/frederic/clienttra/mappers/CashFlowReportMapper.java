@@ -1,7 +1,7 @@
 package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.read.InvoiceSummaryForCashFlowReportDTO;
-import com.frederic.clienttra.dto.read.PartyReportDTO;
+import com.frederic.clienttra.dto.read.PartyForCashFlowReportDTO;
 import com.frederic.clienttra.projections.InvoiceForCashFlowReportProjection;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class CashFlowReportMapper {
 
-    public PartyReportDTO toPartyReportDTO(Integer idCompany, String legalName, String vatNumber, List<InvoiceForCashFlowReportProjection> projections) {
+    public PartyForCashFlowReportDTO toPartyReportDTO(Integer idCompany, String legalName, String vatNumber, List<InvoiceForCashFlowReportProjection> projections) {
         if (projections.isEmpty()){
             return null;
         }
@@ -25,7 +25,7 @@ public class CashFlowReportMapper {
                 ))
                 .toList();
 
-        return PartyReportDTO.builder()
+        return PartyForCashFlowReportDTO.builder()
                 .idCompany(idCompany)
                 .legalName(legalName)
                 .vatNumber(vatNumber)

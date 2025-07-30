@@ -27,7 +27,7 @@ public interface InvoiceForCashFlowReportRepository extends JpaRepository<Docume
       AND d.ownerCompany.idCompany = :idOwnerCompany
       AND d.docType = :docType
 """)
-    List<InvoiceForCashFlowReportProjection> findInvoicesForReport(
+    List<InvoiceForCashFlowReportProjection> findInvoicesForCashFlowReport(
             @Param("initDate") LocalDate initDate,
             @Param("endDate") LocalDate endDate,
             @Param("idOwnerCompany") Integer idOwnerCompany,

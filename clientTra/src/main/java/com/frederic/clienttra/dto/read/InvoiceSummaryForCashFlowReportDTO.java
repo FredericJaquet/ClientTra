@@ -5,19 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PartyReportDTO {
-    private Integer idCompany;
-    private String legalName;
-    private String vatNumber;
+public class InvoiceSummaryForCashFlowReportDTO {
+    private String invoiceNumber;
+    private LocalDate docDate;
     private Double totalNet;
     private Double totalVat;
     private Double totalWithholding;
-    private List<InvoiceSummaryForCashFlowReportDTO> invoices;
 
 }
