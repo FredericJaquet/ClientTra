@@ -1,9 +1,13 @@
 package com.frederic.clienttra.dto.bases;
 
-import com.frederic.clienttra.dto.read.SchemeLineDTO;
-
 import java.util.List;
 
+/**
+ * Base interface for Scheme DTOs.
+ * <p>
+ * Defines the structure for scheme-related data transfer objects,
+ * including scheme details and its associated scheme lines.
+ */
 public interface BaseSchemeDTO {
     String getSchemeName();
     Double getPrice();
@@ -13,3 +17,4 @@ public interface BaseSchemeDTO {
     String getTargetLanguage();
     List<? extends BaseSchemeLineDTO> getSchemeLines();
 }
+

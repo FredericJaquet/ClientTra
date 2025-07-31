@@ -12,6 +12,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO used to create a new order.
+ * Implements the BaseOrderDTO interface and includes validation constraints
+ * for required fields such as description, date, price, and associated items.
+ * This class is used for input data when a new order is submitted by a client.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +30,8 @@ public class CreateOrderRequestDTO implements BaseOrderDTO {
     @NotNull(message = "validation.order.price_required")
     private Double pricePerUnit;
     private String units;
-    private Double total=0.0;
-    private Boolean billed=false;
+    private Double total = 0.0;
+    private Boolean billed = false;
     private String fieldName;
     private String sourceLanguage;
     private String targetLanguage;

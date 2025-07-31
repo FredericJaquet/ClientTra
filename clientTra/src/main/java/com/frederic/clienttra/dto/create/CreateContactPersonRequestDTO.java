@@ -9,6 +9,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for creating a contact person associated with a company or entity.
+ * <p>
+ * Includes the person's first name, middle name, optional last name,
+ * their role, and an email address.
+ * <p>
+ * Validations ensure first and middle names are not blank, and
+ * email is well-formed and does not exceed 100 characters.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,5 +32,4 @@ public class CreateContactPersonRequestDTO implements BaseContactPersonDTO {
     @Email(message = "{validation.email.invalid}")
     @Size(max = 100, message = "{validation.email.too_long}")
     private String email;
-
 }

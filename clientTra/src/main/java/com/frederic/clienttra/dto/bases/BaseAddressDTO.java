@@ -1,5 +1,9 @@
 package com.frederic.clienttra.dto.bases;
 
+/**
+ * Base interface for Address DTOs.
+ * Provides getter methods for common address fields.
+ */
 public interface BaseAddressDTO {
     String getStreet();
     String getStNumber();
@@ -9,4 +13,3 @@ public interface BaseAddressDTO {
     String getState();
     String getCountry();
 }
-

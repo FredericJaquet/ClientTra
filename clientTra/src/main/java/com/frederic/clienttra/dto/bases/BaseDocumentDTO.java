@@ -8,6 +8,10 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Base interface for Document DTOs.
+ * Defines common properties and methods for document-related data transfer objects.
+ */
 public interface BaseDocumentDTO {
     String getDocNumber();
     LocalDate getDocDate();
@@ -24,6 +28,6 @@ public interface BaseDocumentDTO {
     Integer getIdChangeRate();
     Integer getIdBankAccount();
     Integer getIdDocumentParent();
-    List<Integer> getOrderIds();
     void setIdDocumentParent(Integer idDocumentParent);
+    List<Integer> getOrderIds();
 }
