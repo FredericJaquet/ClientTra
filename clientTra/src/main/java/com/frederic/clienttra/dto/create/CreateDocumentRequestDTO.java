@@ -10,6 +10,11 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO used to create a new financial document (invoice, quote, purchase order, etc.).
+ * Includes metadata such as document number, type, date, and financial details like VAT, currency, and withholding.
+ * Also supports linking orders and optional parent document references.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +28,7 @@ public class CreateDocumentRequestDTO implements BaseDocumentDTO {
     private LocalDate docDate;
     @NotBlank(message="validation.document.doc_type_required")
     private DocumentType docType;
-    private DocumentStatus status=null;//No se usa en Creación, está allí simplemente para poder usar la Interfaz BasedocumentDTO
+    private DocumentStatus status=null; // Not used on creation, it is here just to use the BaseDocumentDTO interface
 
     private String language = "es";
     private Double vatRate = 0.21;
@@ -34,7 +39,7 @@ public class CreateDocumentRequestDTO implements BaseDocumentDTO {
     private String noteDelivery;
     private String notePayment;
     private String noteComment;
-    private LocalDate deadline;//TODO no sé si hace falta, casí que lo mejor es quitarlo de aquí y actualizar la Entity O simplemente lo omitimos en la creación.
+    private LocalDate deadline;
 
     @NotBlank(message="validation.document.change_rate_required")
     private Integer idChangeRate;
@@ -43,4 +48,3 @@ public class CreateDocumentRequestDTO implements BaseDocumentDTO {
     private Integer idDocumentParent;
     private List<Integer> orderIds;
 }
-

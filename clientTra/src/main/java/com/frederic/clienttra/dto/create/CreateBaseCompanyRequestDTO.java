@@ -11,6 +11,16 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+/**
+ * Base DTO for creating a company.
+ * <p>
+ * Contains common fields required when creating a company, including
+ * VAT number, commercial and legal names, email, web address, contact persons,
+ * phones, addresses, and bank accounts.
+ * <p>
+ * Validation annotations enforce constraints such as required fields,
+ * valid email format, and non-null addresses list.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

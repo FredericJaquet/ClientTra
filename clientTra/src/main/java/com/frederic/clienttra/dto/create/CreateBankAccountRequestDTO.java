@@ -7,6 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for creating a Bank Account.
+ * <p>
+ * Implements the BaseBankAccountDTO interface.
+ * The IBAN field is validated using a custom @ValidIban annotation.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

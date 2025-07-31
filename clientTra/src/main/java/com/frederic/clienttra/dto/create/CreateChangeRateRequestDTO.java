@@ -7,6 +7,14 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * DTO for creating a currency exchange rate entry.
+ * <p>
+ * Includes the source and target currencies, the exchange rate value,
+ * and the effective date of the rate.
+ * <p>
+ * Validation ensures currency codes are not blank, and rate and date are not null.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
