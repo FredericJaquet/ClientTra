@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for representing a provider in list views.
+ * Contains basic identification and contact information along with status.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

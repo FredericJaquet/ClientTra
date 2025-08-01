@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO for representing a party (company) in a cash flow report.
+ * Contains company identification and financial summary along with a list of invoices.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

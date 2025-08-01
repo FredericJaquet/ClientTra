@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO for representing cash flow report data.
+ * Contains the date range, total net amount, and a list of parties involved in the report.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

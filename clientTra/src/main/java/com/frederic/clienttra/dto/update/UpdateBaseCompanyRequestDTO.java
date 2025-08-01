@@ -7,6 +7,10 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+/**
+ * DTO for updating base company information.
+ * Contains fields for VAT number, commercial name, legal name, email, and website.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

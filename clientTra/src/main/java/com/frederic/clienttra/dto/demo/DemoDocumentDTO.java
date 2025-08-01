@@ -13,6 +13,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO representing a demo document with comprehensive financial and metadata details.
+ * This includes document identification, status, currency, notes, deadlines,
+ * associated change rate, bank account, and linked orders for demonstration purposes.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * DTO for representing a summary of an invoice for cash flow reports.
+ * Contains invoice number, document date, net total, VAT total, and withholding total.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for reading bank account information.
+ * Implements the base bank account interface to provide standardized access
+ * to bank account-related fields.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

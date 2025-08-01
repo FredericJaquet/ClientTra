@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO used to create a phone entry for a company or contact person.
+ * Implements the BasePhoneDTO interface and includes basic validation.
+ * Typically used when submitting new or additional phone information.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

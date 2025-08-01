@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO representing a demo company with complete sample data.
+ * This includes company metadata, contact details, financial info, predefined schemes,
+ * documents, and orders used for demonstration purposes.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

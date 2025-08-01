@@ -5,6 +5,11 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+/**
+ * DTO for representing a company owner.
+ * Extends the base company DTO to include additional details such as the company ID,
+ * logo path, and associated users.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

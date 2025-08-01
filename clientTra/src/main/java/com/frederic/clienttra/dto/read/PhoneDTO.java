@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO representing a phone.
+ * Implements the BasePhoneDTO interface.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

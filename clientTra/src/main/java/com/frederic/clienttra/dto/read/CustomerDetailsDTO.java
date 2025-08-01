@@ -3,6 +3,12 @@ package com.frederic.clienttra.dto.read;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Detailed DTO for a customer.
+ * Extends the base company DTO with additional customer-specific information such as
+ * invoicing method, due date, payment method, default language, VAT rates, withholding rates,
+ * geographic region flag, and enabled status.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

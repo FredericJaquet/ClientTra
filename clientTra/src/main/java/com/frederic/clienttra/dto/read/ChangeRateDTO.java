@@ -5,6 +5,10 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * DTO for representing a currency exchange rate.
+ * Implements the base interface for change rate data.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

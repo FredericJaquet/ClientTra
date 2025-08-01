@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for updating a scheme line.
+ * Implements the BaseSchemeLineDTO interface.
+ * Represents the description and discount of a scheme line.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +19,5 @@ public class UpdateSchemeLineRequestDTO implements BaseSchemeLineDTO {
     private Integer idSchemeLine;
     private String descrip;
     private Double discount;
-
 
 }

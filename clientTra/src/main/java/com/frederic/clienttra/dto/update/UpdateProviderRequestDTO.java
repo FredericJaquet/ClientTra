@@ -6,6 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * DTO for updating a provider's information.
+ * Extends the UpdateBaseCompanyRequestDTO.
+ * Contains additional fields related to provider-specific details such as
+ * payment due date, default language, VAT and withholding rates,
+ * whether the provider is located in Europe, and if the provider is enabled.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

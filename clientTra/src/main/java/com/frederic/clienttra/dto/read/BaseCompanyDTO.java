@@ -7,6 +7,12 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+/**
+ * Base DTO representing common company information.
+ * Includes VAT number, commercial and legal names, contact details,
+ * and associated collections such as phones, addresses, bank accounts,
+ * contact persons, and schemes.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

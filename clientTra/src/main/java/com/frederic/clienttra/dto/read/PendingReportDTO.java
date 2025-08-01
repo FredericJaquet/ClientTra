@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO for a pending report.
+ * Contains the grand total amount and a list of monthly pending reports.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

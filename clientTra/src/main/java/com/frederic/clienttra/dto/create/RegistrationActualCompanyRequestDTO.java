@@ -9,6 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO used to register a real company (non-demo) during the initial setup process.
+ * Includes basic identification and contact details, along with a mandatory address.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

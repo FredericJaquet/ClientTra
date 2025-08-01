@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Detailed DTO for representing detailed information about an order.
+ * Includes order identification, description, date, pricing details,
+ * billing status, language information, associated company, and list of items.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

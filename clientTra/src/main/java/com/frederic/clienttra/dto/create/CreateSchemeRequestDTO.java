@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO used to create a new pricing scheme.
+ * Implements the BaseSchemeDTO interface to standardize scheme-related data.
+ * Includes optional and required fields for scheme definition and its associated lines.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

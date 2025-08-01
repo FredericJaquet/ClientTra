@@ -9,6 +9,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO for updating order details.
+ * Implements BaseOrderDTO interface.
+ * Contains fields for description, order date, price per unit, units, total amount,
+ * billed status, field name, source and target languages, and a list of items.
+ * Includes a helper method to add an item to the order's item list (used in tests).
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

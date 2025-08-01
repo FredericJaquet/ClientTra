@@ -5,11 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Minimal DTO for company information.
+ * Used to populate the two fields shown in an order when selecting a customer.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BaseCompanyMinimalDTO {//Sirve para rellenar los 2 campos de información que aparecen en un pedido al seleccionar el cliente
+public class BaseCompanyMinimalDTO {
     private Integer idCompany;
     private String comName;
     private String vatNumber;
