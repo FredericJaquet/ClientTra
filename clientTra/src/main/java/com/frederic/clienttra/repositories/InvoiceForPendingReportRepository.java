@@ -10,7 +10,23 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Repository interface for fetching invoices that are pending, intended for generating pending payment reports.
+ * <p>
+ * Extends JpaRepository to provide CRUD operations on Document entities.
+ * Includes a custom query to fetch invoices filtered by status, owner company, and document type.
+ */
 public interface InvoiceForPendingReportRepository extends JpaRepository<Document, Integer> {
+
+    /**
+     * Retrieves a list of invoices matching the specified owner company, document type, and status.
+     * The returned data includes minimal invoice information suitable for pending payment reports.
+     *
+     * @param idOwnerCompany the ID of the owning company
+     * @param docType the type of document (typically INVOICE)
+     * @param status the status of the document (e.g., PENDING)
+     * @return list of invoice projections with summary data
+     */
     @Query("""
             SELECT
                 d.id AS idDocument,
@@ -28,6 +44,5 @@ public interface InvoiceForPendingReportRepository extends JpaRepository<Documen
     List<InvoiceForPendingReportProjection> findInvoiceForPendingReport(
             @Param("idOwnerCompany") Integer idOwnerCompany,
             @Param("docType") DocumentType docType,
-            @Param("status")DocumentStatus status);
-
+            @Param("status") DocumentStatus status);
 }
