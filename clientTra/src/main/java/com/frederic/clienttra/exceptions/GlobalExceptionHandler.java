@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Global exception handler to intercept exceptions thrown by controllers
+ * and return standardized error responses with appropriate HTTP status codes.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -19,10 +23,15 @@ public class GlobalExceptionHandler {
         this.messageResolver = messageResolver;
     }
 
-    // --- Authentication y authorization ---
+    // --- Authentication and authorization ---
+
     @ExceptionHandler(UserNotAuthenticatedException.class)
     public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(UserNotAuthenticatedException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), "No se pudo determinar la compañía del usuario autenticado.", request.getRequestURI());
+        return buildErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                ex.getMessage(),
+                "Could not determine the authenticated user's company.",
+                request.getRequestURI());
     }
 
     @ExceptionHandler({
@@ -31,10 +40,15 @@ public class GlobalExceptionHandler {
             AccessDeniedException.class
     })
     public ResponseEntity<ErrorResponse> handleAccessDeniedExceptions(RuntimeException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), "Acceso denegado. No tienes permisos para realizar esta acción.", request.getRequestURI());
+        return buildErrorResponse(
+                HttpStatus.FORBIDDEN,
+                ex.getMessage(),
+                "Access denied. You do not have permission to perform this action.",
+                request.getRequestURI());
     }
 
     // --- Resources not found (404) ---
+
     @ExceptionHandler({
             UserNotFoundException.class,
             CompanyNotFoundForUserException.class,
@@ -53,10 +67,15 @@ public class GlobalExceptionHandler {
             LastNumberNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "El recurso solicitado no existe o no pertenece a tu compañía.", request.getRequestURI());
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                "The requested resource does not exist or does not belong to your company.",
+                request.getRequestURI());
     }
 
-    // --- Custom Validation ---
+    // --- Custom manual validation errors ---
+
     @ExceptionHandler(ManualValidationException.class)
     public ResponseEntity<ErrorResponse> handleManualValidationException(ManualValidationException ex, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
@@ -75,7 +94,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // --- Validation on tags (e.g. @Valid) ---
+    // --- Validation errors triggered by @Valid annotations ---
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
@@ -94,7 +114,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // --- Validation simple (incorrect fields, already exists, etc.) ---
+    // --- Simple validation and conflict errors ---
+
     @ExceptionHandler({
             InvalidEmailException.class,
             InvalidIbanException.class,
@@ -107,30 +128,35 @@ public class GlobalExceptionHandler {
             LogoNotLoadedException.class,
             LastAddressException.class,
             CantDeleteSelfException.class,
-            InvalidSchemeNameException.class,
-            InvalidSchemePriceException.class,
             InvalidOrderDescriptionException.class,
             InvalidOrderDateException.class,
             InvalidOrderPriceException.class,
             CantCreateDocumentWithoutOrdersException.class,
             CantModifyPaidInvoiceException.class,
             CantIncludeOrderAlreadyBilledException.class,
-            CantIncludeOrderAlreadyBilledException.class,
-            CantIncludeOrderAlreadyBilledException.class,
             InvalidVatRateException.class,
             InvalidWithholdingException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidInput(RuntimeException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Datos inválidos o conflicto con la operación.", request.getRequestURI());
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                "Invalid data or operation conflict.",
+                request.getRequestURI());
     }
 
-    // --- Generic (Last chance) ---
+    // --- Generic catch-all exception handler ---
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), "Ha ocurrido un error inesperado.", request.getRequestURI());
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                "An unexpected error occurred.",
+                request.getRequestURI());
     }
 
-    // --- Centralized utilities ---
+    // --- Utility method to build ErrorResponse and ResponseEntity ---
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String code, String fallbackMessage, String path) {
         String localizedMsg = messageResolver.getMessage(code);
