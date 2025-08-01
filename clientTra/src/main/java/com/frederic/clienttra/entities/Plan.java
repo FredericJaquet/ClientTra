@@ -3,6 +3,9 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing a subscription plan available in the system.
+ */
 @Entity
 @Table(name = "Plans")
 @Getter

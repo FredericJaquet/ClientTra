@@ -3,6 +3,10 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Represents a line item within an order, including description, quantity,
+ * discount, total amount, and its associated order.
+ */
 @Entity
 @Table(name = "Items")
 @Getter

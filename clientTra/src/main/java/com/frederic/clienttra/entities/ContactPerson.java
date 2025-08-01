@@ -3,6 +3,10 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Represents a contact person related to a company.
+ * Contains personal and contact information.
+ */
 @Entity
 @Table(name = "ContactPersons")
 @Getter
@@ -16,23 +20,18 @@ public class ContactPerson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contact_person")
     private Integer idContactPerson;
-
     @Column(nullable = false, length = 40)
     private String firstname;
-
     @Column(nullable = false, length = 40)
     private String middlename;
-
     @Column(length = 40)
     private String lastname;
-
     @Column(length = 40)
     private String role;
-
     @Column(length = 100)
     private String email;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)
     private Company company;
+
 }

@@ -3,6 +3,11 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing a bank account.
+ * Maps to the "BankAccounts" table in the database.
+ * Contains banking details and a reference to the owning company.
+ */
 @Entity
 @Table(name = "BankAccounts")
 @Getter

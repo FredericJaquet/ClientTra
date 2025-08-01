@@ -3,6 +3,10 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing an application user, including login credentials, preferences,
+ * status, and associations with company, role, and subscription plan.
+ */
 @Entity
 @Table(name = "users")
 @Getter
@@ -33,11 +37,9 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", nullable = false)
     private Company company;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_plan", nullable = false)
     private Plan plan;

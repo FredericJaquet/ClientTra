@@ -3,6 +3,9 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing a user role in the system.
+ */
 @Entity
 @Table(name = "Roles")
 @Getter

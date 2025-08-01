@@ -6,6 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents an order made by a company, including details like description,
+ * date, pricing, languages involved, billing status, related items, and
+ * associated documents.
+ */
 @Entity
 @Table(name = "Orders")
 @Getter

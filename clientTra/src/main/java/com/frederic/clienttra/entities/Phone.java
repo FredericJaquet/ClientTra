@@ -3,6 +3,10 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing a phone number associated with a company.
+ * Each phone has a unique number within the owning entity.
+ */
 @Entity
 @Table(name = "Phones",
     uniqueConstraints = {@UniqueConstraint(columnNames = {"phone_number", "id_owner_entity"})
