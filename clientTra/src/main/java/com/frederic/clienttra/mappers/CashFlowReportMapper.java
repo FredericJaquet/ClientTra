@@ -7,9 +7,26 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Mapper class for converting invoice and party projections into DTOs
+ * used in cash flow reports.
+ */
 @Component
 public class CashFlowReportMapper {
 
+    /**
+     * Converts invoice projections and company info into a PartyForCashFlowReportDTO.
+     * If the list of projections is empty, returns null.
+     *
+     * Note: Totals (totalNet, totalVat, totalWithholding) are initialized to 0.0
+     * and calculated later in the service layer.
+     *
+     * @param idCompany the ID of the company
+     * @param legalName the legal name of the party
+     * @param vatNumber the VAT number of the party
+     * @param projections list of invoice projections related to the party
+     * @return a PartyForCashFlowReportDTO containing the party and its invoices, or null if no invoices
+     */
     public PartyForCashFlowReportDTO toPartyReportDTO(Integer idCompany, String legalName, String vatNumber, List<InvoiceForCashFlowReportProjection> projections) {
         if (projections.isEmpty()){
             return null;
@@ -31,7 +48,7 @@ public class CashFlowReportMapper {
                 .vatNumber(vatNumber)
                 .totalNet(0.0)
                 .totalVat(0.0)
-                .totalWithholding(0.0)//Los totales se calculan en el Service
+                .totalWithholding(0.0) // Totals are calculated in the Service layer
                 .invoices(invoices)
                 .build();
     }

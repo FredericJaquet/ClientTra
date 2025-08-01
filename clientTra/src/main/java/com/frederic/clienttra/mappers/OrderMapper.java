@@ -17,12 +17,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class for converting between Order entities and their corresponding DTOs.
+ * Provides methods to map to/from various Order-related DTO classes.
+ * Uses ItemMapper and MinimalCompanyMapper to map nested entities.
+ */
 @Component
 @RequiredArgsConstructor
 public class OrderMapper {
-     private final ItemMapper itemMapper;
-     private final MinimalCompanyMapper companyMapper;
 
+    private final ItemMapper itemMapper;
+    private final MinimalCompanyMapper companyMapper;
+
+    /**
+     * Converts an Order entity to an OrderDetailsDTO including nested items and minimal company info.
+     *
+     * @param entity the Order entity to convert
+     * @return the mapped OrderDetailsDTO
+     */
     public OrderDetailsDTO toDetailsDto(Order entity){
         return OrderDetailsDTO.builder()
                 .idOrder(entity.getIdOrder())
@@ -40,12 +52,24 @@ public class OrderMapper {
                 .build();
     }
 
+    /**
+     * Converts a list of Order entities to a list of OrderDetailsDTOs.
+     *
+     * @param entities list of Order entities
+     * @return list of mapped OrderDetailsDTOs
+     */
     public List<OrderDetailsDTO> toDetailsDtos(List<Order> entities){
         return entities.stream()
                 .map(this::toDetailsDto)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a projection representing an Order list entry to an OrderListDTO.
+     *
+     * @param entity the OrderListProjection
+     * @return mapped OrderListDTO
+     */
     public OrderListDTO toListDtosFromProjection(OrderListProjection entity){
         return OrderListDTO.builder()
                 .idOrder(entity.getIdOrder())
@@ -56,6 +80,12 @@ public class OrderMapper {
                 .build();
     }
 
+    /**
+     * Converts an Order entity to an OrderListDTO.
+     *
+     * @param entity the Order entity
+     * @return mapped OrderListDTO
+     */
     public OrderListDTO toListDtosFromEntity(Order entity) {
         return OrderListDTO.builder()
                 .idOrder(entity.getIdOrder())
@@ -66,18 +96,37 @@ public class OrderMapper {
                 .build();
     }
 
+    /**
+     * Converts a list of OrderListProjections to a list of OrderListDTOs.
+     *
+     * @param entities list of OrderListProjections
+     * @return list of mapped OrderListDTOs
+     */
     public List<OrderListDTO> toListDtosFromProjection(List<OrderListProjection> entities){
         return entities.stream()
                 .map(this::toListDtosFromProjection)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a list of Order entities to a list of OrderListDTOs.
+     *
+     * @param entities list of Order entities
+     * @return list of mapped OrderListDTOs
+     */
     public List<OrderListDTO> toListDtosFromEntities(List<Order> entities){
         return entities.stream()
                 .map(this::toListDtosFromEntity)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a BaseOrderDTO to an Order entity.
+     * Sets billed flag to false by default.
+     *
+     * @param dto the BaseOrderDTO to convert
+     * @return new Order entity
+     */
     public Order toEntity(BaseOrderDTO dto){
         return Order.builder()
                 .descrip(dto.getDescrip())
@@ -93,12 +142,28 @@ public class OrderMapper {
                 .build();
     }
 
-    public List<Order> toEntities(List<? extends BaseOrderDTO> dtos){//TODO este probablemente nunca se use, pero si actualizar varios pedidos a la vez (para marcar como pagado)
+    /**
+     * Converts a list of BaseOrderDTOs to a list of Order entities.
+     * TODO: This may be used to update multiple orders at once.
+     *
+     * @param dtos list of BaseOrderDTOs
+     * @return list of Order entities
+     */
+    public List<Order> toEntities(List<? extends BaseOrderDTO> dtos){
         return dtos.stream()
                 .map(this::toEntity)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a BaseOrderDTO to an Order entity with ownership and company references.
+     * Also sets the bidirectional relationship between Order and its Items.
+     *
+     * @param dto the BaseOrderDTO
+     * @param ownerCompany the owning Company
+     * @param company the Company related to the order
+     * @return new Order entity
+     */
     public Order toEntity(BaseOrderDTO dto, Company ownerCompany, Company company){
         List<Item> items = new ArrayList<>(itemMapper.toEntities(dto.getItems()));
 
@@ -117,6 +182,7 @@ public class OrderMapper {
                 .ownerCompany(ownerCompany)
                 .build();
 
+        // Set bidirectional link from items to this order
         for(Item item: order.getItems()){
             item.setOrder(order);
         }
@@ -124,12 +190,29 @@ public class OrderMapper {
         return order;
     }
 
+    /**
+     * Converts a list of BaseOrderDTOs to a list of Order entities with ownership and company references.
+     *
+     * @param dtos list of BaseOrderDTOs
+     * @param ownerCompany the owning Company
+     * @param company the Company related to the orders
+     * @return list of Order entities
+     */
     public List<Order> toEntities(List<? extends BaseOrderDTO> dtos, Company ownerCompany, Company company){
         return dtos.stream()
                 .map(dto -> toEntity(dto, ownerCompany, company))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Updates an existing Order entity with fields from UpdateOrderRequestDTO.
+     * Performs basic validation on description and price fields.
+     *
+     * @param entity the Order entity to update
+     * @param dto the update DTO containing new values
+     * @throws InvalidOrderDescriptionException if description is blank
+     * @throws InvalidOrderPriceException if pricePerUnit is zero
+     */
     public void updateEntity(Order entity, UpdateOrderRequestDTO dto){
         if(dto.getDescrip() != null){
             if(dto.getDescrip().isBlank()){
@@ -150,7 +233,7 @@ public class OrderMapper {
             entity.setUnits(dto.getUnits());
         }
         if(dto.getTotal() != null){
-           entity.setTotal(dto.getTotal());
+            entity.setTotal(dto.getTotal());
         }
         if(dto.getBilled() != null){
             entity.setBilled(dto.getBilled());
