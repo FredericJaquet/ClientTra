@@ -8,6 +8,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a financial document entity such as invoice, quote or purchase order.
+ * Contains details like document number, date, type, status, monetary amounts,
+ * related company, currency, notes, deadlines, and linked orders.
+ */
 @Entity
 @Table(name = "Documents")
 @Getter

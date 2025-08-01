@@ -6,6 +6,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a company entity which may own other companies (hierarchical ownership).
+ * Contains multiple related entities such as addresses, phones, contacts, bank accounts,
+ * change rates, users, customers, providers, schemes, documents, and orders.
+ */
 @Entity
 @Table(name = "Companies",
     uniqueConstraints = {
@@ -35,12 +40,12 @@ public class Company {
     private String web;
     @Column(length = 255)
     private String logoPath;
-
-    // Auto-relación (entidad propietaria)
+    // Self-reference: the owning company (parent)
     @ManyToOne
     @JoinColumn(name = "id_owner_company", referencedColumnName = "id_company")
     private Company ownerCompany;
     @OneToMany(mappedBy = "ownerCompany")
+    // List of child companies owned by this company
     private List<Company> childCompanies=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses=new ArrayList<>();
@@ -75,6 +80,7 @@ public class Company {
     @OneToMany(mappedBy = "ownerCompany")
     private List<Order> ownedOrders=new ArrayList<>();
 
+    // Convenience methods to add associated entities and keep bidirectional consistency
     public void addAddress(Address address) {
         if (addresses == null) {
             addresses = new ArrayList<>();
@@ -147,6 +153,4 @@ public class Company {
         user.setCompany(this);
     }
 
-
 }
-

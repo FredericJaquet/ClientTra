@@ -5,6 +5,9 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Entity representing a pricing scheme used in the system.
+ */
 @Entity
 @Table(name = "Schemes")
 @Getter

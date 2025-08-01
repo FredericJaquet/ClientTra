@@ -3,6 +3,11 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing an address.
+ * Maps to the "Addresses" table in the database.
+ * Contains detailed address information and a link to its owning company.
+ */
 @Entity
 @Table(name = "Addresses")
 @Getter

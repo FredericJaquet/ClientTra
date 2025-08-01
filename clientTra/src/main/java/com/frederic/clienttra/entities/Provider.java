@@ -3,6 +3,9 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity representing a provider (supplier) associated with a company.
+ */
 @Entity
 @Table(name = "Providers")
 @Getter

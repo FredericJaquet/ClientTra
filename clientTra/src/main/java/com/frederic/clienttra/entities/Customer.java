@@ -3,6 +3,10 @@ package com.frederic.clienttra.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Represents a customer entity linked to a company.
+ * Includes billing, payment, and localization details.
+ */
 @Entity
 @Table(name = "Customers")
 @Getter

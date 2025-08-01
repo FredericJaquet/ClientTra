@@ -5,6 +5,10 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * Entity representing an exchange rate between two currencies for a specific date and company.
+ * Maps to the "ChangeRates" table with a unique constraint on the combination of currency1, currency2, date, and owner company.
+ */
 @Entity
 @Table(name = "ChangeRates", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"currency1", "currency2", "date", "id_owner_company"})
