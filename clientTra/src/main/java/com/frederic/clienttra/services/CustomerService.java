@@ -8,6 +8,13 @@ import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 
 import java.util.List;
 
+/**
+ * Service interface for managing customers.
+ * <p>
+ * Provides methods for retrieving, searching, creating, updating,
+ * and disabling customer entities.
+ * </p>
+ */
 public interface CustomerService {
     List<CustomerForListDTO> getAllCustomers();
     List<CustomerForListDTO> getAllCustomersEnabled(boolean enabled);

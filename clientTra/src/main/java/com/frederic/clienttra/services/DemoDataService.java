@@ -21,13 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * Service class to load and delete demo data into/from the database.
+ *
+ * <p><b>Note:</b> If this functionality is kept in production,
+ * appropriate unit and integration tests should be implemented.</p>
+ */
 @Service
 @RequiredArgsConstructor
-public class DemoDataService {// FIXME: Añadir test unitario/integración si esta función se mantiene en producción
+public class DemoDataService { // TODO: Add unit/integration tests if this function remains in production
 
     private final AddressRepository addressRepository;
     private final BankAccountRepository bankAccountRepository;
@@ -46,8 +50,13 @@ public class DemoDataService {// FIXME: Añadir test unitario/integración si es
     private final UserMapper userMapper;
     private final CompanyService companyService;
 
+    /**
+     * Loads demo data for a new user including company, customers, and providers.
+     *
+     * @param userDTO the user creation data transfer object containing username
+     */
     @Transactional
-    public void loadData(CreateUserRequestDTO userDTO){
+    public void loadData(CreateUserRequestDTO userDTO) {
         try {
             Company demoCompany = loadDemoCompany(userDTO.getUsername());
 
@@ -56,104 +65,117 @@ public class DemoDataService {// FIXME: Añadir test unitario/integración si es
 
             loadDemoCustomers(demoCompany);
             loadDemoProviders(demoCompany);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Loads a demo company from JSON resource and creates it in the database.
+     *
+     * @param userName the username to customize the demo company name
+     * @return the persisted Company entity
+     */
     private Company loadDemoCompany(String userName) {
-        // 2. Convertir JSON a DTO
         DemoOwnerCompanyDTO demoCompanyDTO = readJsonFromResource("db/demo_data/company.json", new TypeReference<>() {});
 
-        // 3. Crear empresa con el DTO y devolver
         return createDemoCompany(demoCompanyDTO, userName);
     }
 
+    /**
+     * Creates a demo company entity based on the provided DTO and username.
+     *
+     * @param dto      the demo company data transfer object
+     * @param userName the username to append to company details
+     * @return the persisted Company entity
+     */
     private Company createDemoCompany(DemoOwnerCompanyDTO dto, String userName) {
-        // 1. Crear entidad Company
         Company company = new Company();
         company.setVatNumber(dto.getVatNumber());
         company.setComName(dto.getComName() + " for " + userName);
-        company.setLegalName(dto.getLegalName()+ " for "+ userName +" S.A.");
+        company.setLegalName(dto.getLegalName() + " for " + userName + " S.A.");
         company.setEmail(dto.getEmail());
         company.setWeb(dto.getWeb());
 
         Company savedCompany = companyRepository.save(company);
 
-        // 2. Añadir direcciones
         List<Address> addresses = addressMapper.toEntities(dto.getAddresses(), savedCompany);
-        List<Address> savedAddresses=addressRepository.saveAll(addresses);
-
+        List<Address> savedAddresses = addressRepository.saveAll(addresses);
         savedCompany.setAddresses(savedAddresses);
 
-        // 3. Añadir cuentas bancarias
         List<BankAccount> accountEntities = bankAccountMapper.toEntities(dto.getBankAccounts(), savedCompany);
         List<BankAccount> savedAccounts = bankAccountRepository.saveAll(accountEntities);
-
         savedCompany.setBankAccounts(savedAccounts);
 
-        //4. Añadir Tipos de cambio.
         List<ChangeRate> changeRateEntities = changeRateMapper.toEntities(dto.getChangeRates(), savedCompany);
         List<ChangeRate> savedChangeRate = changeRateRepository.saveAll(changeRateEntities);
-
         savedCompany.setChangeRates(savedChangeRate);
 
         return savedCompany;
     }
 
-    private void loadDemoUsers(Company company){
-
-            // 1. Convertir JSON a DTO
-            List<CreateUserRequestDTO> dtos = readJsonFromResource("db/demo_data/users.json", new TypeReference<>() {});
-
-            // 2. Crear usuarios con los DTOs
-            List<User> entities = userMapper.toEntities(dtos, company);
-            userRepository.saveAll(entities);
+    /**
+     * Loads demo users for a given company from JSON resource and saves them.
+     *
+     * @param company the company to associate the demo users with
+     */
+    private void loadDemoUsers(Company company) {
+        List<CreateUserRequestDTO> dtos = readJsonFromResource("db/demo_data/users.json", new TypeReference<>() {});
+        List<User> entities = userMapper.toEntities(dtos, company);
+        userRepository.saveAll(entities);
     }
 
-    private void loadDemoCustomers(Company company){
-
-        // 1. Convertir JSON a DTO
+    /**
+     * Loads demo customers from JSON resource and saves them along with their companies.
+     *
+     * @param company the owning company of the demo customers
+     */
+    private void loadDemoCustomers(Company company) {
         List<DemoCompanyDTO> dtos = readJsonFromResource("db/demo_data/customers.json", new TypeReference<>() {});
 
-        // 2. Crear Clientes con los DTOs
         List<Customer> entities = customerMapper.toEntities(dtos, company);
         List<Company> companyEntities = new ArrayList<>();
 
-        //Guardar la Companies primero
-        for(Customer entity:entities) {
+        for (Customer entity : entities) {
             companyEntities.add(entity.getCompany());
         }
 
         companyRepository.saveAll(companyEntities);
-
         customerRepository.saveAll(entities);
     }
 
-    private void loadDemoProviders(Company company){
+    /**
+     * Loads demo providers from JSON resource and saves them along with their companies.
+     *
+     * @param company the owning company of the demo providers
+     */
+    private void loadDemoProviders(Company company) {
         List<DemoCompanyDTO> dtos = readJsonFromResource("db/demo_data/providers.json", new TypeReference<>() {});
 
         List<Provider> entities = providerMapper.toEntities(dtos, company);
         List<Company> companyEntities = new ArrayList<>();
 
-        for(Provider  entity:entities) {
+        for (Provider entity : entities) {
             companyEntities.add(entity.getCompany());
         }
 
         companyRepository.saveAll(companyEntities);
-
         providerRepository.saveAll(entities);
     }
 
+    /**
+     * Deletes all demo data associated with the current user's company.
+     * This includes breaking many-to-many relationships between documents and orders.
+     */
     @Transactional
     public void deleteDemoData() {
         Company ownerCompany = companyService.getCurrentCompanyOrThrow();
 
         List<Company> companies = companyRepository.findAllByOwnerCompany(ownerCompany);
-        // 2. Romper relaciones ManyToMany entre documentos y órdenes
+
         for (Company company : companies) {
             for (Document doc : company.getDocuments()) {
-                doc.getOrders().clear(); // ⚠️ Esto rompe la relación ManyToMany (tabla intermedia)
+                doc.getOrders().clear(); // Breaks ManyToMany relationship (join table)
                 documentRepository.save(doc);
             }
         }
@@ -161,13 +183,21 @@ public class DemoDataService {// FIXME: Añadir test unitario/integración si es
         companyRepository.deleteAll(companies);
     }
 
+    /**
+     * Reads a JSON file from resources and deserializes it into the specified type.
+     *
+     * @param <T>     the type of the returned object
+     * @param path    the resource path to the JSON file
+     * @param typeRef the Jackson TypeReference representing the target type
+     * @return deserialized object from JSON
+     * @throws RuntimeException if resource is not found or reading/parsing fails
+     */
     private <T> T readJsonFromResource(String path, TypeReference<T> typeRef) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
             if (is == null) {
                 throw new RuntimeException("Resource not found: " + path);
             }
 
-            // Configura el ObjectMapper
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             objectMapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
@@ -177,5 +207,4 @@ public class DemoDataService {// FIXME: Añadir test unitario/integración si es
             throw new RuntimeException("Error reading JSON from " + path, e);
         }
     }
-
 }

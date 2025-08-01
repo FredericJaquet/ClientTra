@@ -16,6 +16,9 @@ import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service responsible for generating pending invoice reports grouped by month.
+ */
 @Service
 @RequiredArgsConstructor
 public class PendingReportService {
@@ -24,28 +27,44 @@ public class PendingReportService {
     private final PendingReportMapper mapper;
     private final CompanyServiceImpl companyService;
 
+    /**
+     * Generates a pending report for invoices of the specified document type.
+     * The report groups pending invoices by YearMonth and calculates totals per month and overall.
+     *
+     * @param type the document type to generate the report for (e.g., customer or provider invoices).
+     * @return a DTO containing the aggregated pending report data.
+     */
     public PendingReportDTO generate(DocumentType type){
+        // Retrieve the current user's owning company
         Company owner = companyService.getCurrentCompanyOrThrow();
+
+        // Fetch raw pending invoices for the company and document type
         List<InvoiceForPendingReportProjection> rawData = repository.findInvoiceForPendingReport(owner.getIdCompany(), type, DocumentStatus.PENDING);
 
-        // Agrupar por YearMonth
+        // Group invoices by YearMonth of the document date
         Map<YearMonth, List<InvoiceForPendingReportProjection>> groupedByYearMonth =  rawData.stream()
                 .collect(Collectors.groupingBy(p -> YearMonth.from(p.getDocDate())));
+
         List<MonthlyPendingReportDTO> monthlyReport =  new ArrayList<>();
         double grandTotal = 0.0;
 
+        // Process each YearMonth group to build the monthly report DTOs
         for(Map.Entry<YearMonth, List<InvoiceForPendingReportProjection>> entry : groupedByYearMonth.entrySet()){
             YearMonth ym = entry.getKey();
             List<InvoiceForPendingReportProjection> monthlyInvoices = entry.getValue();
 
             if (monthlyInvoices.isEmpty()) continue;
 
-            MonthlyPendingReportDTO dto = mapper.toMonthlyPendingReportDTO(ym,monthlyInvoices);
+            // Map projections to monthly report DTO
+            MonthlyPendingReportDTO dto = mapper.toMonthlyPendingReportDTO(ym, monthlyInvoices);
 
-            //Calcular totales por mes
-            double monthlyTotal = dto.getInvoices().stream().mapToDouble(i -> Optional.ofNullable(i.getTotalToPay()).orElse(0.0)).sum();
+            // Calculate total amount pending for the month
+            double monthlyTotal = dto.getInvoices().stream()
+                    .mapToDouble(i -> Optional.ofNullable(i.getTotalToPay()).orElse(0.0))
+                    .sum();
             dto.setMonthlyTotal(monthlyTotal);
 
+            // Sort invoices within the month by document number
             dto.setInvoices(dto.getInvoices().stream()
                     .sorted(Comparator.comparing(InvoiceSummaryForPendingReportDTO::getDocNumber))
                     .toList());
@@ -54,6 +73,7 @@ public class PendingReportService {
             grandTotal += monthlyTotal;
         }
 
+        // Build and return the complete pending report DTO
         return PendingReportDTO.builder()
                 .grandTotal(grandTotal)
                 .monthlyReports(monthlyReport)
