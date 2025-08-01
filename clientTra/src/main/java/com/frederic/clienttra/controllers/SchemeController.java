@@ -62,7 +62,7 @@ public class SchemeController {
      */
     @DeleteMapping("/{idScheme}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> deleteAddress(@PathVariable Integer idCompany, @PathVariable Integer idScheme){
+    public ResponseEntity<GenericResponseDTO> deleteScheme(@PathVariable Integer idCompany, @PathVariable Integer idScheme){
         schemeService.deleteScheme(idCompany, idScheme);
         return ResponseEntity.ok(new GenericResponseDTO("scheme.deleted.success"));
     }
