@@ -144,7 +144,6 @@ public class OrderMapper {
 
     /**
      * Converts a list of BaseOrderDTOs to a list of Order entities.
-     * TODO: This may be used to update multiple orders at once.
      *
      * @param dtos list of BaseOrderDTOs
      * @return list of Order entities
