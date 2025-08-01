@@ -1,8 +1,26 @@
 package com.frederic.clienttra.validators;
 
+/**
+ * Utility class for validating International Bank Account Numbers (IBAN).
+ */
 public class IbanValidator {
 
-    // Main method to check whether the given IBAN string is valid.
+    /**
+     * Validates whether the given IBAN string is correctly formatted and valid according to the IBAN standard.
+     *
+     * <p>The validation process includes:
+     * <ul>
+     *   <li>Removing whitespace and converting the string to uppercase.</li>
+     *   <li>Rearranging the IBAN by moving the first four characters to the end.</li>
+     *   <li>Converting letters to numbers (A=10, B=11, ..., Z=35).</li>
+     *   <li>Performing a modulo 97 operation on the resulting numeric string.</li>
+     * </ul>
+     *
+     * <p>A valid IBAN must produce a modulo 97 result equal to 1.
+     *
+     * @param iban the IBAN string to validate
+     * @return true if the IBAN is valid; false otherwise (null, too short, invalid characters, or checksum fail)
+     */
     public static boolean isValidIban(String iban) {
         // First, check if the input is null or too short to be a valid IBAN.
         if (iban == null || iban.length() < 4) return false;
