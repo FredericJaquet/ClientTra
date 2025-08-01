@@ -20,6 +20,13 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class responsible for converting between Customer entities and their various DTO representations.
+ * <p>
+ * Supports conversions for listing customers, detailed views, creating and updating entities,
+ * as well as handling DemoCompanyDTO conversions.
+ * </p>
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomerMapper {
@@ -32,6 +39,12 @@ public class CustomerMapper {
     private final SchemeMapper schemeMapper;
     private final CompanyRepository companyRepository;
 
+    /**
+     * Converts a list of CustomerListProjection to a list of CustomerForListDTO.
+     *
+     * @param entities the list of CustomerListProjection to convert
+     * @return a list of CustomerForListDTO representing customers for listing
+     */
     public List<CustomerForListDTO> toCustomerForListDTOS(List<CustomerListProjection> entities){
         return entities.stream()
                 .map(p -> CustomerForListDTO.builder()
@@ -45,6 +58,12 @@ public class CustomerMapper {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a Customer entity to a detailed CustomerDetailsDTO including related company data.
+     *
+     * @param entity the Customer entity to convert
+     * @return a CustomerDetailsDTO with full customer details
+     */
     public CustomerDetailsDTO toCustomerDetailsDTO(Customer entity) {
         return CustomerDetailsDTO.builder()
                 .idCustomer(entity.getIdCustomer())
@@ -69,6 +88,12 @@ public class CustomerMapper {
                 .build();
     }
 
+    /**
+     * Converts a CreateCustomerRequestDTO to a Customer entity.
+     *
+     * @param dto the DTO containing creation data
+     * @return a new Customer entity with the provided data
+     */
     public Customer toEntity(CreateCustomerRequestDTO dto) {
         return Customer.builder()
                 .invoicingMethod(dto.getInvoicingMethod())
@@ -82,6 +107,13 @@ public class CustomerMapper {
                 .build();
     }
 
+    /**
+     * Converts a DemoCompanyDTO into a Customer entity, creating and saving the associated Company first.
+     *
+     * @param dto the demo company DTO with data
+     * @param ownerCompany the owner company entity for ownership reference
+     * @return a Customer entity linked to the saved Company
+     */
     public Customer toEntity(DemoCompanyDTO dto, Company ownerCompany) {
         Company company = companyMapper.toEntity(dto,ownerCompany);
         Company savedCompany =  companyRepository.save(company);
@@ -100,13 +132,25 @@ public class CustomerMapper {
                 .build();
     }
 
+    /**
+     * Converts a list of DemoCompanyDTOs into Customer entities associated with the given owner company.
+     *
+     * @param dtos the list of demo company DTOs
+     * @param ownerCompany the owner company entity
+     * @return list of Customer entities created from the DTOs
+     */
     public List<Customer> toEntities(List<DemoCompanyDTO> dtos, Company ownerCompany){
-
         return dtos.stream()
                 .map(dto -> toEntity(dto, ownerCompany))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Updates a Customer entity with non-null values from an UpdateCustomerRequestDTO.
+     *
+     * @param entity the Customer entity to update
+     * @param dto the DTO containing updated data (nullable fields)
+     */
     public void updateEntity(Customer entity, UpdateCustomerRequestDTO dto) {
         if (dto.getInvoicingMethod() != null) {
             entity.setInvoicingMethod(dto.getInvoicingMethod());
@@ -134,6 +178,12 @@ public class CustomerMapper {
         }
     }
 
+    /**
+     * Converts a CustomerMinimalProjection to a BaseCompanyMinimalDTO.
+     *
+     * @param entity the projection containing minimal customer data
+     * @return a BaseCompanyMinimalDTO with minimal company info
+     */
     public BaseCompanyMinimalDTO toMinimalDTO(CustomerMinimalProjection entity) {
         return BaseCompanyMinimalDTO.builder()
                 .idCompany(entity.getIdCompany())
@@ -142,12 +192,27 @@ public class CustomerMapper {
                 .build();
     }
 
+    /**
+     * Converts a list of CustomerMinimalProjection entities to a list of BaseCompanyMinimalDTO.
+     *
+     * @param entities the list of minimal customer projections
+     * @return a list of minimal company DTOs
+     */
     public List<BaseCompanyMinimalDTO> toMinimalDTOs(List<CustomerMinimalProjection> entities) {
         return entities.stream()
                 .map(this::toMinimalDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Helper method to safely map a list using a mapper function, handling null or empty lists.
+     *
+     * @param list the input list, which can be null
+     * @param mapper the function to map each element
+     * @param <T> the input list element type
+     * @param <R> the output list element type
+     * @return a list of mapped elements or an empty list if input is null
+     */
     private <T, R> List<R> safeMapToDTO(List<T> list, Function<T, R> mapper) {
         return list == null ? List.of() :
                 list.stream()

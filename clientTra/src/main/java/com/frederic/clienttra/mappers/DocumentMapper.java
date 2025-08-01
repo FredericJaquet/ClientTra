@@ -15,6 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class for converting between Document entities and various DTOs.
+ * <p>
+ * Supports conversions for detailed document views, list views, minimal views,
+ * creation from demo DTOs, and entity updates.
+ * </p>
+ */
 @Component
 @RequiredArgsConstructor
 public class DocumentMapper {
@@ -24,6 +31,13 @@ public class DocumentMapper {
     private final OrderMapper orderMapper;
     private final DocumentUtils documentUtils;
 
+    /**
+     * Converts a Document entity to a detailed DocumentDTO.
+     * Calculates additional fields like totals in secondary currency if applicable.
+     *
+     * @param entity the Document entity to convert
+     * @return a detailed DocumentDTO representation, or null if entity is null
+     */
     public DocumentDTO toDto(Document entity) {
         if (entity == null) {
             return null;
@@ -75,12 +89,24 @@ public class DocumentMapper {
         return dto;
     }
 
+    /**
+     * Converts a list of DocumentListProjection to a list of DocumentForListDTO.
+     *
+     * @param entities list of document projections
+     * @return list of documents as DTOs suitable for list display
+     */
     public List<DocumentForListDTO> toListDtosFromProjection(List<DocumentListProjection> entities){
         return entities.stream()
                 .map(this::toListDtoFromProjection)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a DocumentListProjection to a DocumentForListDTO.
+     *
+     * @param entity a single document projection
+     * @return a DocumentForListDTO representation
+     */
     public DocumentForListDTO toListDtoFromProjection(DocumentListProjection entity){
         return DocumentForListDTO.builder()
                 .idDocument(entity.getIdDocument())
@@ -94,6 +120,12 @@ public class DocumentMapper {
                 .build();
     }
 
+    /**
+     * Converts a Document entity to a minimal DTO with basic info.
+     *
+     * @param entity the Document entity
+     * @return a minimal DocumentMinimalDTO
+     */
     public DocumentMinimalDTO toMinimalDto(Document entity) {
         return DocumentMinimalDTO.builder()
                 .idDocument(entity.getIdDocument())
@@ -102,6 +134,16 @@ public class DocumentMapper {
                 .build();
     }
 
+    /**
+     * Creates or updates a Document entity from a BaseDocumentDTO and associated entities.
+     *
+     * @param dto the source DTO with document data
+     * @param changeRate associated ChangeRate entity (nullable)
+     * @param bankAccount associated BankAccount entity (nullable)
+     * @param documentParent parent Document entity if any (nullable)
+     * @param orders list of associated Order entities (nullable)
+     * @return a Document entity
+     */
     public Document toEntity(BaseDocumentDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {
         if (dto == null) {
             return null;
@@ -138,6 +180,14 @@ public class DocumentMapper {
         return entity;
     }
 
+    /**
+     * Converts a DemoDocumentDTO to a Document entity, setting owner company and defaults.
+     *
+     * @param dto the demo document DTO
+     * @param ownerCompany the owner Company entity
+     * @param company the company associated with the document
+     * @return a new Document entity built from the demo DTO
+     */
     public Document toEntity(DemoDocumentDTO dto, Company ownerCompany, Company company){
         List<Order> orders = new ArrayList<>(orderMapper.toEntities(dto.getOrders(), ownerCompany, company));
 
@@ -166,6 +216,17 @@ public class DocumentMapper {
                 .build();
     }
 
+    /**
+     * Updates an existing Document entity with data from a BaseDocumentDTO and associated entities.
+     * Also recalculates totals using DocumentUtils.
+     *
+     * @param entity the Document entity to update
+     * @param dto the source DTO containing new data (nullable fields allowed)
+     * @param changeRate the ChangeRate entity to set
+     * @param bankAccount the BankAccount entity to set
+     * @param documentParent the parent Document entity to set (nullable)
+     * @param orders list of Order entities to set (nullable)
+     */
     public void updateEntity(Document entity, BaseDocumentDTO dto, ChangeRate changeRate, BankAccount bankAccount, Document documentParent, List<Order> orders) {
         if (dto.getDocNumber() != null) {
             entity.setDocNumber(dto.getDocNumber());

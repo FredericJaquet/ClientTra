@@ -12,10 +12,22 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-
+/**
+ * Mapper class responsible for converting between Address entities and various Address DTOs.
+ * <p>
+ * Provides methods to map entities to DTOs, DTOs to entities, update entities from DTOs,
+ * and handle lists of these objects.
+ * </p>
+ */
 @Component
 public class AddressMapper {
 
+    /**
+     * Converts a list of Address entities into a list of AddressDTOs.
+     *
+     * @param entities the list of Address entities to convert
+     * @return a list of AddressDTO objects representing the entities
+     */
     public List<AddressDTO> toAddressDTOList(List<Address> entities){
 
         return entities.stream()
@@ -32,6 +44,12 @@ public class AddressMapper {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a single Address entity into an AddressDTO.
+     *
+     * @param address the Address entity to convert
+     * @return an AddressDTO representing the given entity
+     */
     public AddressDTO toAddressDTO(Address address){
         return AddressDTO.builder()
                 .idAddress(address.getIdAddress())
@@ -45,6 +63,14 @@ public class AddressMapper {
                 .build();
     }
 
+    /**
+     * Converts an UpdateAddressRequestDTO and an existing Address entity
+     * into a CreateAddressRequestDTO, merging updated fields and existing values.
+     *
+     * @param dto the UpdateAddressRequestDTO containing new values (nullable)
+     * @param entity the existing Address entity with current values
+     * @return a CreateAddressRequestDTO with updated and existing values combined
+     */
     public CreateAddressRequestDTO toCreateAddressRequestDTO(UpdateAddressRequestDTO dto, Address entity){
         return CreateAddressRequestDTO.builder()
                 .street(dto.getStreet() != null ? dto.getStreet() : entity.getStreet())
@@ -57,6 +83,12 @@ public class AddressMapper {
                 .build();
     }
 
+    /**
+     * Converts a BaseAddressDTO into an Address entity.
+     *
+     * @param dto the BaseAddressDTO to convert
+     * @return an Address entity built from the DTO data
+     */
     public Address toEntity(BaseAddressDTO dto) {
         return Address.builder()
                 .street(dto.getStreet())
@@ -69,11 +101,24 @@ public class AddressMapper {
                 .build();
     }
 
+    /**
+     * Converts a list of BaseAddressDTO (or subclasses) into a list of Address entities.
+     *
+     * @param dtos the list of BaseAddressDTO objects to convert
+     * @return a list of Address entities
+     */
     public List<Address> toEntities(List< ? extends BaseAddressDTO> dtos){
         return dtos.stream().map(this::toEntity)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Converts a BaseAddressDTO and associates it with a Company, returning an Address entity.
+     *
+     * @param dto the BaseAddressDTO to convert
+     * @param company the Company entity to associate with the Address
+     * @return an Address entity built from the DTO and linked to the given Company
+     */
     public Address toEntity(BaseAddressDTO dto, Company company) {
         return Address.builder()
                 .street(dto.getStreet())
@@ -87,12 +132,25 @@ public class AddressMapper {
                 .build();
     }
 
+    /**
+     * Converts a list of BaseAddressDTO (or subclasses), associating each Address entity with the given Company.
+     *
+     * @param dtos the list of BaseAddressDTO objects to convert
+     * @param company the Company entity to associate with each Address
+     * @return a list of Address entities linked to the specified Company
+     */
     public List<Address> toEntities(List< ? extends BaseAddressDTO> dtos, Company company){
         return dtos.stream()
                 .map(dto -> toEntity(dto, company))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Updates an existing Address entity with non-null values from an UpdateAddressRequestDTO.
+     *
+     * @param entity the Address entity to update
+     * @param dto the UpdateAddressRequestDTO containing new values (nullable)
+     */
     public void updateEntity(Address entity, UpdateAddressRequestDTO dto) {
         if(dto.getStreet() != null) {
             entity.setStreet(dto.getStreet());
