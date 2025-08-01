@@ -6,12 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for updating address information.
+ * Implements the BaseAddressDTO interface.
+ * Contains fields representing the components of an address.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UpdateAddressRequestDTO implements BaseAddressDTO {
-    //private Integer idAddress;
     private String street;
     private String stNumber;
     private String apt;

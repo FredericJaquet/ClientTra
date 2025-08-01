@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for listing customers.
+ * Contains basic customer information such as ID, commercial name,
+ * VAT number, email, website, and enabled status.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

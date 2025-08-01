@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for representing an item in an order or document.
+ * Implements the base item interface with description, quantity, discount, and total.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

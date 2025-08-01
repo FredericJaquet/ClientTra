@@ -6,6 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Detailed DTO for a provider.
+ * Extends BaseCompanyDTO with additional provider-specific details.
+ */
 @Data
 @SuperBuilder
 @NoArgsConstructor

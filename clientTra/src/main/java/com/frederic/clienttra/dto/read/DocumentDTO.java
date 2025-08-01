@@ -1,6 +1,5 @@
 package com.frederic.clienttra.dto.read;
 
-import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
 import lombok.*;
@@ -8,6 +7,11 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Data Transfer Object representing detailed information of a document.
+ * Includes identification, dates, types, financial totals, notes, deadlines,
+ * associated change rate, bank account, parent document, and related orders.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

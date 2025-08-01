@@ -6,6 +6,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * DTO for updating customer-specific information.
+ * Extends the base company update DTO.
+ * Contains fields related to invoicing, payment, tax defaults,
+ * regional flags, and activation status.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

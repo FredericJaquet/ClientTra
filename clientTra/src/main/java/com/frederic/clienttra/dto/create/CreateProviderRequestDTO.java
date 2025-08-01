@@ -6,6 +6,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * DTO used to create a new provider in the system.
+ * Inherits general company data from CreateBaseCompanyRequestDTO and adds provider-specific defaults.
+ * Includes fields for default language, VAT, withholding, due date, and EU status.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

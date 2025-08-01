@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO for representing a billing or pricing scheme.
+ * Contains general scheme information and the list of associated scheme lines.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

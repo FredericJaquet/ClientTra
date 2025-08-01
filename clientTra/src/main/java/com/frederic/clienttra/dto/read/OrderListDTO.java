@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * DTO for representing a summarized view of an order.
+ * Contains order ID, description, date, total amount, and billing status.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

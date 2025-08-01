@@ -9,6 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO used during the registration of a new actual company.
+ * It includes company information and the credentials for the initial administrator user.
+ * Optional fields allow setting preferences like language or theme for the admin.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

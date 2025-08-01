@@ -6,6 +6,10 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * DTO for representing a summarized view of a document for listing purposes.
+ * Includes document ID, company name, document number, date, net total, currency, status, and type.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

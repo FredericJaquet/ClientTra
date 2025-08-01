@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for representing a line item within a billing or pricing scheme.
+ * Contains description and discount details for the scheme line.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

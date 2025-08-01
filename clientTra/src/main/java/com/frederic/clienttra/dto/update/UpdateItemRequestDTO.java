@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for updating item details.
+ * Implements BaseItemDTO interface.
+ * Includes fields for item ID, description, quantity, discount, and total amount.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

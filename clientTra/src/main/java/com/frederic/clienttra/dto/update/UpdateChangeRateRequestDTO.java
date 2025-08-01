@@ -5,6 +5,10 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * DTO for updating change rate information.
+ * Includes currency pair, rate value, and the date of the rate.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

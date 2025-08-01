@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for representing a user with details relevant for administrative purposes.
+ * Includes user's ID, username, email, role, and assigned plan.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

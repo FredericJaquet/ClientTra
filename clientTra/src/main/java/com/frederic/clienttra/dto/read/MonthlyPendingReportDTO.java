@@ -8,6 +8,11 @@ import lombok.NoArgsConstructor;
 import java.time.YearMonth;
 import java.util.List;
 
+/**
+ * DTO for representing a monthly pending report.
+ * Contains the deadline month, the total amount pending for that month,
+ * and a list of invoice summaries that are pending.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

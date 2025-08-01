@@ -6,12 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for updating contact person information.
+ * Implements the BaseContactPersonDTO interface.
+ *
+ * The ID field is commented out, assuming updates are done without changing the ID.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UpdateContactPersonRequestDTO implements BaseContactPersonDTO {
-    //private Integer idContactPerson;
     private String firstname;
     private String middlename;
     private String lastname;

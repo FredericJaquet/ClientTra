@@ -9,6 +9,13 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DTO for updating document information.
+ * Implements BaseDocumentDTO interface.
+ * Contains fields for document metadata such as number, date, status, type,
+ * language, tax rates, currency, notes, deadlines, and associations with
+ * change rates, bank accounts, parent documents, company, and related orders.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

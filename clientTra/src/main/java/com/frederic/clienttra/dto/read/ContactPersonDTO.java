@@ -6,6 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for representing a contact person.
+ * Implements the base contact person DTO interface.
+ * Contains identification and contact details including first name, middle name,
+ * last name, role, and email address.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

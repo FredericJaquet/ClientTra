@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+/**
+ * DTO used to create a new user within the system.
+ * Includes credentials, contact information, and role/plan associations.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

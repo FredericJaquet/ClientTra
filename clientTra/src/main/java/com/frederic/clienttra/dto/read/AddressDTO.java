@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for reading address information.
+ * Implements the base address interface to provide standardized access
+ * to address-related fields.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

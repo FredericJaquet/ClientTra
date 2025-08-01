@@ -8,6 +8,11 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * DTO representing a demo owner company, including its main identification details,
+ * contact information, and associated lists of addresses, bank accounts, and change rates.
+ * This is used for demonstration and data seeding purposes.
+ */
 @Data
 public class DemoOwnerCompanyDTO {
     private String vatNumber;

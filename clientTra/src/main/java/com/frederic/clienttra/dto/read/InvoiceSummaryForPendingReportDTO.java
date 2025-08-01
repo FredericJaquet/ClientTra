@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for representing a summary of an invoice for pending reports.
+ * Contains the document ID, company name, document number, total amount to pay,
+ * and the status of the document.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

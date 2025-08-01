@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO used to create a new line within a pricing scheme.
+ * Implements the BaseSchemeLineDTO interface for consistency across scheme line data structures.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

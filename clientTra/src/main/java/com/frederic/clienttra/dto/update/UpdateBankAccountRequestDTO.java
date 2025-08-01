@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for updating bank account information.
+ * Implements the BaseBankAccountDTO interface.
+ * Contains fields for IBAN, SWIFT code, branch, and account holder name.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
