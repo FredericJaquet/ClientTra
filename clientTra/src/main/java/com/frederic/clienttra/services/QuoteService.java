@@ -22,9 +22,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Service implementation for managing quote (presupuesto) documents.
+ * Implements the DocumentService interface for CRUD and business logic.
+ */
 @Service
 @RequiredArgsConstructor
-public class QuoteService implements DocumentService{
+public class QuoteService implements DocumentService {
 
     private final DocumentMapper documentMapper;
     private final DocumentRepository documentRepository;
@@ -36,6 +40,12 @@ public class QuoteService implements DocumentService{
     private final OrderRepository orderRepository;
     private final DocumentUtils documentUtils;
 
+    /**
+     * Retrieves all documents of a given type belonging to the current company.
+     *
+     * @param type DocumentType to filter by.
+     * @return List of DocumentForListDTO.
+     */
     @Transactional(readOnly = true)
     @Override
     public List<DocumentForListDTO> getAllDocumentsByType(DocumentType type) {
@@ -44,6 +54,14 @@ public class QuoteService implements DocumentService{
         return documentMapper.toListDtosFromProjection(entities);
     }
 
+    /**
+     * Retrieves all documents of a given type for a specific company ID,
+     * filtered by the current owner company.
+     *
+     * @param type      DocumentType filter.
+     * @param idCompany Company ID filter.
+     * @return List of DocumentForListDTO.
+     */
     @Transactional(readOnly = true)
     @Override
     public List<DocumentForListDTO> getDocumentsByCompanyId(DocumentType type, Integer idCompany) {
@@ -52,6 +70,14 @@ public class QuoteService implements DocumentService{
         return documentMapper.toListDtosFromProjection(entities);
     }
 
+    /**
+     * Retrieves all documents of a given type and status,
+     * filtered by the current owner company.
+     *
+     * @param type   DocumentType filter.
+     * @param status DocumentStatus filter.
+     * @return List of DocumentForListDTO.
+     */
     @Transactional(readOnly = true)
     @Override
     public List<DocumentForListDTO> getDocumentsByStatus(DocumentType type, DocumentStatus status) {
@@ -60,6 +86,15 @@ public class QuoteService implements DocumentService{
         return documentMapper.toListDtosFromProjection(entities);
     }
 
+    /**
+     * Retrieves all documents filtered by type, company ID, and status,
+     * within the current owner company.
+     *
+     * @param type      DocumentType filter.
+     * @param idCompany Company ID filter.
+     * @param status    DocumentStatus filter.
+     * @return List of DocumentForListDTO.
+     */
     @Transactional(readOnly = true)
     @Override
     public List<DocumentForListDTO> getDocumentsByIdCompanyAndStatus(DocumentType type, Integer idCompany, DocumentStatus status) {
@@ -68,6 +103,14 @@ public class QuoteService implements DocumentService{
         return documentMapper.toListDtosFromProjection(entities);
     }
 
+    /**
+     * Retrieves a document by its ID and type within the current company.
+     *
+     * @param type DocumentType.
+     * @param id   Document ID.
+     * @return DocumentDTO representing the document.
+     * @throws DocumentNotFoundException if no document found.
+     */
     @Transactional(readOnly = true)
     @Override
     public DocumentDTO getDocumentById(DocumentType type, Integer id) {
@@ -77,53 +120,81 @@ public class QuoteService implements DocumentService{
         return documentMapper.toDto(entity);
     }
 
+    /**
+     * Retrieves the last document number used for a specific document type.
+     *
+     * @param type DocumentType.
+     * @return String last document number.
+     * @throws LastNumberNotFoundException if no document numbers found.
+     */
     @Transactional(readOnly = true)
     public String getLastDocumentNumber(DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-
         return documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type)
                 .orElseThrow(LastNumberNotFoundException::new);
     }
 
+    /**
+     * Creates a new quote document for the specified company.
+     * Validates orders, rates, and calculates totals and deadlines.
+     *
+     * @param idCompany Company ID.
+     * @param dto       BaseDocumentDTO with input data.
+     * @param type      DocumentType.
+     * @return DocumentDTO of the newly created quote.
+     * @throws CantCreateDocumentWithoutOrdersException if no orders given.
+     * @throws InvalidVatRateException                   if VAT rate invalid.
+     * @throws InvalidWithholdingException               if withholding invalid.
+     * @throws CustomerNotFoundException                  if customer not found.
+     * @throws CompanyNotFoundException                    if company not found.
+     * @throws DocumentNotFoundException                   if parent document missing.
+     */
     @Transactional
     @Override
     public DocumentDTO createDocument(Integer idCompany, BaseDocumentDTO dto, DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        String currency=null;
-        LocalDate deadline=null;
+        String currency = null;
+        LocalDate deadline = null;
 
-        // 1. Recuperar entidades relacionadas
+        // Retrieve related entities
         ChangeRate changeRate = changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner);
-        BankAccount bankAccount = dto.getIdBankAccount() != null ? bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner) : null;
-        Document parent = dto.getIdDocumentParent() == null ? null : documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, dto.getIdDocumentParent(), type)
+        BankAccount bankAccount = dto.getIdBankAccount() != null
+                ? bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner)
+                : null;
+
+        Document parent = dto.getIdDocumentParent() == null
+                ? null
+                : documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, dto.getIdDocumentParent(), type)
                 .orElseThrow(DocumentNotFoundException::new);
+
         List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(dto.getOrderIds(), owner);
         if (orders.isEmpty()) {
             throw new CantCreateDocumentWithoutOrdersException();
         }
 
-        //Verificar que los % son correctos
-        if(dto.getVatRate()<1){
+        // Validate percentage values
+        if (dto.getVatRate() < 1) {
             throw new InvalidVatRateException();
         }
-        if(dto.getWithholding()<1){
+        if (dto.getWithholding() < 1) {
             throw new InvalidWithholdingException();
         }
 
         Company orderCompany = getCompany(idCompany, orders, parent);
 
-        Company company=companyRepository.findByIdCompany(idCompany)
+        Company company = companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
 
-        //2. Campos calculados
-        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
+        // Retrieve customer linked to the order company
+        Customer customer = customerRepository.findByOwnerCompanyAndCompany(owner, orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 
         currency = changeRate.getCurrency1();
 
+        // Calculate payment deadline based on document date and customer's due date
         deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
 
-        // 3. Crear entidad
+        // Create the document entity
         Document entity = documentMapper.toEntity(dto, changeRate, bankAccount, parent, orders);
         entity.setOwnerCompany(owner);
         entity.setCompany(company);
@@ -131,51 +202,70 @@ public class QuoteService implements DocumentService{
         entity.setDeadline(deadline);
         entity.setDocType(type);
 
-        //4. Calcular los totales
+        // Calculate totals (net, VAT, total amounts)
         documentUtils.calculateTotals(entity);
 
-        // 6. Guardar el documento
+        // Persist and return the created document DTO
         Document newEntity = documentRepository.save(entity);
-
         return documentMapper.toDto(newEntity);
     }
 
+    /**
+     * Updates an existing quote document with new data.
+     * Validates and recalculates totals and deadlines accordingly.
+     *
+     * @param idDocument Document ID.
+     * @param dto        BaseDocumentDTO with update data.
+     * @param type       DocumentType.
+     * @return Updated DocumentDTO.
+     * @throws DocumentNotFoundException if document not found.
+     * @throws InvalidVatRateException   if VAT rate invalid.
+     * @throws InvalidWithholdingException if withholding invalid.
+     */
     @Transactional
     @Override
     public DocumentDTO updateDocument(Integer idDocument, BaseDocumentDTO dto, DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         Document entity = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, idDocument, type)
                 .orElseThrow(DocumentNotFoundException::new);
+
         Company orderCompany = entity.getCompany();
-        Customer customer=customerRepository.findByOwnerCompanyAndCompany(owner,orderCompany)
+
+        Customer customer = customerRepository.findByOwnerCompanyAndCompany(owner, orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 
         ChangeRate changeRate;
-
         List<Order> orders;
 
-        if(dto.getIdChangeRate()==null) {
+        // Determine change rate to apply
+        if (dto.getIdChangeRate() == null) {
             changeRate = entity.getChangeRate();
-            String currency = changeRate.getCurrency1();
-            entity.setCurrency(currency);
-        }else{
+            entity.setCurrency(changeRate.getCurrency1());
+        } else {
             changeRate = changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner);
-            String currency = changeRate.getCurrency1();
-            entity.setCurrency(currency);
+            entity.setCurrency(changeRate.getCurrency1());
         }
-        if(dto.getIdBankAccount()!=null){
+
+        // Update bank account if provided
+        if (dto.getIdBankAccount() != null) {
             BankAccount bankAccount = bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner);
             entity.setBankAccount(bankAccount);
         }
-        if(dto.getOrderIds()!=null && !dto.getOrderIds().isEmpty()) {
+
+        // Update orders if provided
+        if (dto.getOrderIds() != null && !dto.getOrderIds().isEmpty()) {
             orders = orderRepository.findAllByIdOrderInAndOwnerCompany(dto.getOrderIds(), owner);
             entity.setOrders(orders);
         }
-        if(dto.getDocDate() != null) {
+
+        // Update deadline if document date provided
+        if (dto.getDocDate() != null) {
             LocalDate deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
             entity.setDeadline(deadline);
         }
 
+        // Validate rates
         if (dto.getVatRate() != null && dto.getVatRate() < 1) {
             throw new InvalidVatRateException();
         }
@@ -183,37 +273,57 @@ public class QuoteService implements DocumentService{
             throw new InvalidWithholdingException();
         }
 
+        // Update the entity from DTO fields
         documentMapper.updateEntity(entity, dto, entity.getChangeRate(), entity.getBankAccount(), null, entity.getOrders());
 
         Document newEntity = documentRepository.save(entity);
-
         return documentMapper.toDto(newEntity);
     }
 
+    /**
+     * Marks a document as deleted by setting its status to DELETED (soft delete).
+     *
+     * @param id Document ID.
+     * @throws DocumentNotFoundException if document does not exist.
+     */
     @Transactional
     @Override
     public void softDeleteDocument(Integer id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
+
         Document entity = documentRepository.findByOwnerCompanyAndIdDocument(owner, id)
                 .orElseThrow(DocumentNotFoundException::new);
+
         entity.setStatus(DocumentStatus.DELETED);
         documentRepository.save(entity);
     }
 
+    /**
+     * Validates that all orders belong to the specified company,
+     * and that none are already billed unless they belong to the parent document.
+     *
+     * @param idCompany Company ID to validate.
+     * @param orders    List of orders.
+     * @param parent    Parent document for modification scenarios (nullable).
+     * @return Company of the first order.
+     * @throws CantIncludeOrderAlreadyBilledException if order is billed elsewhere.
+     * @throws OrderDoNotBelongToCompanyException     if orders belong to a different company.
+     */
     private static Company getCompany(Integer idCompany, List<Order> orders, Document parent) {
-        Company orderCompany= orders.getFirst().getCompany();
+        Company orderCompany = orders.get(0).getCompany();
 
-        for(Order order : orders){
-            // Verifica si el pedido ya está vinculado a otra factura activa
+        for (Order order : orders) {
+            // Check if order is already billed in another active document
             if (order.getBilled() != null && order.getBilled()) {
-                // Busca si el pedido está en la factura "padre"
+                // Check if order belongs to the parent document in case of editing
                 boolean isPartOfModifiedInvoice = parent != null && parent.getOrders().contains(order);
 
                 if (!isPartOfModifiedInvoice) {
                     throw new CantIncludeOrderAlreadyBilledException();
                 }
             }
-            if(!Objects.equals(orderCompany.getIdCompany(), idCompany)){
+            // Verify orders belong to the specified company
+            if (!Objects.equals(orderCompany.getIdCompany(), idCompany)) {
                 throw new OrderDoNotBelongToCompanyException();
             }
         }

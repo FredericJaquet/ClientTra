@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Implementation of CustomerService interface.
+ * Provides business logic for customer-related operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -27,28 +31,47 @@ public class CustomerServiceImpl implements CustomerService {
     private final CompanyService companyService;
     private final CompanyMapper companyMapper;
 
+    /**
+     * Retrieves all enabled customers of the current user's company, sorted by company name.
+     *
+     * @return a list of CustomerForListDTO with all enabled customers
+     */
     @Transactional(readOnly = true)
     @Override
     public List<CustomerForListDTO> getAllCustomers() {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner, true));
-        List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
+        List<CustomerForListDTO> dtos = customerMapper.toCustomerForListDTOS(entities);
         dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         return dtos;
     }
 
-    public List<CustomerForListDTO> getAllCustomersEnabled(boolean enabled){
+    /**
+     * Retrieves customers filtered by their enabled status, sorted by company name.
+     *
+     * @param enabled true to get enabled customers, false to get disabled customers
+     * @return a list of filtered CustomerForListDTOs
+     */
+    @Transactional(readOnly = true)
+    public List<CustomerForListDTO> getAllCustomersEnabled(boolean enabled) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner, enabled));
-        List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
+        List<CustomerForListDTO> dtos = customerMapper.toCustomerForListDTOS(entities);
         dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         return dtos;
     }
 
+    /**
+     * Retrieves detailed information for a customer by its ID.
+     *
+     * @param id the customer ID
+     * @return CustomerDetailsDTO with detailed customer information
+     * @throws CustomerNotFoundException if customer is not found or inaccessible
+     */
     @Transactional(readOnly = true)
     @Override
     public CustomerDetailsDTO getCustomerById(int id) {
@@ -58,6 +81,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toCustomerDetailsDTO(entity);
     }
 
+    /**
+     * Searches customers by matching input text against company name, legal name, or VAT number.
+     *
+     * @param input the search query string
+     * @return a list of matching CustomerForListDTOs sorted by company name
+     */
     @Transactional(readOnly = true)
     @Override
     public List<CustomerForListDTO> searchByNameOrVat(String input) {
@@ -65,12 +94,17 @@ public class CustomerServiceImpl implements CustomerService {
         String query = "%" + input + "%";
 
         List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByComNameOrLegalNameOrVatNumber(owner, query));
-        List<CustomerForListDTO> dtos=customerMapper.toCustomerForListDTOS(entities);
+        List<CustomerForListDTO> dtos = customerMapper.toCustomerForListDTOS(entities);
         dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         return dtos;
     }
 
+    /**
+     * Retrieves a minimal list of customers for lightweight display purposes (e.g., dropdowns).
+     *
+     * @return list of BaseCompanyMinimalDTO containing essential customer info
+     */
     @Transactional(readOnly = true)
     @Override
     public List<BaseCompanyMinimalDTO> getMinimalCustomerList() {
@@ -79,6 +113,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toMinimalDTOs(entities);
     }
 
+    /**
+     * Creates a new customer along with its associated company.
+     *
+     * @param dto the creation data transfer object containing customer and company info
+     * @return the ID of the newly created customer
+     */
     @Transactional
     @Override
     public int createCustomer(CreateCustomerRequestDTO dto) {
@@ -92,40 +132,48 @@ public class CustomerServiceImpl implements CustomerService {
         Customer entity = customerMapper.toEntity(dto);
         entity.setCompany(savedCompany);
         entity.setOwnerCompany(owner);
-        //entity.setEnabled(true);
 
-        Customer customerSaved=customerRepository.save(entity);
+        Customer customerSaved = customerRepository.save(entity);
 
         return customerSaved.getIdCustomer();
     }
 
+    /**
+     * Updates an existing customer's data and its associated company data.
+     *
+     * @param id  the ID of the customer to update
+     * @param dto the update data transfer object
+     * @throws CustomerNotFoundException if the customer does not exist or is inaccessible
+     */
     @Transactional
     @Override
     public void updateCustomer(int id, UpdateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
+        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
                 .orElseThrow(CustomerNotFoundException::new);
 
         Company company = entity.getCompany();
 
-        companyMapper.updateEntity(company,dto);
+        companyMapper.updateEntity(company, dto);
         customerMapper.updateEntity(entity, dto);
 
         companyRepository.save(company);
         customerRepository.save(entity);
     }
 
+    /**
+     * Disables a customer, marking it as inactive.
+     *
+     * @param id the ID of the customer to disable
+     * @throws CustomerNotFoundException if the customer does not exist or is inaccessible
+     */
     @Transactional
     @Override
     public void disableCustomer(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner,id)
+        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
                 .orElseThrow(CustomerNotFoundException::new);
         entity.setEnabled(false);
         customerRepository.save(entity);
     }
-
-
 }
-
-

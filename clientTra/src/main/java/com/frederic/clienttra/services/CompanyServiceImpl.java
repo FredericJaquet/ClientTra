@@ -23,6 +23,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
+/**
+ * Implementation of {@link CompanyService} interface
+ * that manages operations related to the authenticated user's company.
+ */
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
@@ -30,6 +34,11 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
 
+    /**
+     * Retrieves the current authenticated user's company, if available.
+     *
+     * @return an {@link Optional} containing the current {@link Company} or empty if not authenticated or company not found
+     */
     @Transactional(readOnly = true)
     @Override
     public Optional<Company> getCurrentCompany() {
@@ -43,43 +52,76 @@ public class CompanyServiceImpl implements CompanyService {
         return Optional.empty();
     }
 
+    /**
+     * Retrieves the current authenticated user's company.
+     *
+     * @return the current {@link Company}
+     * @throws CompanyNotFoundForUserException if no company is found for the authenticated user
+     */
     @Transactional(readOnly = true)
     @Override
     public Company getCurrentCompanyOrThrow() {
         return getCurrentCompany().orElseThrow(CompanyNotFoundForUserException::new);
     }
 
+    /**
+     * Retrieves the current authenticated user's company information
+     * mapped to a {@link CompanyOwnerDTO}.
+     *
+     * @return an {@link Optional} containing the {@link CompanyOwnerDTO} or empty if no company found
+     */
     @Transactional(readOnly = true)
-    public Optional<CompanyOwnerDTO> getCompanyOwnerDTO(){
-        Company company=getCurrentCompanyOrThrow();
-        CompanyOwnerDTO companyOwnerDTO=companyMapper.toCompanyOwnerDTO(company);
+    public Optional<CompanyOwnerDTO> getCompanyOwnerDTO() {
+        Company company = getCurrentCompanyOrThrow();
+        CompanyOwnerDTO companyOwnerDTO = companyMapper.toCompanyOwnerDTO(company);
         return Optional.of(companyOwnerDTO);
     }
 
+    /**
+     * Retrieves a company by its ID.
+     *
+     * @param id the ID of the company to retrieve
+     * @return the {@link Company} with the specified ID
+     * @throws CompanyNotFoundException if no company is found with the given ID
+     */
     @Transactional(readOnly = true)
     @Override
-    public Company getCompanyById(Integer id){
+    public Company getCompanyById(Integer id) {
         return companyRepository.findByIdCompany(id)
                 .orElseThrow(CompanyNotFoundException::new);
     }
 
+    /**
+     * Updates the owner information of the current authenticated user's company.
+     *
+     * @param dto the DTO containing updated company owner information
+     */
     @Transactional
     @Override
     public void updateCompanyOwner(UpdateCompanyOwnerRequestDTO dto) {
         Company company = getCurrentCompanyOrThrow();
 
-        //TODO Convertir en CreateCustomerRequestDTO y pasar el DtoValidator
+        // TODO: Convert to CreateCustomerRequestDTO and validate using DtoValidator
 
-        companyMapper.updateEntity(company,dto);
+        companyMapper.updateEntity(company, dto);
 
         companyRepository.save(company);
     }
 
+    /**
+     * Uploads and stores a logo file for the current authenticated user's company.
+     * The logo is saved in a predefined folder with a unique filename,
+     * and the relative path is stored in the company entity.
+     *
+     * @param file the logo file to upload
+     * @throws IllegalArgumentException if the file is null or empty
+     * @throws LogoNotLoadedException if an IOException occurs during file storage
+     */
     @Transactional
     @Override
     public void uploadCompanyLogo(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Archivo vacío");
+            throw new IllegalArgumentException("Empty file");
         }
 
         Company company = getCurrentCompanyOrThrow();
@@ -92,7 +134,7 @@ public class CompanyServiceImpl implements CompanyService {
 
             Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
-            // Guardar solo el path relativo
+            // Save only the relative path
             company.setLogoPath("uploads/logos/" + filename);
             companyRepository.save(company);
 
@@ -100,5 +142,4 @@ public class CompanyServiceImpl implements CompanyService {
             throw new LogoNotLoadedException();
         }
     }
-
 }

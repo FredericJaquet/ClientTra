@@ -15,6 +15,12 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for generating cash flow reports based on invoices within a date range.
+ * <p>
+ * It retrieves invoices filtered by document type and owner company, groups them by client or provider company,
+ * calculates totals, and maps data into DTOs for reporting purposes.
+ */
 @Service
 @RequiredArgsConstructor
 public class CashFlowReportService {
@@ -23,11 +29,20 @@ public class CashFlowReportService {
     private final CashFlowReportMapper mapper;
     private final CompanyServiceImpl companyService;
 
+    /**
+     * Generates a cash flow report for invoices of a specified document type between two dates.
+     *
+     * @param initDate the start date (inclusive) of the report period
+     * @param endDate  the end date (inclusive) of the report period
+     * @param type     the document type to filter invoices (e.g., INVOICE)
+     * @return a {@link CashFlowReportDTO} containing aggregated invoice data grouped by client/provider
+     * @throws RuntimeException if the current user's company cannot be retrieved
+     */
     public CashFlowReportDTO generate(LocalDate initDate, LocalDate endDate, DocumentType type) {
         Company onwerCompany = companyService.getCurrentCompanyOrThrow();
         List<InvoiceForCashFlowReportProjection> rawData = repository.findInvoicesForCashFlowReport(initDate, endDate, onwerCompany.getIdCompany(), type);
 
-        // Agrupar por idCompany (cliente o proveedor)
+        // Group invoices by company (client or provider)
         Map<Integer, List<InvoiceForCashFlowReportProjection>> groupedByCompany = rawData.stream()
                 .collect(Collectors.groupingBy(InvoiceForCashFlowReportProjection::getIdCompany));
 
@@ -38,7 +53,7 @@ public class CashFlowReportService {
             Integer companyId = entry.getKey();
             List<InvoiceForCashFlowReportProjection> companyInvoices = entry.getValue();
 
-            // Obtener info básica del cliente/proveedor desde la primera factura
+            // Retrieve basic company info from the first invoice of the group
             InvoiceForCashFlowReportProjection first = companyInvoices.get(0);
 
             PartyForCashFlowReportDTO dto = mapper.toPartyReportDTO(
@@ -48,7 +63,7 @@ public class CashFlowReportService {
                     companyInvoices
             );
 
-            // Calcular totales por empresa
+            // Calculate totals per company
             double totalNet = dto.getInvoices().stream().mapToDouble(i -> Optional.ofNullable(i.getTotalNet()).orElse(0.0)).sum();
             double totalVat = dto.getInvoices().stream().mapToDouble(i -> Optional.ofNullable(i.getTotalVat()).orElse(0.0)).sum();
             double totalWithholding = dto.getInvoices().stream().mapToDouble(i -> Optional.ofNullable(i.getTotalWithholding()).orElse(0.0)).sum();
