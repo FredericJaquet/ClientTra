@@ -38,3 +38,5 @@ frontend/.env
 frontend/.next/
 frontend/.turbo/
 
+# Archivos de configuración sensibles de Spring Boot
+/src/main/resources/application.properties
