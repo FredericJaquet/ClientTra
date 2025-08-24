@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# === Configuración sensible del backend ===
+src/main/resources/application.properties
