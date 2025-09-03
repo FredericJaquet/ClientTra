@@ -23,6 +23,8 @@ public class CustomUserDetails implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private final int idCompany;
     private final String preferredLanguage;
+    private final String preferredTheme;
+    private final String preferredMode;
 
     /**
      * Indicates whether the user account has expired.

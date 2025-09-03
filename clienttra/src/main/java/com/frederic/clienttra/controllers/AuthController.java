@@ -47,7 +47,10 @@ public class AuthController {
             return ResponseEntity.ok(Map.of(
                     "token", jwt,
                     "username", userDetails.getUsername(),
-                    "role", userDetails.getAuthorities().iterator().next().getAuthority()
+                    "role", userDetails.getAuthorities().iterator().next().getAuthority(),
+                    "preferredLanguage", userDetails.getPreferredLanguage(),
+                    "preferredTheme", userDetails.getPreferredTheme(),
+                    "preferredMode", userDetails.getPreferredMode()
             ));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

@@ -41,6 +41,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 new SimpleGrantedAuthority(user.getRole().getRoleName())
         );
 
+        String darkMode="light";
+
+        if(user.isDarkMode()){
+            darkMode="dark";
+        }
+
         return new CustomUserDetails(
                 user.getIdUser(),
                 user.getUserName(),
@@ -48,7 +54,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.isEnabled(),
                 authorities,
                 user.getCompany().getIdCompany(),
-                user.getPreferredLanguage()
+                user.getPreferredLanguage(),
+                user.getPreferredTheme(),
+                darkMode
         );
     }
 }

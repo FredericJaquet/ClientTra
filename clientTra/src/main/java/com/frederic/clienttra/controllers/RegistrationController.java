@@ -3,11 +3,14 @@ package com.frederic.clienttra.controllers;
 import com.frederic.clienttra.dto.GenericResponseDTO;
 import com.frederic.clienttra.dto.create.CreateUserRequestDTO;
 import com.frederic.clienttra.dto.create.RegistrationRequestDTO;
+import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.services.DemoDataService;
 import com.frederic.clienttra.services.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -41,7 +44,14 @@ public class RegistrationController {
      */
     @PostMapping("/demo-data")
     public ResponseEntity<GenericResponseDTO> registerDemoCompany(@Valid @RequestBody CreateUserRequestDTO dto){
-        demoDataService.loadData(dto);
-        return ResponseEntity.ok(new GenericResponseDTO("registration.created_with_demo.success"));
+        try {
+            demoDataService.loadData(dto);
+            return ResponseEntity.ok(new GenericResponseDTO("registration.created_with_demo.success"));
+        } catch (Exception ex) {
+            // opcional: solo para pruebas, delega en tu GlobalExceptionHandler
+            return ResponseEntity
+                    .badRequest()
+                    .body(new GenericResponseDTO("Error: " + ex.getMessage()));
+        }
     }
 }

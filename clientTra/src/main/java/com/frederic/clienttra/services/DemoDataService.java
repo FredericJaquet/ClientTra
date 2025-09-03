@@ -60,7 +60,16 @@ public class DemoDataService { // TODO: Add unit/integration tests if this funct
         try {
             Company demoCompany = loadDemoCompany(userDTO.getUsername());
 
+            if(userDTO.getIdRole()==null) {
+                userDTO.setIdRole(1);
+            }
+            if(userDTO.getIdPlan()==null) {
+                userDTO.setIdPlan(1);
+            }
             User user = userMapper.toEntity(userDTO, demoCompany);
+            user.setPreferredLanguage("es");
+            user.setPreferredTheme("blue");
+            user.setDarkMode(false);
             userRepository.save(user);
 
             loadDemoCustomers(demoCompany);
