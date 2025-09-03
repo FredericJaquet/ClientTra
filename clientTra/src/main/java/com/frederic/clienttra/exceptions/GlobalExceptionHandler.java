@@ -75,13 +75,12 @@ public class GlobalExceptionHandler {
     }
 
     // --- Custom manual validation errors ---
-
     @ExceptionHandler(ManualValidationException.class)
     public ResponseEntity<ErrorResponse> handleManualValidationException(ManualValidationException ex, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         ex.getFieldErrors().forEach((field, msgKey) -> {
             String message = messageResolver.getMessage(msgKey);
-            sb.append(field).append(": ").append(message).append("; ");
+            sb.append(field).append(": ").append(message);
         });
 
         ErrorResponse error = new ErrorResponse(
@@ -95,13 +94,12 @@ public class GlobalExceptionHandler {
     }
 
     // --- Validation errors triggered by @Valid annotations ---
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             String message = messageResolver.getMessage(fieldError.getDefaultMessage());
-            sb.append(fieldError.getField()).append(": ").append(message).append("; ");
+            sb.append(fieldError.getField()).append(": ").append(message);
         }
 
         ErrorResponse error = new ErrorResponse(
@@ -115,7 +113,6 @@ public class GlobalExceptionHandler {
     }
 
     // --- Simple validation and conflict errors ---
-
     @ExceptionHandler({
             InvalidEmailException.class,
             InvalidIbanException.class,
@@ -146,7 +143,6 @@ public class GlobalExceptionHandler {
     }
 
     // --- Generic catch-all exception handler ---
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
         return buildErrorResponse(
