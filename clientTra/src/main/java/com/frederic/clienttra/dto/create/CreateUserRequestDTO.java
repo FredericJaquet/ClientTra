@@ -22,8 +22,7 @@ public class CreateUserRequestDTO {
     @Email(message = "{validation.email.invalid}")
     @Size(max = 100, message = "{validation.email.too_long}")
     private String email;
-    //@NotNull(message = "{validation.role_id.required}")
+    private String preferredLanguage;
     private Integer idRole;
-    //@NotNull(message = "{validation.plan_id.required}")
     private Integer idPlan;
 }

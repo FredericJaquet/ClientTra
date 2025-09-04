@@ -1,6 +1,7 @@
 package com.frederic.clienttra.repositories;
 
 import com.frederic.clienttra.entities.User;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -38,6 +39,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @return an Optional containing the user if found, or empty otherwise
      */
     Optional<User> findByIdUserAndCompany_IdCompany(int idUser, int idCompany);
+
+    boolean existsByUserName(@NotBlank String UserName);
 
     /**
      * Counts the number of users in a company that have a specific role.

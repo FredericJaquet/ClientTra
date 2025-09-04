@@ -24,7 +24,6 @@ public class GlobalExceptionHandler {
     }
 
     // --- Authentication and authorization ---
-
     @ExceptionHandler(UserNotAuthenticatedException.class)
     public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(UserNotAuthenticatedException ex, HttpServletRequest request) {
         return buildErrorResponse(
@@ -48,7 +47,6 @@ public class GlobalExceptionHandler {
     }
 
     // --- Resources not found (404) ---
-
     @ExceptionHandler({
             UserNotFoundException.class,
             CompanyNotFoundForUserException.class,
@@ -71,6 +69,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 "The requested resource does not exist or does not belong to your company.",
+                request.getRequestURI());
+    }
+
+    //Custom already exists errors
+    @ExceptionHandler({
+            UserAlreadyExistsException.class,
+            CompanyAlreadyExistsException.class
+    })
+    public ResponseEntity<ErrorResponse> handleAlreadyExists(RuntimeException ex, HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.FORBIDDEN,
+                ex.getMessage(),
+                "The requested resource already exists.",
                 request.getRequestURI());
     }
 
@@ -121,7 +132,6 @@ public class GlobalExceptionHandler {
             InvalidVatNumberException.class,
             InvalidSchemeNameException.class,
             InvalidSchemePriceException.class,
-            CompanyAlreadyExistsException.class,
             LogoNotLoadedException.class,
             LastAddressException.class,
             CantDeleteSelfException.class,
@@ -153,7 +163,6 @@ public class GlobalExceptionHandler {
     }
 
     // --- Utility method to build ErrorResponse and ResponseEntity ---
-
     private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String code, String fallbackMessage, String path) {
         String localizedMsg = messageResolver.getMessage(code);
         ErrorResponse error = new ErrorResponse(

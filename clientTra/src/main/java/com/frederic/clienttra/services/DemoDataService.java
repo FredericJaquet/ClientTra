@@ -13,6 +13,7 @@ import com.frederic.clienttra.dto.demo.DemoDocumentDTO;
 import com.frederic.clienttra.dto.demo.DemoOwnerCompanyDTO;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CompanyNotFoundException;
+import com.frederic.clienttra.exceptions.UserAlreadyExistsException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service class to load and delete demo data into/from the database.
@@ -57,26 +59,25 @@ public class DemoDataService { // TODO: Add unit/integration tests if this funct
      */
     @Transactional
     public void loadData(CreateUserRequestDTO userDTO) {
-        try {
-            Company demoCompany = loadDemoCompany(userDTO.getUsername());
+       boolean exists=userRepository.existsByUserName(userDTO.getUsername());
+       if(exists){
+           throw new UserAlreadyExistsException();
+       }
+       Company demoCompany = loadDemoCompany(userDTO.getUsername());
 
-            if(userDTO.getIdRole()==null) {
-                userDTO.setIdRole(1);
-            }
-            if(userDTO.getIdPlan()==null) {
-                userDTO.setIdPlan(1);
-            }
-            User user = userMapper.toEntity(userDTO, demoCompany);
-            user.setPreferredLanguage("es");
-            user.setPreferredTheme("blue");
-            user.setDarkMode(false);
-            userRepository.save(user);
+       if(userDTO.getIdRole()==null) {
+           userDTO.setIdRole(1);
+       }
+       if(userDTO.getIdPlan()==null) {
+           userDTO.setIdPlan(1);
+       }
+       User user = userMapper.toEntity(userDTO, demoCompany);
+       user.setPreferredTheme("blue");
+       user.setDarkMode(false);
+       userRepository.save(user);
 
-            loadDemoCustomers(demoCompany);
-            loadDemoProviders(demoCompany);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+       loadDemoCustomers(demoCompany);
+       loadDemoProviders(demoCompany);
     }
 
     /**

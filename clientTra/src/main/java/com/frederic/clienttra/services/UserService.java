@@ -166,6 +166,10 @@ public class UserService {
      */
     @Transactional
     public UserForAdminDTO createUser(CreateUserRequestDTO dto) {
+        boolean exists=userRepository.existsByUserName(dto.getUsername());
+        if(exists){
+            throw new UserAlreadyExistsException();
+        }
         Company currentCompany = companyService.getCurrentCompany()
                 .orElseThrow(UserNotAuthenticatedException::new);
 

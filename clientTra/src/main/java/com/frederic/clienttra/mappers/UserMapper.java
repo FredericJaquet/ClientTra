@@ -85,6 +85,7 @@ public class UserMapper {
                 .userName(dto.getUsername())
                 .passwd(passwordEncoder.encode(dto.getPassword()))
                 .email(dto.getEmail())
+                .preferredLanguage((dto.getPreferredLanguage()))
                 .role(role)
                 .plan(plan)
                 .enabled(true)

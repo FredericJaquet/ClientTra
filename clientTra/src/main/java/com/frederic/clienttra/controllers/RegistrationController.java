@@ -44,14 +44,7 @@ public class RegistrationController {
      */
     @PostMapping("/demo-data")
     public ResponseEntity<GenericResponseDTO> registerDemoCompany(@Valid @RequestBody CreateUserRequestDTO dto){
-        try {
-            demoDataService.loadData(dto);
-            return ResponseEntity.ok(new GenericResponseDTO("registration.created_with_demo.success"));
-        } catch (Exception ex) {
-            // opcional: solo para pruebas, delega en tu GlobalExceptionHandler
-            return ResponseEntity
-                    .badRequest()
-                    .body(new GenericResponseDTO("Error: " + ex.getMessage()));
-        }
+        demoDataService.loadData(dto);
+        return ResponseEntity.ok(new GenericResponseDTO("registration.created_with_demo.success"));
     }
 }
