@@ -74,6 +74,7 @@ public class DemoDataService { // TODO: Add unit/integration tests if this funct
        User user = userMapper.toEntity(userDTO, demoCompany);
        user.setPreferredTheme("blue");
        user.setDarkMode(false);
+       user.setPreferredLanguage("es");
        userRepository.save(user);
 
        loadDemoCustomers(demoCompany);
@@ -142,6 +143,20 @@ public class DemoDataService { // TODO: Add unit/integration tests if this funct
      */
     private void loadDemoCustomers(Company company) {
         List<DemoCompanyDTO> dtos = readJsonFromResource("db/demo_data/customers.json", new TypeReference<>() {});
+
+        for(DemoCompanyDTO dto : dtos) {
+            for(CreateOrderRequestDTO order: dto.getOrders()) {
+                System.out.println(order);
+            }
+        }
+
+        for(DemoCompanyDTO dto : dtos) {
+            for(DemoDocumentDTO doc: dto.getDocuments()) {
+                for(CreateOrderRequestDTO order:doc.getOrders()) {
+                    System.out.println(order);
+                }
+            }
+        }
 
         List<Customer> entities = customerMapper.toEntities(dtos, company);
         List<Company> companyEntities = new ArrayList<>();

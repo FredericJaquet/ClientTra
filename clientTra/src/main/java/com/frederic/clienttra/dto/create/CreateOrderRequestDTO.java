@@ -31,7 +31,7 @@ public class CreateOrderRequestDTO implements BaseOrderDTO {
     private Double pricePerUnit;
     private String units;
     private Double total = 0.0;
-    private Boolean billed = false;
+    private Boolean billed;
     private String fieldName;
     private String sourceLanguage;
     private String targetLanguage;

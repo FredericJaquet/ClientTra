@@ -9,7 +9,6 @@ import com.frederic.clienttra.services.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,7 +47,6 @@ public class OrderController {
      * @return a list of pending {@link OrderListDTO}
      */
     @GetMapping("/pending")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<List<OrderListDTO>> getPendingOrders(@PathVariable Integer idCompany) {
         List<OrderListDTO> orders = orderService.getPendingOrders(idCompany);
         return ResponseEntity.ok(orders);
@@ -77,7 +75,6 @@ public class OrderController {
      * @return a success message wrapped in {@link GenericResponseDTO}
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> createOrder(@PathVariable Integer idCompany,
                                                           @Valid @RequestBody CreateOrderRequestDTO dto) {
         orderService.createOrder(idCompany, dto);
@@ -94,7 +91,6 @@ public class OrderController {
      * @return the updated {@link OrderDetailsDTO}
      */
     @PatchMapping("/{idOrder}")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<OrderDetailsDTO> updateOrder(@PathVariable Integer idCompany,
                                                        @PathVariable Integer idOrder,
                                                        @Valid @RequestBody UpdateOrderRequestDTO dto) {
@@ -111,7 +107,6 @@ public class OrderController {
      * @return a success message wrapped in {@link GenericResponseDTO}
      */
     @DeleteMapping("/{idOrder}")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> deleteOrder(@PathVariable Integer idCompany,
                                                           @PathVariable Integer idOrder) {
         orderService.deleteOrder(idCompany, idOrder);

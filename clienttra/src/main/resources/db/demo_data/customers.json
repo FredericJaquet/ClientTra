@@ -76,7 +76,7 @@
       "totalGross": 82.28,
       "totalWithholding": 10.2,
       "totalToPay": 72.08,
-      "currency": "string",
+      "currency": "€",
       "noteDelivery": "DeadLine - 3 days",
       "notePayment": "",
       "noteComment": "",
@@ -142,7 +142,7 @@
     },
     {
       "docNumber": "2025-1.Q01",
-       "docDate": "2025-07-03",
+      "docDate": "2025-07-03",
       "docType": "QUOTE",
       "status": "PENDING",
       "language": "es",

@@ -35,24 +35,25 @@ CREATE TABLE IF NOT EXISTS Companies(
 );
 
 CREATE TABLE IF NOT EXISTS Addresses(
-  idAddress	INT(10) 	AUTO_INCREMENT,
+  id_address	INT(10) 	AUTO_INCREMENT,
   street	VARCHAR(100) 	NOT NULL,
-  stNumber	VARCHAR(10) 	NOT NULL,
+  st_number	VARCHAR(10) 	NOT NULL,
   apt		VARCHAR(100),
   cp		VARCHAR(10) 	NOT NULL,
   city		VARCHAR(40) 	NOT NULL,
   state		VARCHAR(40),
   country	VARCHAR(40) 	NOT NULL,
-  idCompany	INT(10),
+  id_company	INT(10),
   PRIMARY KEY	(idAddress),
   FOREIGN KEY	(idCompany)	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Phones(
-  phoneNumber	VARCHAR(25) 	NOT NULL UNIQUE,
+  id_phone	INT(10)		AUTO_INCREMENT,
+  phone_number	VARCHAR(25) 	NOT NULL,
   kind		VARCHAR(25),
   idCompany	INT(10) 	NOT NULL,
-  PRIMARY KEY 	(phoneNumber),
+  PRIMARY KEY 	(id_phone),
   FOREIGN KEY 	(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE
 );
 
@@ -92,17 +93,20 @@ CREATE TABLE IF NOT EXISTS Plans(
 );
 
 CREATE TABLE IF NOT EXISTS Users(
-  idUser	INT(10) 	AUTO_INCREMENT,
-  userName	VARCHAR(100) 	NOT NULL UNIQUE,
-  passwd	VARCHAR(255) 	NOT NULL,
-  email		VARCHAR(100),
-  idCompany	INT(10) 	NOT NULL,
-  idRole	INT(10) 	NOT NULL,
-  idPlan	INT(10) 	NOT NULL,
-  PRIMARY KEY 	(idUser),
-  FOREIGN KEY 	(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
-  FOREIGN KEY 	(idRole) 	REFERENCES Roles(idRole) ON UPDATE CASCADE,
-  FOREIGN KEY 	(idPlan) 	REFERENCES Plans(idPlan) ON UPDATE CASCADE
+  idUser		INT(10) 	AUTO_INCREMENT,
+  userName		VARCHAR(100) 	NOT NULL UNIQUE,
+  passwd		VARCHAR(255) 	NOT NULL,
+  email			VARCHAR(100),
+  preferred_language	VARCHAR(10)	DEFAULT('es'),
+  preferred_theme	VARCHAR(10)	DEFAULT('blue'),
+  dark_mode		BOOLEAN		DEFAULT(0),
+  idCompany		INT(10) 	NOT NULL,
+  idRole		INT(10) 	NOT NULL,
+  idPlan		INT(10) 	NOT NULL,
+  PRIMARY KEY 		(idUser),
+  FOREIGN KEY 		(idCompany) 	REFERENCES Companies(idCompany) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idRole) 	REFERENCES Roles(idRole) ON UPDATE CASCADE,
+  FOREIGN KEY 		(idPlan) 	REFERENCES Plans(idPlan) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Customers(
@@ -166,6 +170,7 @@ CREATE TABLE IF NOT EXISTS ChangeRates(
   currency1	VARCHAR(10) 	NOT NULL DEFAULT '€',
   currency2	VARCHAR(10) 	NOT NULL,
   rate		DOUBLE 		NOT NULL DEFAULT 1,
+  date		DATE,
   PRIMARY KEY	(idChangeRate)
 );
 
@@ -239,3 +244,4 @@ CREATE TABLE IF NOT EXISTS Items(
 
 INSERT INTO Roles (roleName) VALUES ('ADMIN'), ('ACCOUNTING'), ('USER');
 INSERT INTO Plans (planName) VALUES ('FREEMIUM'), ('PREMIUM');
+INSERT INTO change_rates VALUES ('€', '€', 1, "2025-01-01");

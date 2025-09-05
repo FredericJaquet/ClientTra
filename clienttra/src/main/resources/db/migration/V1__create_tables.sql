@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS users (
   passwd               VARCHAR(255) NOT NULL,
   email                VARCHAR(100),
   preferred_language   VARCHAR(10) DEFAULT 'es',
-  preferred_theme      VARCHAR(20) DEFAULT 'red',
+  preferred_theme      VARCHAR(20) DEFAULT 'blue',
   dark_mode	       BOOLEAN DEFAULT FALSE,
   enabled	       BOOLEAN NOT NULL DEFAULT TRUE,
   id_company           INT NOT NULL,
@@ -232,4 +232,4 @@ CREATE TABLE IF NOT EXISTS items (
 -- Datos iniciales
 INSERT INTO roles (role_name) VALUES ('ROLE_ADMIN'), ('ROLE_ACCOUNTING'), ('ROLE_USER');
 INSERT INTO plans (plan_name) VALUES ('FREEMIUM'), ('PREMIUM'), ('TEST');
--- INSERT INTO change_rates value ('€','€',1,'2025-01-01',1);
+INSERT INTO change_rates value ('€','€',1,'2025-01-01',1);

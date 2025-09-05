@@ -155,6 +155,7 @@ public class GlobalExceptionHandler {
     // --- Generic catch-all exception handler ---
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
+        ex.printStackTrace();
         return buildErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getMessage(),

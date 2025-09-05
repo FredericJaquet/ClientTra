@@ -38,6 +38,15 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<OrderListProjection> findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(Company owner, Integer idCompany);
 
     /**
+     * Finds all orders for a given owner company that have NOT been billed,
+     * ordered descending by order date.
+     *
+     * @param owner the owner company
+     * @return list of non-billed order projections ordered by order date descending
+     */
+    List<OrderListProjection> findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(Company owner);
+
+    /**
      * Finds an order by its ID and owner company.
      *
      * @param idOrder the order ID

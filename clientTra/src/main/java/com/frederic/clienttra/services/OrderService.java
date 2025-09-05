@@ -110,6 +110,20 @@ public class OrderService {
     }
 
     /**
+     * Retrieves all pending (not yet billed) orders.
+     *
+     * @return list of pending order DTOs.
+     */
+    @Transactional(readOnly = true)
+    public List<OrderListDTO> getPendingOrders() {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<OrderListProjection> orders = orderRepository.findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(owner);
+
+        return orderMapper.toListDtosFromProjection(orders);
+    }
+
+    /**
      * Creates a new order for a company.
      *
      * @param idCompany the ID of the company.

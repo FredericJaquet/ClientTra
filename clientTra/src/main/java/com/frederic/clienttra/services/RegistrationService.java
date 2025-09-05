@@ -55,7 +55,6 @@ public class RegistrationService {
     @Transactional
     public void register(RegistrationRequestDTO dto) {
 
-
         boolean exists = companyRepository.existsByVatNumberAndOwnerCompanyIsNull(dto.getVatNumber());
         if (exists) {
             throw new CompanyAlreadyExistsException();

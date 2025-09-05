@@ -69,7 +69,6 @@ public class QuoteController {
      * @return filtered list of quotes
      */
     @GetMapping("/by-status")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<List<DocumentForListDTO>> getQuotesByStatus(@RequestParam DocumentStatus status) {
         List<DocumentForListDTO> result = documentService.getDocumentsByStatus(DOC_TYPE, status);
         return ResponseEntity.ok(result);
@@ -83,7 +82,6 @@ public class QuoteController {
      * @return list of quotes filtered by company and status
      */
     @GetMapping("/by-customer/{idCompany}/by-status")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<List<DocumentForListDTO>> getQuotesByCustomerAndStatus(
             @PathVariable Integer idCompany,
             @RequestParam DocumentStatus status) {

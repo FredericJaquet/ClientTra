@@ -172,7 +172,7 @@ public class OrderMapper {
                 .pricePerUnit(dto.getPricePerUnit())
                 .units(dto.getUnits())
                 .total(dto.getTotal())
-                .billed(false)
+                .billed(dto.getBilled())
                 .fieldName(dto.getFieldName())
                 .sourceLanguage(dto.getSourceLanguage())
                 .targetLanguage(dto.getTargetLanguage())
