@@ -44,6 +44,7 @@ public class UserMapper {
                 .email(user.getEmail())
                 .roleName(user.getRole().getRoleName())
                 .planName(user.getPlan().getPlanName())
+                .enabled((user.isEnabled()))
                 .build();
     }
 

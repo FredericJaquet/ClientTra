@@ -6,6 +6,7 @@ import com.frederic.clienttra.dto.read.UserForAdminDTO;
 import com.frederic.clienttra.dto.read.UserSelfDTO;
 import com.frederic.clienttra.dto.update.UpdatePasswordRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateSelfRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateUserForAdminDTO;
 import com.frederic.clienttra.exceptions.UserNotFoundException;
 import com.frederic.clienttra.services.UserService;
 import com.frederic.clienttra.utils.MessageResolver;
@@ -79,12 +80,11 @@ public class UserController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GenericResponseDTO> createUser(
+    public ResponseEntity<UserForAdminDTO> createUser(
             @Valid @RequestBody CreateUserRequestDTO dto) {
-        userService.createUser(dto);
-        String msg = messageResolver.getMessage("user.created.success", "User successfully created");
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new GenericResponseDTO(msg));
+        UserForAdminDTO createdUser = userService.createUser(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     /**
@@ -127,6 +127,19 @@ public class UserController {
         userService.reactivateUserById(id);
         String msg = messageResolver.getMessage("user.reactivate.success", "User successfully reactivated");
         return ResponseEntity.ok(new GenericResponseDTO(msg));
+    }
+
+    /**
+     * Updates a user.
+     * Requires ADMIN role.
+     *
+     * @return success message
+     */
+    @PatchMapping()
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserForAdminDTO> updateUser(@RequestBody UpdateUserForAdminDTO dto) {
+
+        return ResponseEntity.ok(userService.updateUser(dto));
     }
 
     /**

@@ -64,7 +64,10 @@ public class OrderServiceTest {
                 true,                        // enabled
                 List.of(),                   // authorities (vacía, suficiente para test)
                 idCompany,                   // idCompany
-                "es"                         // preferredLanguage
+                "es",                        // preferredLanguage
+                "blue",
+                "light"
+
         );
     }
 

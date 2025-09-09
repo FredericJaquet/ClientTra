@@ -19,4 +19,5 @@ public class UserForAdminDTO {
     private String email;
     private String roleName;
     private String planName;
+    private Boolean enabled;
 }

@@ -141,7 +141,7 @@ public class CreateBaseCompanyRequestDToValidationTest extends AbstractValidatio
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
 
-        assertThat(message).isEqualTo("Il est obligatoire d'indiquer au moins une adresse.");
+        assertThat(message).isEqualTo("Vous devez saisir au moins une adresse.");
     }
 
 }

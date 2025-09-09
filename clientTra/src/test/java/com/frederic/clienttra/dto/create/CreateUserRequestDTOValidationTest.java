@@ -108,7 +108,6 @@ public class CreateUserRequestDTOValidationTest extends AbstractValidationTest {
 
     @Test
     void shouldReturnLocalizedValidationMessage_whenIdRoleIsNull() {
-        // Simula que el locale activo es "es"
         LocaleContextHolder.setLocale(new Locale("es"));
 
         CreateUserRequestDTO dto = baseBuilder().idRole(null).build();

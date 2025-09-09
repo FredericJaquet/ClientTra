@@ -12,6 +12,7 @@ import com.frederic.clienttra.exceptions.CantDeleteSelfException;
 import com.frederic.clienttra.exceptions.InvalidPasswordException;
 import com.frederic.clienttra.exceptions.UserNotFoundException;
 import com.frederic.clienttra.mappers.UserMapper;
+import com.frederic.clienttra.repositories.RoleRepository;
 import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
@@ -39,6 +40,8 @@ class UserServiceTest {
     private UserMapper userMapper;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private RoleRepository roleRepository;
 
     @InjectMocks
     private UserService userService;
@@ -56,7 +59,9 @@ class UserServiceTest {
                 true,                        // enabled
                 List.of(),                   // authorities (vacía, suficiente para test)
                 idCompany,                   // idCompany
-                "es"                         // preferredLanguage
+                "es",                        // preferredLanguage
+                "blue",                      //preferredTheme
+                "light"                      //preferredMode
         );
     }
 
@@ -65,6 +70,7 @@ class UserServiceTest {
                 "user",     // username
                 "pass",     // password
                 "email",    //email
+                "es",       //preferredLanguage
                 1,          //idRole
                 1           //idPlan
         );
@@ -77,18 +83,21 @@ class UserServiceTest {
         try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
             mockedSecurityUtils.when(SecurityUtils::getCurrentUserCompanyId).thenReturn(idCompany);
 
+            int idCurrentUser = 2;
             User u1 = new User();
             u1.setUserName("Carlos");
             User u2 = new User();
             u2.setUserName("Ana");
             List<User> users = Arrays.asList(u1, u2);
 
-            when(userRepository.findAllByCompany_IdCompany(idCompany)).thenReturn(users);
+            when(userRepository.findAllByCompany_IdCompanyAndIdUserNot(idCompany,idCurrentUser)).thenReturn(users);
 
             UserForAdminDTO dto1 = new UserForAdminDTO();
             dto1.setUserName("Carlos");
+            dto1.setIdUser(3);
             UserForAdminDTO dto2 = new UserForAdminDTO();
             dto2.setUserName("Ana");
+            dto2.setIdUser(4);
 
             when(userMapper.toAdminDTO(u1)).thenReturn(dto1);
             when(userMapper.toAdminDTO(u2)).thenReturn(dto2);
@@ -101,7 +110,7 @@ class UserServiceTest {
             assertThat(result.get(0).getUserName()).isEqualTo("Ana");
             assertThat(result.get(1).getUserName()).isEqualTo("Carlos");
 
-            verify(userRepository).findAllByCompany_IdCompany(idCompany);
+            verify(userRepository).findAllByCompany_IdCompanyAndIdUserNot(idCompany,idCurrentUser);
             verify(userMapper).toAdminDTO(u1);
             verify(userMapper).toAdminDTO(u2);
         }
@@ -182,7 +191,7 @@ class UserServiceTest {
 
         // Creamos el usuario autenticado simulando un ADMIN de esa empresa
         CustomUserDetails currentUser = new CustomUserDetails(
-                idUser, "username", "pass", true, null, idCompany, "en"
+                idUser, "username", "pass", true, null, idCompany, "en", "blue", "light"
         );
         SecurityTestUtils.mockSecurityContextWithUser(currentUser); // 👈 esto basta
 
@@ -217,7 +226,7 @@ class UserServiceTest {
         CustomUserDetails currentUser = getCurrentUser(1, idCompany);
         SecurityTestUtils.mockSecurityContextWithUser(currentUser);
 
-        UserService userService = new UserService(userRepository, companyService, userMapper, passwordEncoder);
+        UserService userService = new UserService(userRepository, companyService, userMapper, passwordEncoder, roleRepository);
 
         when(userRepository.findByIdUserAndCompany_IdCompany(userId, idCompany))
                 .thenReturn(Optional.empty());

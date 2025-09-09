@@ -5,10 +5,13 @@ import com.frederic.clienttra.dto.read.UserForAdminDTO;
 import com.frederic.clienttra.dto.read.UserSelfDTO;
 import com.frederic.clienttra.dto.update.UpdatePasswordRequestDTO;
 import com.frederic.clienttra.dto.update.UpdateSelfRequestDTO;
+import com.frederic.clienttra.dto.update.UpdateUserForAdminDTO;
 import com.frederic.clienttra.entities.Company;
+import com.frederic.clienttra.entities.Role;
 import com.frederic.clienttra.entities.User;
 import com.frederic.clienttra.exceptions.*;
 import com.frederic.clienttra.mappers.UserMapper;
+import com.frederic.clienttra.repositories.RoleRepository;
 import com.frederic.clienttra.repositories.UserRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.security.SecurityUtils;
@@ -34,6 +37,7 @@ public class UserService {
     private final CompanyService companyService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     /**
      * Retrieves all users belonging to the current user's company,
@@ -44,11 +48,20 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserForAdminDTO> getAllUsers() {
         int idCompany = SecurityUtils.getCurrentUserCompanyId();
+        int idUser = SecurityUtils.getCurrentUserId();
 
-        return userRepository.findAllByCompany_IdCompany(idCompany)
+        return userRepository.findAllByCompany_IdCompanyAndIdUserNot(idCompany, idUser)
                 .stream()
                 .map(userMapper::toAdminDTO)
-                .sorted(Comparator.comparing(UserForAdminDTO::getUserName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)))
+                .sorted(
+                    Comparator
+                        .comparing((UserForAdminDTO u) -> Boolean.TRUE.equals(u.getEnabled()))
+                        .reversed()
+                        .thenComparing(
+                            UserForAdminDTO::getUserName,
+                            Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                        )
+                )
                 .collect(Collectors.toList());
     }
 
@@ -175,6 +188,7 @@ public class UserService {
 
         User user = userMapper.toEntity(dto);
         user.setCompany(currentCompany);
+        user.setPreferredTheme("blue");
 
         userRepository.save(user);
 
@@ -210,6 +224,32 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public UserForAdminDTO updateUser(UpdateUserForAdminDTO dto){
+        User userToUpdate = userRepository.findById(dto.getIdUser())
+                .orElseThrow(UserNotFoundException::new);
+
+        CustomUserDetails currentUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int ownerCompanyId = currentUser.getIdCompany();
+
+        if (userToUpdate.getCompany().getIdCompany() != ownerCompanyId) {
+            throw new AccessDeniedException();
+        }
+
+        if (dto.getIdRole() != null) {
+            Role role = roleRepository.findById(dto.getIdRole()).orElseThrow(RoleNotFoundException::new);
+            userToUpdate.setRole(role);
+        }
+        if(dto.getEnabled() != null){
+            userToUpdate.setEnabled(dto.getEnabled());
+        }
+
+        userRepository.save(userToUpdate);
+
+        return userMapper.toAdminDTO(userToUpdate);
+
     }
 
     /**

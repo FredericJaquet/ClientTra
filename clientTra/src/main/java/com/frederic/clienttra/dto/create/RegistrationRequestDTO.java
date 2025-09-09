@@ -19,7 +19,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RegistrationRequestDTO {
+    @NotBlank(message = "validation.username.required")
+    private String adminUsername;
     @NotBlank(message = "validation.company.vat_number_required")
+    @Email(message = "validation.email.invalid")
+    @Size(max = 100, message = "validation.email.too_long")
+    private String adminEmail;
+    @NotBlank(message = "validation.password.required")
+    private String adminPassword;
+    private String preferredLanguage;
     private String vatNumber;
     private String comName;
     @NotBlank(message = "validation.company.legal_name_required")
@@ -30,14 +38,6 @@ public class RegistrationRequestDTO {
     private String web;
     @NotNull(message = "validation.company.address_required")
     private CreateAddressRequestDTO address;
-    @NotBlank(message = "validation.username.required")
-    private String adminUsername;
-    @Email(message = "validation.email.invalid")
-    @Size(max = 100, message = "validation.email.too_long")
-    private String adminEmail;
-    @NotBlank(message = "validation.password.required")
-    private String adminPassword;
-    private String preferredLanguage;
     private String preferredTheme;//Todo yo quitaría esto
     private Boolean darkMode;//Todo yo quitaría esto
 

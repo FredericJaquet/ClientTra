@@ -90,13 +90,20 @@ public class RegistrationService {
         Plan defaultPlan = planRepository.findByPlanName("FREEMIUM")
                 .orElseThrow(() -> new RuntimeException("No hay planes definidos"));
 
+        if(dto.getPreferredTheme()==null){
+            dto.setPreferredTheme("blue");
+        }
+        if(dto.getDarkMode()==null){
+            dto.setDarkMode(false);
+        }
+
         User adminUser = User.builder()
                 .userName(dto.getAdminUsername())
                 .email(dto.getAdminEmail())
                 .passwd(passwordEncoder.encode(dto.getAdminPassword()))
                 .preferredLanguage(dto.getPreferredLanguage())
                 .preferredTheme(dto.getPreferredTheme())
-                .darkMode(dto.getDarkMode() != null ? dto.getDarkMode() : false)
+                .darkMode(dto.getDarkMode())
                 .enabled(true)
                 .company(company)
                 .role(adminRole)

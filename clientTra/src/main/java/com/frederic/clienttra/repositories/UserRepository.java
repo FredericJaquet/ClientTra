@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @param idCompany the ID of the company
      * @return list of users belonging to the company
      */
-    List<User> findAllByCompany_IdCompany(int idCompany);
+    List<User> findAllByCompany_IdCompanyAndIdUserNot(int idCompany, int idUser);
 
     /**
      * Finds a user by their ID and company ID.
