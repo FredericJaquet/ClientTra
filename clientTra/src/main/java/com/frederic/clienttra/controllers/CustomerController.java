@@ -94,15 +94,6 @@ public class CustomerController {
     public ResponseEntity<GenericResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
         int newId = customerService.createCustomer(dto);
 
-        /*
-         * Example if you want to return the full created object instead of a message:
-         *
-         * CustomerDetailsDTO created = customerService.getCustomerById(newId);
-         * return ResponseEntity
-         *     .created(URI.create("/api/customers/" + newId))
-         *     .body(created);
-         */
-
         return ResponseEntity
                 .created(URI.create("/api/customers/" + newId))
                 .body(new GenericResponseDTO("customer.created.success"));

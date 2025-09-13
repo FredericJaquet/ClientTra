@@ -7,6 +7,7 @@ import com.frederic.clienttra.dto.update.UpdateSchemeRequestDTO;
 import com.frederic.clienttra.services.SchemeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,27 +28,23 @@ public class SchemeController {
 
     /**
      * Retrieves all schemes for a given company.
-     * Requires ADMIN or ACCOUNTING role.
      *
      * @param idCompany the ID of the company
      * @return list of schemes
      */
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<List<SchemeDTO>> getAllSchemes(@PathVariable Integer idCompany){
         return ResponseEntity.ok(schemeService.getAllSchemes(idCompany));
     }
 
     /**
      * Retrieves a specific scheme by ID within a company.
-     * Requires ADMIN or ACCOUNTING role.
      *
      * @param idCompany the ID of the company
      * @param idScheme the ID of the scheme
      * @return the scheme details
      */
     @GetMapping("/{idScheme}")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<SchemeDTO> getSchemeById(@PathVariable Integer idCompany, @PathVariable Integer idScheme){
         return ResponseEntity.ok(schemeService.getScheme(idCompany, idScheme));
     }
@@ -77,9 +74,9 @@ public class SchemeController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createScheme(@PathVariable Integer idCompany, @Valid @RequestBody CreateSchemeRequestDTO dto){
-        schemeService.createScheme(idCompany, dto);
-        return ResponseEntity.ok(new GenericResponseDTO("scheme.created.success"));
+    public ResponseEntity<SchemeDTO> createScheme(@PathVariable Integer idCompany, @Valid @RequestBody CreateSchemeRequestDTO dto){
+        SchemeDTO newScheme = schemeService.createScheme(idCompany, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newScheme);
     }
 
     /**

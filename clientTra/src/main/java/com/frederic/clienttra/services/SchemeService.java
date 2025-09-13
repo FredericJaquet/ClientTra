@@ -75,7 +75,7 @@ public class SchemeService {
      * @param dto the DTO containing the scheme data including optional scheme lines.
      */
     @Transactional
-    public void createScheme(Integer idCompany, CreateSchemeRequestDTO dto) {
+    public SchemeDTO createScheme(Integer idCompany, CreateSchemeRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Company company = companyService.getCompanyById(idCompany);
         Scheme entity = schemeMapper.toEntity(dto);
@@ -85,6 +85,9 @@ public class SchemeService {
         if (dto.getSchemeLines() != null && !dto.getSchemeLines().isEmpty()) {
             List<SchemeLine> lines = dto.getSchemeLines().stream()
                     .map(lineDto -> {
+                        if(lineDto.getDiscount()>1){
+                            lineDto.setDiscount(lineDto.getDiscount()/100);
+                        }
                         SchemeLine lineEntity = schemeLineMapper.toEntity(lineDto);
                         lineEntity.setScheme(entity);
                         return lineEntity;
@@ -94,7 +97,9 @@ public class SchemeService {
             entity.setSchemeLines(lines);
         }
 
-        schemeRepository.save(entity);
+        Scheme newScheme = schemeRepository.save(entity);
+
+        return schemeMapper.toDto(newScheme);
     }
 
     /**
