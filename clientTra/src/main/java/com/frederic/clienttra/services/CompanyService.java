@@ -47,6 +47,6 @@ public interface CompanyService {
      *
      * @param file the {@link MultipartFile} representing the logo image to upload
      */
-    void uploadCompanyLogo(MultipartFile file);
+    String uploadCompanyLogo(MultipartFile file);
 
 }

@@ -67,6 +67,25 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     List<CustomerListProjection> findListByOwnerCompany(@Param("owner") Company owner, @Param("enabled") Boolean enabled);
 
     /**
+     * Retrieves a list of customers with selected fields filtered by owning company.
+     *
+     * @param owner the owning company
+     * @return list of customer projections with basic info
+     */
+    @Query("""
+        SELECT c.idCustomer AS idCustomer,
+               co.comName AS comName,
+               co.vatNumber AS vatNumber,
+               co.email AS email,
+               co.web AS web,
+               c.enabled AS enabled
+        FROM Customer c
+        JOIN c.company co
+        WHERE c.ownerCompany = :owner
+    """)
+    List<CustomerListProjection> findListByOwnerCompany(@Param("owner") Company owner);
+
+    /**
      * Retrieves a list of customers filtered by owning company and matching
      * a search input in company commercial name, legal name, or VAT number (case-insensitive).
      *

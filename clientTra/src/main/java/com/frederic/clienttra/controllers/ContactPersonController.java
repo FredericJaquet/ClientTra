@@ -3,10 +3,12 @@ package com.frederic.clienttra.controllers;
 import com.frederic.clienttra.dto.GenericResponseDTO;
 import com.frederic.clienttra.dto.create.CreateContactPersonRequestDTO;
 import com.frederic.clienttra.dto.read.ContactPersonDTO;
+import com.frederic.clienttra.dto.read.PhoneDTO;
 import com.frederic.clienttra.dto.update.UpdateContactPersonRequestDTO;
 import com.frederic.clienttra.services.ContactPersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -74,9 +76,9 @@ public class ContactPersonController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createContactPerson(@PathVariable Integer idCompany, @Valid @RequestBody CreateContactPersonRequestDTO dto) {
-        contactPersonService.createContactPerson(idCompany, dto);
-        return ResponseEntity.ok(new GenericResponseDTO("contact.created.success"));
+    public ResponseEntity<ContactPersonDTO> createContactPerson(@PathVariable Integer idCompany, @Valid @RequestBody CreateContactPersonRequestDTO dto) {
+        ContactPersonDTO newDto = contactPersonService.createContactPerson(idCompany, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newDto);
     }
 
     /**

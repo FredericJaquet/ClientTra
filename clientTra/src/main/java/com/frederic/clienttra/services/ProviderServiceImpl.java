@@ -146,6 +146,14 @@ public class ProviderServiceImpl implements ProviderService {
         companyEntity.setOwnerCompany(owner);
         Company savedCompany = companyRepository.save(companyEntity);
 
+        if(dto.getDefaultVAT()>1){
+            dto.setDefaultVAT(dto.getDefaultVAT()/100);
+        }
+
+        if(dto.getDefaultWithholding()>1){
+            dto.setDefaultWithholding(dto.getDefaultWithholding()/100);
+        }
+
         Provider entity = providerMapper.toEntity(dto);
         entity.setCompany(savedCompany);
         entity.setOwnerCompany(owner);
@@ -171,6 +179,14 @@ public class ProviderServiceImpl implements ProviderService {
                 .orElseThrow(ProviderNotFoundException::new);
 
         Company company = entity.getCompany();
+
+        if(dto.getDefaultVAT()>1){
+            dto.setDefaultVAT(dto.getDefaultVAT()/100);
+        }
+
+        if(dto.getDefaultWithholding()>1){
+            dto.setDefaultWithholding(dto.getDefaultWithholding()/100);
+        }
 
         // Update company and provider entities from DTO
         companyMapper.updateEntity(company, dto);

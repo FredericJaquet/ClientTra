@@ -22,7 +22,7 @@ public class UpdateCustomerRequestDTO extends UpdateBaseCompanyRequestDTO{
     private Integer duedate;
     private String payMethod;
     private String defaultLanguage;
-    private Double defaultVAT;
+    private Double defaultVat;
     private Double defaultWithholding;
     private Boolean europe;
     private Boolean enabled;

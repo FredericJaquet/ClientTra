@@ -65,9 +65,10 @@ public class OwnerController {
      */
     @PostMapping("/logo")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GenericResponseDTO> uploadCompanyLogo(@RequestParam("logo") MultipartFile file) {
-        companyService.uploadCompanyLogo(file);
+    public ResponseEntity<String> uploadCompanyLogo(@RequestParam("logo") MultipartFile file) {
+        String logoPath = companyService.uploadCompanyLogo(file);
         String msg = messageResolver.getMessage("logo.upload.success", "Logo actualizado correctamente");
-        return ResponseEntity.ok(new GenericResponseDTO(msg));
+        return ResponseEntity.ok()
+                .body(logoPath);
     }
 }

@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerForListDTO> getAllCustomers() {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner, true));
+        List<CustomerListProjection> entities = new ArrayList<>(customerRepository.findListByOwnerCompany(owner));
         List<CustomerForListDTO> dtos = customerMapper.toCustomerForListDTOS(entities);
         dtos.sort(Comparator.comparing(CustomerForListDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
@@ -129,6 +129,13 @@ public class CustomerServiceImpl implements CustomerService {
 
         Company savedCompany = companyRepository.save(companyEntity);
 
+        if(dto.getDefaultVAT()>1){
+            dto.setDefaultVAT(dto.getDefaultVAT()/100);
+        }
+
+        if(dto.getDefaultWithholding()>1){
+            dto.setDefaultWithholding(dto.getDefaultWithholding()/100);
+        }
         Customer entity = customerMapper.toEntity(dto);
         entity.setCompany(savedCompany);
         entity.setOwnerCompany(owner);
@@ -153,6 +160,14 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(CustomerNotFoundException::new);
 
         Company company = entity.getCompany();
+
+        if(dto.getDefaultVat()>1){
+            dto.setDefaultVat(dto.getDefaultVat()/100);
+        }
+
+        if(dto.getDefaultWithholding()>1){
+            dto.setDefaultWithholding(dto.getDefaultWithholding()/100);
+        }
 
         companyMapper.updateEntity(company, dto);
         customerMapper.updateEntity(entity, dto);

@@ -66,6 +66,7 @@ public class CustomerMapper {
      */
     public CustomerDetailsDTO toCustomerDetailsDTO(Customer entity) {
         return CustomerDetailsDTO.builder()
+                .idCompany(entity.getCompany().getIdCompany())
                 .idCustomer(entity.getIdCustomer())
                 .comName(entity.getCompany().getComName())
                 .legalName(entity.getCompany().getLegalName())
@@ -164,8 +165,8 @@ public class CustomerMapper {
         if (dto.getDefaultLanguage() != null) {
             entity.setDefaultLanguage(dto.getDefaultLanguage());
         }
-        if (dto.getDefaultVAT() != null) {
-            entity.setDefaultVat(dto.getDefaultVAT());
+        if (dto.getDefaultVat() != null) {
+            entity.setDefaultVat(dto.getDefaultVat());
         }
         if (dto.getDefaultWithholding() != null) {
             entity.setDefaultWithholding(dto.getDefaultWithholding());

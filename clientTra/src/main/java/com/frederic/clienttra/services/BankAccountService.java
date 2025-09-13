@@ -107,14 +107,16 @@ public class BankAccountService {
      * @throws SecurityException        if the current user is not authorized to access the company
      */
     @Transactional
-    public void createBankAccount(Integer idCompany, CreateBankAccountRequestDTO dto){
+    public BankAccountDTO createBankAccount(Integer idCompany, CreateBankAccountRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
 
         Company company = companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
         BankAccount entity = bankAccountMapper.toEntity(dto);
         entity.setCompany(company);
-        bankAccountRepository.save(entity);
+        BankAccount newAccount = bankAccountRepository.save(entity);
+
+        return bankAccountMapper.toBankAccountDTO(newAccount);
     }
 
     /**

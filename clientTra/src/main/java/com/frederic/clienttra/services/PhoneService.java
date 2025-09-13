@@ -88,13 +88,15 @@ public class PhoneService {
      * @throws CompanyNotFoundException if the current user does not own the company.
      */
     @Transactional
-    public void createPhone(Integer idCompany, CreatePhoneRequestDTO dto){
+    public PhoneDTO createPhone(Integer idCompany, CreatePhoneRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
         Company company = companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
         Phone entity = phoneMapper.toEntity(dto);
         entity.setCompany(company);
-        phoneRepository.save(entity);
+        Phone newPhone=phoneRepository.save(entity);
+
+        return phoneMapper.toPhoneDTO(newPhone);
     }
 
     /**

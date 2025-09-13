@@ -7,6 +7,7 @@ import com.frederic.clienttra.dto.update.UpdatePhoneRequestDTO;
 import com.frederic.clienttra.services.PhoneService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -74,9 +75,9 @@ public class PhoneController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createPhone(@PathVariable Integer idCompany, @Valid @RequestBody CreatePhoneRequestDTO dto) {
-        phoneService.createPhone(idCompany, dto);
-        return ResponseEntity.ok(new GenericResponseDTO("phone.created.success"));
+    public ResponseEntity<PhoneDTO> createPhone(@PathVariable Integer idCompany, @Valid @RequestBody CreatePhoneRequestDTO dto) {
+        PhoneDTO createdPhone = phoneService.createPhone(idCompany, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPhone);
     }
 
     /**

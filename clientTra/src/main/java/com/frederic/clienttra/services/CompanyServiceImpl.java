@@ -119,7 +119,7 @@ public class CompanyServiceImpl implements CompanyService {
      */
     @Transactional
     @Override
-    public void uploadCompanyLogo(MultipartFile file) {
+    public String uploadCompanyLogo(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Empty file");
         }
@@ -141,5 +141,7 @@ public class CompanyServiceImpl implements CompanyService {
         } catch (IOException e) {
             throw new LogoNotLoadedException();
         }
+
+        return company.getLogoPath();
     }
 }

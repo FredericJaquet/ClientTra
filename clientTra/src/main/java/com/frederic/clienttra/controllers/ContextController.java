@@ -17,6 +17,7 @@ public class ContextController {
 
     @GetMapping
     public ResponseEntity<ContextDTO> getContext(){
+
         return ResponseEntity.ok(contextService.getContext());
     }
 }

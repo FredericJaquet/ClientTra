@@ -14,8 +14,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class CustomerDetailsDTO extends BaseCompanyDTO {//TODO aquí faltan cosas... No me imprime los datos de este DTO...
+public class CustomerDetailsDTO extends BaseCompanyDTO {
 
+    private Integer idCompany;
     private Integer idCustomer;
     private String invoicingMethod;
     private Integer duedate;

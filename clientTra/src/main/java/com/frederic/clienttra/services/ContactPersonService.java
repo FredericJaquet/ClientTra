@@ -91,14 +91,16 @@ public class ContactPersonService {
      * @throws CompanyNotFoundException if the company does not exist or does not belong to the current user
      */
     @Transactional
-    public void createContactPerson(Integer idCompany, CreateContactPersonRequestDTO dto){
+    public ContactPersonDTO createContactPerson(Integer idCompany, CreateContactPersonRequestDTO dto){
         ownerValidator.checkOwner(idCompany);
 
         Company company = companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
         ContactPerson entity = contactPersonMapper.toEntity(dto);
         entity.setCompany(company);
-        contactPersonRepository.save(entity);
+        ContactPerson newContact = contactPersonRepository.save(entity);
+
+        return contactPersonMapper.toContactPersonDTO(newContact);
     }
 
     /**

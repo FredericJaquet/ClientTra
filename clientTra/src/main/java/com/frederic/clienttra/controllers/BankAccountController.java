@@ -7,6 +7,7 @@ import com.frederic.clienttra.dto.update.UpdateBankAccountRequestDTO;
 import com.frederic.clienttra.services.BankAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,9 +74,9 @@ public class BankAccountController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createBankAccount(@PathVariable Integer idCompany, @Valid @RequestBody CreateBankAccountRequestDTO dto) {
-        bankAccountService.createBankAccount(idCompany, dto);
-        return ResponseEntity.ok(new GenericResponseDTO("account.created.success"));
+    public ResponseEntity<BankAccountDTO> createBankAccount(@PathVariable Integer idCompany, @Valid @RequestBody CreateBankAccountRequestDTO dto) {
+        BankAccountDTO createdBankAccount = bankAccountService.createBankAccount(idCompany, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBankAccount);
     }
 
     /**
