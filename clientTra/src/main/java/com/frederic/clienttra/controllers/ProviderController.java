@@ -120,7 +120,7 @@ public class ProviderController {
      * @param id the provider ID
      * @return a success message wrapped in {@link GenericResponseDTO}
      */
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> deleteProvider(@PathVariable int id) {
         providerService.disableProvider(id);

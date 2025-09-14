@@ -48,7 +48,7 @@ public class ProviderServiceImpl implements ProviderService {
     public List<ProviderForListDTO> getAllProviders() {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByOwnerCompany(owner, true));
+        List<ProviderListProjection> entities = new ArrayList<>(providerRepository.findListByOwnerCompany(owner));
         List<ProviderForListDTO> dtos = providerMapper.toProviderForListDTOS(entities);
 
         // Sort providers by commercial name, nulls last, case-insensitive

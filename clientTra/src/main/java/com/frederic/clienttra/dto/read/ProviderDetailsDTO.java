@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class ProviderDetailsDTO extends BaseCompanyDTO {
     private Integer idProvider;
     private String defaultLanguage;
-    private Double defaultVAT;
+    private Double defaultVat;
     private Double defaultWithholding;
     private Integer duedate;
     private Boolean europe;

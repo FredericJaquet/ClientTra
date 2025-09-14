@@ -18,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class BaseCompanyDTO {
+
+    private Integer idCompany;
     private String vatNumber;
     private String comName;
     private String legalName;

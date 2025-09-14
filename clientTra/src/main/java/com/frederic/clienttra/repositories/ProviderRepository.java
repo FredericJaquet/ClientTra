@@ -59,6 +59,26 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     List<ProviderListProjection> findListByOwnerCompany(@Param("owner") Company owner, @Param("enabled") boolean enabled);
 
     /**
+     * Retrieves a list of providers for an owner company.
+     * Returns a projection with basic provider information.
+     *
+     * @param owner the owning company
+     * @return a list of providers matching the criteria
+     */
+    @Query("""
+        SELECT p.idProvider AS idProvider,
+               co.comName AS comName,
+               co.vatNumber AS vatNumber,
+               co.email AS email,
+               co.web AS web,
+               p.enabled AS enabled
+        FROM Provider p
+        JOIN p.company co
+        WHERE p.ownerCompany = :owner
+    """)
+    List<ProviderListProjection> findListByOwnerCompany(@Param("owner") Company owner);
+
+    /**
      * Retrieves a list of providers filtered by company name, legal name or VAT number,
      * performing a case-insensitive partial match.
      *

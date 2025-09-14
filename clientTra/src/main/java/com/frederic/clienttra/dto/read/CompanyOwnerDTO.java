@@ -16,7 +16,7 @@ import java.util.List;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class CompanyOwnerDTO extends BaseCompanyDTO {
-    private int idCompany;
+
     private String logoPath;
     private List<UserForAdminDTO> users;
 }

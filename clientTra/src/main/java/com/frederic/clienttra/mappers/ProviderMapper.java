@@ -73,9 +73,10 @@ public class ProviderMapper {
      */
     public ProviderDetailsDTO toProviderDetailsDTO(Provider entity){
         return ProviderDetailsDTO.builder()
+                .idCompany(entity.getCompany().getIdCompany())
                 .idProvider(entity.getIdProvider())
                 .defaultLanguage(entity.getDefaultLanguage())
-                .defaultVAT(entity.getDefaultVat())
+                .defaultVat(entity.getDefaultVat())
                 .defaultWithholding(entity.getDefaultWithholding())
                 .duedate(entity.getDuedate())
                 .europe(entity.getEurope())
