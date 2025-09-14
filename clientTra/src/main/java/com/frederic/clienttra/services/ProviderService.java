@@ -55,7 +55,7 @@ public interface ProviderService {
      * @param dto the provider creation DTO.
      * @return the generated ID of the created provider.
      */
-    int createProvider(CreateProviderRequestDTO dto);
+    ProviderForListDTO createProvider(CreateProviderRequestDTO dto);
 
     /**
      * Updates an existing provider identified by its ID.

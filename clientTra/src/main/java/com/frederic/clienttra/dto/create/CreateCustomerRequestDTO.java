@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class CreateCustomerRequestDTO extends CreateBaseCompanyRequestDTO {
 
     private String defaultLanguage = "es";
-    private Double defaultVAT = 0.21;
+    private Double defaultVat = 0.21;
     private Double defaultWithholding = 0.15;
     private String invoicingMethod;
     private String payMethod;

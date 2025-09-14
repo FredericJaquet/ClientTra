@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 public class UpdateProviderRequestDTO extends UpdateBaseCompanyRequestDTO{
     private Integer duedate;
     private String defaultLanguage;
-    private Double defaultVAT;
+    private Double defaultVat;
     private Double defaultWithholding;
     private Boolean europe;
     private Boolean enabled;

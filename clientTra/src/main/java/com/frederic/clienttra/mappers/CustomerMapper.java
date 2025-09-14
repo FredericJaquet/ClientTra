@@ -58,6 +58,17 @@ public class CustomerMapper {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public CustomerForListDTO toCustomerForListDTO(Customer entity){
+        return CustomerForListDTO.builder()
+                .idCustomer(entity.getIdCustomer())
+                .comName(entity.getCompany().getComName())
+                .vatNumber(entity.getCompany().getVatNumber())
+                .email(entity.getCompany().getEmail())
+                .web(entity.getCompany().getWeb())
+                .enabled(entity.getEnabled())
+                .build();
+    }
+
     /**
      * Converts a Customer entity to a detailed CustomerDetailsDTO including related company data.
      *
@@ -101,7 +112,7 @@ public class CustomerMapper {
                 .duedate(dto.getDuedate())
                 .payMethod(dto.getPayMethod())
                 .defaultLanguage(dto.getDefaultLanguage())
-                .defaultVat(dto.getDefaultVAT())
+                .defaultVat(dto.getDefaultVat())
                 .defaultWithholding(dto.getDefaultWithholding())
                 .europe(dto.getEurope())
                 .enabled(true)

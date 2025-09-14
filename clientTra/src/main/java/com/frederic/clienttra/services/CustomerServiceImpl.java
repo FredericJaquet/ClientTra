@@ -121,16 +121,15 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Transactional
     @Override
-    public int createCustomer(CreateCustomerRequestDTO dto) {
+    public CustomerForListDTO createCustomer(CreateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         Company companyEntity = companyMapper.toEntity(dto);
         companyEntity.setOwnerCompany(owner);
-
         Company savedCompany = companyRepository.save(companyEntity);
 
-        if(dto.getDefaultVAT()>1){
-            dto.setDefaultVAT(dto.getDefaultVAT()/100);
+        if(dto.getDefaultVat()>1){
+            dto.setDefaultVat(dto.getDefaultVat()/100);
         }
 
         if(dto.getDefaultWithholding()>1){
@@ -142,7 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customerSaved = customerRepository.save(entity);
 
-        return customerSaved.getIdCustomer();
+        return customerMapper.toCustomerForListDTO(customerSaved);
     }
 
     /**

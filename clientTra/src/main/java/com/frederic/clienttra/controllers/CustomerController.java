@@ -5,10 +5,12 @@ import com.frederic.clienttra.dto.create.CreateCustomerRequestDTO;
 import com.frederic.clienttra.dto.read.CustomerDetailsDTO;
 import com.frederic.clienttra.dto.read.BaseCompanyMinimalDTO;
 import com.frederic.clienttra.dto.read.CustomerForListDTO;
+import com.frederic.clienttra.dto.read.ProviderForListDTO;
 import com.frederic.clienttra.dto.update.UpdateCustomerRequestDTO;
 import com.frederic.clienttra.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -91,12 +93,10 @@ public class CustomerController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
-        int newId = customerService.createCustomer(dto);
+    public ResponseEntity<CustomerForListDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO dto) {
+        CustomerForListDTO newDto = customerService.createCustomer(dto);
 
-        return ResponseEntity
-                .created(URI.create("/api/customers/" + newId))
-                .body(new GenericResponseDTO("customer.created.success"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(newDto);
     }
 
     /**

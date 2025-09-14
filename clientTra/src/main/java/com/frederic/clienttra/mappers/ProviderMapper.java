@@ -54,6 +54,17 @@ public class ProviderMapper {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public ProviderForListDTO toProviderForListDTO(Provider entity){
+        return ProviderForListDTO.builder()
+                .idProvider(entity.getIdProvider())
+                .comName(entity.getCompany().getComName())
+                .vatNumber(entity.getCompany().getVatNumber())
+                .email(entity.getCompany().getEmail())
+                .web(entity.getCompany().getWeb())
+                .enabled(entity.getEnabled())
+                .build();
+    }
+
     /**
      * Converts a Provider entity to ProviderDetailsDTO, including nested related data.
      *
@@ -92,7 +103,7 @@ public class ProviderMapper {
         return Provider.builder()
                 .duedate(dto.getDuedate())
                 .defaultLanguage(dto.getDefaultLanguage())
-                .defaultVat(dto.getDefaultVAT())
+                .defaultVat(dto.getDefaultVat())
                 .defaultWithholding(dto.getDefaultWithholding())
                 .europe(dto.getEurope())
                 .enabled(true)
@@ -149,8 +160,8 @@ public class ProviderMapper {
         if (dto.getDefaultLanguage() != null) {
             entity.setDefaultLanguage(dto.getDefaultLanguage());
         }
-        if (dto.getDefaultVAT() != null) {
-            entity.setDefaultVat(dto.getDefaultVAT());
+        if (dto.getDefaultVat() != null) {
+            entity.setDefaultVat(dto.getDefaultVat());
         }
         if (dto.getDefaultWithholding() != null) {
             entity.setDefaultWithholding(dto.getDefaultWithholding());

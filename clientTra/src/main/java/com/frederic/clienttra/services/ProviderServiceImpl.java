@@ -139,15 +139,15 @@ public class ProviderServiceImpl implements ProviderService {
      */
     @Transactional
     @Override
-    public int createProvider(CreateProviderRequestDTO dto) {
+    public ProviderForListDTO createProvider(CreateProviderRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         Company companyEntity = companyMapper.toEntity(dto);
         companyEntity.setOwnerCompany(owner);
         Company savedCompany = companyRepository.save(companyEntity);
 
-        if(dto.getDefaultVAT()>1){
-            dto.setDefaultVAT(dto.getDefaultVAT()/100);
+        if(dto.getDefaultVat()>1){
+            dto.setDefaultVat(dto.getDefaultVat()/100);
         }
 
         if(dto.getDefaultWithholding()>1){
@@ -160,7 +160,7 @@ public class ProviderServiceImpl implements ProviderService {
 
         Provider providerSaved = providerRepository.save(entity);
 
-        return providerSaved.getIdProvider();
+        return providerMapper.toProviderForListDTO(providerSaved);
     }
 
     /**
@@ -180,8 +180,8 @@ public class ProviderServiceImpl implements ProviderService {
 
         Company company = entity.getCompany();
 
-        if(dto.getDefaultVAT()>1){
-            dto.setDefaultVAT(dto.getDefaultVAT()/100);
+        if(dto.getDefaultVat()>1){
+            dto.setDefaultVat(dto.getDefaultVat()/100);
         }
 
         if(dto.getDefaultWithholding()>1){

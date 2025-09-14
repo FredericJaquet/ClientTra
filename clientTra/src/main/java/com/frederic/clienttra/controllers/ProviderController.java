@@ -9,6 +9,7 @@ import com.frederic.clienttra.dto.update.UpdateProviderRequestDTO;
 import com.frederic.clienttra.services.ProviderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -91,12 +92,10 @@ public class ProviderController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createProvider(@Valid @RequestBody CreateProviderRequestDTO dto) {
-        int newId = providerService.createProvider(dto);
+    public ResponseEntity<ProviderForListDTO> createProvider(@Valid @RequestBody CreateProviderRequestDTO dto) {
+        ProviderForListDTO newDto = providerService.createProvider(dto);
 
-        return ResponseEntity
-                .created(URI.create("/api/providers/" + newId))
-                .body(new GenericResponseDTO("provider.created.success"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(newDto);
     }
 
     /**
@@ -125,7 +124,7 @@ public class ProviderController {
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<GenericResponseDTO> deleteProvider(@PathVariable int id) {
         providerService.disableProvider(id);
-        return ResponseEntity.ok(new GenericResponseDTO(("provider.deleted.success")));
+        return ResponseEntity.ok(new GenericResponseDTO("provider.deleted.success"));
     }
 
 }

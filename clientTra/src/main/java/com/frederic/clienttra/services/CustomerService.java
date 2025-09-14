@@ -21,7 +21,7 @@ public interface CustomerService {
     CustomerDetailsDTO getCustomerById(int id);
     List<CustomerForListDTO> searchByNameOrVat(String query);
     List<BaseCompanyMinimalDTO> getMinimalCustomerList();
-    int createCustomer(CreateCustomerRequestDTO dto);
+    CustomerForListDTO createCustomer(CreateCustomerRequestDTO dto);
     void updateCustomer(int id, UpdateCustomerRequestDTO dto);
     void disableCustomer(int id);
 
