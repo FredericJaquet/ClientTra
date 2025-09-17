@@ -12,11 +12,13 @@ import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.exceptions.CantCreateOrderWithoutItemsException;
+import com.frederic.clienttra.exceptions.CantDeletePaidInvoiceException;
 import com.frederic.clienttra.exceptions.CantModifyPaidInvoiceException;
 import com.frederic.clienttra.exceptions.OrderNotFoundException;
 import com.frederic.clienttra.mappers.ItemMapper;
 import com.frederic.clienttra.mappers.OrderMapper;
-import com.frederic.clienttra.projections.OrderListProjection;
+import com.frederic.clienttra.projections.OrderListForDashboardProjection;
+import com.frederic.clienttra.projections.OrderListForDocumentsProjection;
 import com.frederic.clienttra.repositories.OrderRepository;
 import com.frederic.clienttra.utils.DocumentUtils;
 import com.frederic.clienttra.validators.OwnerValidator;
@@ -61,6 +63,22 @@ public class OrderService {
     }
 
     /**
+     * Retrieves detailed information of an order by its ID and owning company ID.
+     *
+     * @param idOrder   the ID of the order to retrieve.
+     * @return a DTO with full details of the order.
+     * @throws OrderNotFoundException if the order does not exist or does not belong to the company.
+     */
+    @Transactional(readOnly = true)
+    public OrderDetailsDTO getOrderDetails(Integer idOrder) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
+                .orElseThrow(OrderNotFoundException::new);
+
+        return orderMapper.toDetailsDto(order);
+    }
+
+    /**
      * Retrieves a list of orders associated with a specific company.
      *
      * @param idCompany the ID of the owning company.
@@ -70,9 +88,9 @@ public class OrderService {
     public List<OrderListDTO> getOrders(Integer idCompany) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<OrderListProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(owner, idCompany);
+        List<OrderListForDocumentsProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(owner, idCompany);
 
-        return orderMapper.toListDtosFromProjection(orders);
+        return orderMapper.toListDtosFromProjectionForDocuments(orders);
     }
 
     /**
@@ -104,9 +122,9 @@ public class OrderService {
     public List<OrderListDTO> getPendingOrders(Integer idCompany) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<OrderListProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(owner, idCompany);
+        List<OrderListForDocumentsProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(owner, idCompany);
 
-        return orderMapper.toListDtosFromProjection(orders);
+        return orderMapper.toListDtosFromProjectionForDocuments(orders);
     }
 
     /**
@@ -118,9 +136,37 @@ public class OrderService {
     public List<OrderListDTO> getPendingOrders() {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        List<OrderListProjection> orders = orderRepository.findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(owner);
+        List<OrderListForDocumentsProjection> orders = orderRepository.findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(owner);
 
-        return orderMapper.toListDtosFromProjection(orders);
+        return orderMapper.toListDtosFromProjectionForDocuments(orders);
+    }
+
+    /**
+     * Retrieves all orders For Providers.
+     *
+     * @return list of pending order DTOs.
+     */
+    @Transactional(readOnly = true)
+    public List<OrderListDTO> getProvidersOrders() {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<OrderListForDashboardProjection> orders = orderRepository.findByOwnerCompanyOrdersForProvidersByDateOrderDesc(owner);
+
+        return orderMapper.toListDtosFromProjectionForDashboard(orders);
+    }
+
+    /**
+     * Retrieves all orders For Customers.
+     *
+     * @return list of pending order DTOs.
+     */
+    @Transactional(readOnly = true)
+    public List<OrderListDTO> getCustomersOrders() {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<OrderListForDashboardProjection> orders = orderRepository.findByOwnerCompanyOrdersForCustomersByDateOrderDesc(owner);
+
+        return orderMapper.toListDtosFromProjectionForDashboard(orders);
     }
 
     /**
@@ -151,8 +197,11 @@ public class OrderService {
         }
         for (Item item : items) {
             item.setOrder(order);
+            if (item.getDiscount() != null && item.getDiscount()>1){
+                item.setDiscount(item.getDiscount()/100);
+            }
             double discount = item.getDiscount() != null ? item.getDiscount() : 0.0;
-            double lineTotal = item.getQty() * order.getPricePerUnit() * (1 - discount / 100.0);
+            double lineTotal = item.getQty() * order.getPricePerUnit() * (1 - discount);
             item.setTotal(lineTotal);
             totalOrder += lineTotal;
         }
@@ -219,6 +268,9 @@ public class OrderService {
                     item.setQty(itemDTO.getQty());
                 }
                 if (itemDTO.getDiscount() != null){
+                    if(itemDTO.getDiscount()>1){
+                        itemDTO.setDiscount(itemDTO.getDiscount()/100);
+                    }
                     item.setDiscount(itemDTO.getDiscount());
                 }
                 // Total will be calculated later
@@ -241,9 +293,13 @@ public class OrderService {
         // Recalculate totals and set order in each item
         double totalOrder = 0.0;
         for (Item item : updatedItems) {
+            if(item.getDiscount()>1) {
+                item.setDiscount(item.getDiscount() / 100);
+            }
             item.setOrder(entity);
             double discount = item.getDiscount() != null ? item.getDiscount() : 0.0;
-            double lineTotal = item.getQty() * entity.getPricePerUnit() * (1 - discount / 100.0);
+
+            double lineTotal = item.getQty() * entity.getPricePerUnit() * (1 - discount);
             item.setTotal(lineTotal);
             totalOrder += lineTotal;
         }
@@ -280,11 +336,41 @@ public class OrderService {
     }
 
     /**
+     * Permanently deletes an order.
+     *
+     * @param idOrder   the ID of the order to delete.
+     * @throws OrderNotFoundException if the order does not exist or does not belong to the company.
+     */
+    @Transactional
+    public void deleteOrder(Integer idOrder) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Order order = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
+                .orElseThrow(OrderNotFoundException::new);
+
+        // Check that the order does not belong to an already paid invoice
+        List<Document> documents=order.getDocuments();
+        for(Document document : documents){
+            if(document.getDocType().equals(DocumentType.INV_PROV) || document.getDocType().equals(DocumentType.INV_CUST)){
+                if(!document.getStatus().equals(DocumentStatus.PENDING)){
+                    throw new CantDeletePaidInvoiceException();
+                }
+            }
+        }
+
+        for (Document document : order.getDocuments()) {
+            document.getOrders().remove(order);
+        }
+
+        order.getDocuments().clear();
+
+        orderRepository.delete(order);
+    }
+
+    /**
      * Marks a list of orders as billed.
      *
      * @param orders the list of orders to mark as billed.
      */
-    @Transactional
     public void markOrdersAsBilled(List<Order> orders){
         if (orders == null || orders.isEmpty()) {
             return;

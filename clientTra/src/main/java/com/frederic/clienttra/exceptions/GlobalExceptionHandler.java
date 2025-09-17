@@ -140,6 +140,7 @@ public class GlobalExceptionHandler {
             InvalidOrderPriceException.class,
             CantCreateDocumentWithoutOrdersException.class,
             CantModifyPaidInvoiceException.class,
+            CantDeletePaidInvoiceException.class,
             CantIncludeOrderAlreadyBilledException.class,
             InvalidVatRateException.class,
             InvalidWithholdingException.class

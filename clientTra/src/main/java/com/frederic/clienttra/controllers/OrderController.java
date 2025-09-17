@@ -75,10 +75,10 @@ public class OrderController {
      * @return a success message wrapped in {@link GenericResponseDTO}
      */
     @PostMapping
-    public ResponseEntity<GenericResponseDTO> createOrder(@PathVariable Integer idCompany,
+    public ResponseEntity<OrderDetailsDTO> createOrder(@PathVariable Integer idCompany,
                                                           @Valid @RequestBody CreateOrderRequestDTO dto) {
-        orderService.createOrder(idCompany, dto);
-        return ResponseEntity.ok(new GenericResponseDTO("order.created.success"));
+        OrderDetailsDTO newDto=orderService.createOrder(idCompany, dto);
+        return ResponseEntity.ok(newDto);
     }
 
     /**

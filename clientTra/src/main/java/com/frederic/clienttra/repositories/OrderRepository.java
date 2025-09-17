@@ -2,8 +2,10 @@ package com.frederic.clienttra.repositories;
 
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Order;
-import com.frederic.clienttra.projections.OrderListProjection;
+import com.frederic.clienttra.projections.OrderListForDashboardProjection;
+import com.frederic.clienttra.projections.OrderListForDocumentsProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * @param idCompany the customer or provider company ID
      * @return list of order projections with summary data ordered by order date descending
      */
-    List<OrderListProjection> findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(Company owner, Integer idCompany);
+    List<OrderListForDocumentsProjection> findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(Company owner, Integer idCompany);
 
     /**
      * Finds all orders for a given owner company and a specific company that have NOT been billed,
@@ -35,7 +37,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * @param idCompany the customer or provider company ID
      * @return list of non-billed order projections ordered by order date descending
      */
-    List<OrderListProjection> findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(Company owner, Integer idCompany);
+    List<OrderListForDocumentsProjection> findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(Company owner, Integer idCompany);
 
     /**
      * Finds all orders for a given owner company that have NOT been billed,
@@ -44,7 +46,37 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * @param owner the owner company
      * @return list of non-billed order projections ordered by order date descending
      */
-    List<OrderListProjection> findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(Company owner);
+    List<OrderListForDocumentsProjection> findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(Company owner);
+
+
+    @Query("""
+        SELECT
+            o.idOrder as idOrder,
+            o.descrip as descrip,
+            o.dateOrder as dateOrder,
+            o.total as total,
+            o.billed as billed
+        FROM Order o
+        JOIN Provider prov ON prov.company = o.company AND prov.ownerCompany = :owner
+    WHERE o.ownerCompany = :owner
+    ORDER BY o.dateOrder DESC
+    """)
+    List<OrderListForDashboardProjection> findByOwnerCompanyOrdersForProvidersByDateOrderDesc(Company owner);
+
+    @Query("""
+        SELECT
+            o.idOrder as idOrder,
+            o.descrip as descrip,
+            o.dateOrder as dateOrder,
+            o.total as total,
+            o.billed as billed,
+            o.company.comName as comName
+        FROM Order o
+        JOIN Customer cust ON cust.company = o.company AND cust.ownerCompany = :owner
+        WHERE o.ownerCompany = :owner AND cust.enabled = true
+        ORDER BY o.dateOrder DESC
+    """)
+    List<OrderListForDashboardProjection> findByOwnerCompanyOrdersForCustomersByDateOrderDesc(Company owner);
 
     /**
      * Finds an order by its ID and owner company.

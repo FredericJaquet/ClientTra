@@ -9,7 +9,8 @@ import com.frederic.clienttra.entities.Item;
 import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.exceptions.InvalidOrderDescriptionException;
 import com.frederic.clienttra.exceptions.InvalidOrderPriceException;
-import com.frederic.clienttra.projections.OrderListProjection;
+import com.frederic.clienttra.projections.OrderListForDashboardProjection;
+import com.frederic.clienttra.projections.OrderListForDocumentsProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -70,9 +71,26 @@ public class OrderMapper {
      * @param entity the OrderListProjection
      * @return mapped OrderListDTO
      */
-    public OrderListDTO toListDtosFromProjection(OrderListProjection entity){
+    public OrderListDTO toListDtosFromProjectionForDocuments(OrderListForDocumentsProjection entity){
         return OrderListDTO.builder()
                 .idOrder(entity.getIdOrder())
+                .descrip(entity.getDescrip())
+                .dateOrder(entity.getDateOrder())
+                .total(entity.getTotal())
+                .billed(entity.getBilled())
+                .build();
+    }
+
+    /**
+     * Converts a projection representing an Order list entry to an OrderListDTO.
+     *
+     * @param entity the OrderListProjection
+     * @return mapped OrderListDTO
+     */
+    public OrderListDTO toListDtosFromProjectionForDashboard(OrderListForDashboardProjection entity){
+        return OrderListDTO.builder()
+                .idOrder(entity.getIdOrder())
+                .comName(entity.getComName())
                 .descrip(entity.getDescrip())
                 .dateOrder(entity.getDateOrder())
                 .total(entity.getTotal())
@@ -102,9 +120,21 @@ public class OrderMapper {
      * @param entities list of OrderListProjections
      * @return list of mapped OrderListDTOs
      */
-    public List<OrderListDTO> toListDtosFromProjection(List<OrderListProjection> entities){
+    public List<OrderListDTO> toListDtosFromProjectionForDocuments(List<OrderListForDocumentsProjection> entities){
         return entities.stream()
-                .map(this::toListDtosFromProjection)
+                .map(this::toListDtosFromProjectionForDocuments)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Converts a list of OrderListProjections to a list of OrderListDTOs.
+     *
+     * @param entities list of OrderListProjections
+     * @return list of mapped OrderListDTOs
+     */
+    public List<OrderListDTO> toListDtosFromProjectionForDashboard(List<OrderListForDashboardProjection> entities){
+        return entities.stream()
+                .map(this::toListDtosFromProjectionForDashboard)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

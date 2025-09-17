@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Builder
 public class OrderListDTO {
     private Integer idOrder;
+    private String comName;
     private String descrip;
     private LocalDate dateOrder;
     private Double total;
