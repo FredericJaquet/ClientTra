@@ -1,9 +1,11 @@
 package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.*;
+import com.frederic.clienttra.dto.read.BankAccountDTO;
 import com.frederic.clienttra.dto.read.CompanyOwnerDTO;
 import com.frederic.clienttra.dto.update.UpdateCompanyOwnerRequestDTO;
 import com.frederic.clienttra.exceptions.CompanyNotFoundForUserException;
+import com.frederic.clienttra.services.BankAccountService;
 import com.frederic.clienttra.services.CompanyServiceImpl;
 import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.validation.Valid;
@@ -13,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,6 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OwnerController {
 
+    private final BankAccountService bankAccountService;
     private final CompanyServiceImpl companyService;
     private final MessageResolver messageResolver;
 
@@ -40,6 +44,17 @@ public class OwnerController {
         CompanyOwnerDTO company = companyService.getCompanyOwnerDTO()
                 .orElseThrow(CompanyNotFoundForUserException::new);
         return ResponseEntity.ok(company);
+    }
+
+    /**
+     * Retrieves all bank accounts belonging to owner company.
+     *
+     * @return a list of {@link BankAccountDTO}
+     */
+
+    @GetMapping("/bank-accounts")
+    public ResponseEntity<List<BankAccountDTO>> getAllBankAccounts(){
+        return ResponseEntity.ok(bankAccountService.getAllBankAccounts());
     }
 
     /**

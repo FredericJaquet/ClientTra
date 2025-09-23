@@ -86,7 +86,6 @@ public class DocumentUtils {
      * @return The total gross amount in the second currency, or null if no conversion needed.
      */
     public Double calculateTotalGrossInCurrency2(Document document) {
-        // TODO: Evaluar uso y lugar de esta conversión
         if (document.getChangeRate() == null || document.getChangeRate().getIdChangeRate() == 1) {
             return null;
         }

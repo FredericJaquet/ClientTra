@@ -182,11 +182,11 @@ public class CustomerInvoiceService implements DocumentService {
         }
 
         // Validate VAT and withholding rates
-        if (dto.getVatRate() < 1) {
-            throw new InvalidVatRateException();
+        if (dto.getVatRate() > 1) {
+            dto.setVatRate(dto.getVatRate()/100);
         }
-        if (dto.getWithholding() < 1) {
-            throw new InvalidWithholdingException();
+        if (dto.getWithholding() > 1) {
+            dto.setWithholding(dto.getWithholding()/100);
         }
 
         Company orderCompany = getCompany(idCompany, orders, parent);
@@ -211,7 +211,7 @@ public class CustomerInvoiceService implements DocumentService {
         entity.setCurrency(currency);
         entity.setDeadline(deadline);
         entity.setDocType(type);
-        entity.setStatus(DocumentStatus.PENDING);
+        //entity.setStatus(DocumentStatus.PENDING);
 
         // 4. Calculate totals
         documentUtils.calculateTotals(entity);
@@ -258,6 +258,11 @@ public class CustomerInvoiceService implements DocumentService {
                 throw new CantModifyPaidInvoiceException();
             }
             entityParent.setStatus(DocumentStatus.MODIFIED);
+            //Setting orders as billed = false to free them. Orders staying in the invoice will be setted back to billed = true in CreateDocument
+            entityParent.getOrders().forEach(order -> {
+                order.setBilled(false);
+                orderRepository.save(order);
+            });
             documentRepository.save(entityParent);
         }
 
@@ -280,6 +285,10 @@ public class CustomerInvoiceService implements DocumentService {
         Document entity = documentRepository.findByOwnerCompanyAndIdDocument(owner, id)
                 .orElseThrow(DocumentNotFoundException::new);
         entity.setStatus(DocumentStatus.DELETED);
+        entity.getOrders().forEach(order -> {
+            order.setBilled(false);
+            orderRepository.save(order);
+        });
         documentRepository.save(entity);
     }
 

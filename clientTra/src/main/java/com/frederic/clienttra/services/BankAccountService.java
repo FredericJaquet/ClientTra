@@ -32,6 +32,7 @@ public class BankAccountService {
     private final OwnerValidator ownerValidator;
     private final CompanyRepository companyRepository;
     private final DtoValidator dtoValidator;
+    private final CompanyService companyService;
 
     /**
      * Retrieves all bank accounts for a specific company.
@@ -45,6 +46,21 @@ public class BankAccountService {
         ownerValidator.checkOwner(idCompany);
 
         List<BankAccount> entities = bankAccountRepository.findByCompany_IdCompany(idCompany);
+
+        return bankAccountMapper.toBankAccountDTOList(entities);
+    }
+
+    /**
+     * Retrieves all bank accounts for the owner company.
+     *
+     * @return a list of {@link BankAccountDTO} for the company
+     * @throws SecurityException if the current user is not authorized to access the company
+     */
+    @Transactional(readOnly = true)
+    public List<BankAccountDTO> getAllBankAccounts(){
+        Company owner = companyService.getCurrentCompanyOrThrow();
+
+        List<BankAccount> entities = bankAccountRepository.findByCompany_IdCompany(owner.getIdCompany());
 
         return bankAccountMapper.toBankAccountDTOList(entities);
     }

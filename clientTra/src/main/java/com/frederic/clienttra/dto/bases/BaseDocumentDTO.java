@@ -19,7 +19,9 @@ public interface BaseDocumentDTO {
     DocumentStatus getStatus();
     String getLanguage();
     Double getVatRate();
+    void setVatRate(Double vatRate);
     Double getWithholding();
+    void setWithholding(Double vatRate);
     String getCurrency();
     String getNoteDelivery();
     String getNotePayment();

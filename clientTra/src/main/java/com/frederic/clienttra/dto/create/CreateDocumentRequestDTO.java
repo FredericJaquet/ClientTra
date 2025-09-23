@@ -26,7 +26,6 @@ public class CreateDocumentRequestDTO implements BaseDocumentDTO {
     private String docNumber;
     @NotNull(message="validation.document.doc_date_required")
     private LocalDate docDate;
-    @NotBlank(message="validation.document.doc_type_required")
     private DocumentType docType;
     private DocumentStatus status=null; // Not used on creation, it is here just to use the BaseDocumentDTO interface
 
@@ -41,9 +40,9 @@ public class CreateDocumentRequestDTO implements BaseDocumentDTO {
     private String noteComment;
     private LocalDate deadline;
 
-    @NotBlank(message="validation.document.change_rate_required")
+    @NotNull(message="validation.document.change_rate_required")
     private Integer idChangeRate;
-    @NotBlank(message="validation.document.bank_account_required")
+    @NotNull(message="validation.document.bank_account_required")
     private Integer idBankAccount;
     private Integer idDocumentParent;
     private List<Integer> orderIds;

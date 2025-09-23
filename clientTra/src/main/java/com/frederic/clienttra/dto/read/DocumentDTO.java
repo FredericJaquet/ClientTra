@@ -42,7 +42,7 @@ public class DocumentDTO {
     private String notePayment;
     private String noteComment;
     private LocalDate deadline;
-
+    private BaseCompanyMinimalDTO company;
     private ChangeRateDTO changeRate;
     private BankAccountDTO bankAccount;
     private DocumentMinimalDTO documentParent;

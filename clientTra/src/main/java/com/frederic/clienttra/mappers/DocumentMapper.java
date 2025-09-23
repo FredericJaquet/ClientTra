@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class DocumentMapper {
 
     private final ChangeRateMapper changeRateMapper;
+    private final MinimalCompanyMapper minimalCompanyMapper;
     private final BankAccountMapper bankAccountMapper;
     private final OrderMapper orderMapper;
     private final DocumentUtils documentUtils;
@@ -65,6 +66,8 @@ public class DocumentMapper {
                 .totalNet(entity.getTotalNet())
                 .totalVat(entity.getTotalVat())
                 .totalGross(entity.getTotalGross())
+                .totalGrossInCurrency2(documentUtils.calculateTotalGrossInCurrency2(entity))
+                .totalToPayInCurrency2(documentUtils.calculateTotalToPayInCurrency2(entity))
                 .totalWithholding(entity.getTotalWithholding())
                 .totalToPay(entity.getTotalToPay())
                 .currency(entity.getCurrency())
@@ -72,6 +75,7 @@ public class DocumentMapper {
                 .notePayment(entity.getNotePayment())
                 .noteComment(entity.getNoteComment())
                 .deadline(entity.getDeadline())
+                .company(minimalCompanyMapper.toBaseCompanyMinimalDTO(entity.getCompany()))
                 .changeRate(changeRateMapper.toDto(entity.getChangeRate()))
                 .bankAccount(bankAccountMapper.toBankAccountDTO(entity.getBankAccount()))
                 .documentParent(parentDto)
@@ -156,8 +160,8 @@ public class DocumentMapper {
         entity.setDocType(dto.getDocType());
         entity.setStatus(dto.getStatus());
         entity.setLanguage(dto.getLanguage());
-        entity.setVatRate(dto.getVatRate()/100);
-        entity.setWithholding(dto.getWithholding()/100);
+        entity.setVatRate(dto.getVatRate());
+        entity.setWithholding(dto.getWithholding());
         entity.setCurrency(dto.getCurrency());
         entity.setNoteDelivery(dto.getNoteDelivery());
         entity.setNotePayment(dto.getNotePayment());

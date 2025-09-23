@@ -221,6 +221,11 @@ public class ProviderInvoiceService implements DocumentService {
                 throw new CantModifyPaidInvoiceException();
             }
             entityParent.setStatus(DocumentStatus.MODIFIED);
+            //Setting orders as billed = false to free them. Orders staying in the invoice will be setted back to billed = true in CreateDocument
+            entityParent.getOrders().forEach(order -> {
+                order.setBilled(false);
+                orderRepository.save(order);
+            });
             documentRepository.save(entityParent);
         }
 
@@ -243,6 +248,10 @@ public class ProviderInvoiceService implements DocumentService {
         Document entity = documentRepository.findByOwnerCompanyAndIdDocument(owner, id)
                 .orElseThrow(DocumentNotFoundException::new);
         entity.setStatus(DocumentStatus.DELETED);
+        entity.getOrders().forEach(order -> {
+            order.setBilled(false);
+            orderRepository.save(order);
+        });
         documentRepository.save(entity);
     }
 
