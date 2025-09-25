@@ -30,6 +30,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     Optional<Customer> findByOwnerCompanyAndIdCustomer(Company ownerCompany, Integer id);
 
     /**
+     * Finds a customer by its IDCompany and the owning company.
+     *
+     * @param ownerCompany the company that owns the customer
+     * @param idCompany the Customer's company ID
+     * @return an Optional containing the customer if found
+     */
+    Optional<Customer> findByOwnerCompanyAndCompany_IdCompany(Company ownerCompany, Integer idCompany);
+
+    /**
      * Finds a customer by the owning company and the associated company entity.
      *
      * @param ownerCompany the company that owns the customer
@@ -59,7 +68,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
                co.vatNumber AS vatNumber,
                co.email AS email,
                co.web AS web,
-               c.enabled AS enabled
+               c.enabled AS enabled,
+               co.idCompany AS idCompany
         FROM Customer c
         JOIN c.company co
         WHERE c.ownerCompany = :owner AND c.enabled = :enabled
@@ -78,7 +88,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
                co.vatNumber AS vatNumber,
                co.email AS email,
                co.web AS web,
-               c.enabled AS enabled
+               c.enabled AS enabled,
+               co.idCompany AS idCompany
         FROM Customer c
         JOIN c.company co
         WHERE c.ownerCompany = :owner
@@ -100,7 +111,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
                co.vatNumber AS vatNumber,
                co.email AS email,
                co.web AS web,
-               c.enabled AS enabled
+               c.enabled AS enabled,
+               co.idCompany AS idCompany
         FROM Customer c
         JOIN c.company co
         WHERE c.ownerCompany = :owner AND (LOWER(co.comName) LIKE LOWER(:input) OR LOWER(co.legalName) LIKE LOWER(:input) OR LOWER(co.vatNumber) LIKE LOWER(:input))

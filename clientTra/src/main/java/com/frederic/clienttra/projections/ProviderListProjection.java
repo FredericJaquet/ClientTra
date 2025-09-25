@@ -6,6 +6,7 @@ package com.frederic.clienttra.projections;
  */
 public interface ProviderListProjection {
     Integer getIdProvider();
+    Integer getIdCompany();
     String getComName();
     String getVatNumber();
     String getEmail();

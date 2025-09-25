@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ItemDTO implements BaseItemDTO {
+    private Integer idItem;
     private String descrip;
     private Double qty;
     private Double discount;

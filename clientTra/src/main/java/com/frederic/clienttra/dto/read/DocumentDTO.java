@@ -47,5 +47,5 @@ public class DocumentDTO {
     private BankAccountDTO bankAccount;
     private DocumentMinimalDTO documentParent;
 
-    private List<OrderListDTO> orders;
+    private List<OrderForDocumentDTO> orders;
 }

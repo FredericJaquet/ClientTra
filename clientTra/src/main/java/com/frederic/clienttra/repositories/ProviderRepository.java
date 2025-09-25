@@ -51,7 +51,8 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
                co.vatNumber AS vatNumber,
                co.email AS email,
                co.web AS web,
-               p.enabled AS enabled
+               p.enabled AS enabled,
+               co.idCompany AS idCompany
         FROM Provider p
         JOIN p.company co
         WHERE p.ownerCompany = :owner AND p.enabled = :enabled
@@ -71,7 +72,8 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
                co.vatNumber AS vatNumber,
                co.email AS email,
                co.web AS web,
-               p.enabled AS enabled
+               p.enabled AS enabled,
+               co.idCompany AS idCompany
         FROM Provider p
         JOIN p.company co
         WHERE p.ownerCompany = :owner
@@ -93,7 +95,8 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
                co.vatNumber AS vatNumber,
                co.email AS email,
                co.web AS web,
-               p.enabled AS enabled
+               p.enabled AS enabled,
+               co.idCompany AS idCompany
         FROM Provider p
         JOIN p.company co
         WHERE p.ownerCompany = :owner AND (LOWER(co.comName) LIKE LOWER(:input) OR LOWER(co.legalName) LIKE LOWER(:input) OR LOWER(co.vatNumber) LIKE LOWER(:input))

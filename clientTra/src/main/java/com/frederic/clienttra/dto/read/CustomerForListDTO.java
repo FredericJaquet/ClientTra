@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CustomerForListDTO {
     private Integer idCustomer;
+    private Integer idCompany;
     private String comName;
     private String vatNumber;
     private String email;

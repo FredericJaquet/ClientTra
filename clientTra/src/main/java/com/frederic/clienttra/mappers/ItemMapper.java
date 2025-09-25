@@ -31,6 +31,7 @@ public class ItemMapper {
      */
     public ItemDTO toDto(Item entity){
         return ItemDTO.builder()
+                .idItem(entity.getIdItem())
                 .descrip(entity.getDescrip())
                 .qty(entity.getQty())
                 .discount(entity.getDiscount())

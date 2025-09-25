@@ -56,9 +56,9 @@ public class ChangeRateController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> createChangeRate(@Valid @RequestBody CreateChangeRateRequestDTO dto) {
-        changeRateService.createChangeRate(dto);
-        return ResponseEntity.ok(new GenericResponseDTO("change_rate.created.success"));
+    public ResponseEntity<ChangeRateDTO> createChangeRate(@Valid @RequestBody CreateChangeRateRequestDTO dto) {
+        ChangeRateDTO newChangeRate=changeRateService.createChangeRate(dto);
+        return ResponseEntity.ok(newChangeRate);
     }
 
     /**

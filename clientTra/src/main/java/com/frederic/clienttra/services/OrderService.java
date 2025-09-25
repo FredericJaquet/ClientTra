@@ -90,7 +90,7 @@ public class OrderService {
 
         List<OrderListForDocumentsProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyOrderByDateOrderDesc(owner, idCompany);
 
-        return orderMapper.toListDtosFromProjectionForDocuments(orders);
+        return orderMapper.toListDtoFromProjectionForDocuments(orders);
     }
 
     /**
@@ -124,7 +124,7 @@ public class OrderService {
 
         List<OrderListForDocumentsProjection> orders = orderRepository.findByOwnerCompanyAndCompany_idCompanyAndBilledFalseOrderByDateOrderDesc(owner, idCompany);
 
-        return orderMapper.toListDtosFromProjectionForDocuments(orders);
+        return orderMapper.toListDtoFromProjectionForDocuments(orders);
     }
 
     /**
@@ -138,7 +138,7 @@ public class OrderService {
 
         List<OrderListForDocumentsProjection> orders = orderRepository.findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(owner);
 
-        return orderMapper.toListDtosFromProjectionForDocuments(orders);
+        return orderMapper.toListDtoFromProjectionForDocuments(orders);
     }
 
     /**

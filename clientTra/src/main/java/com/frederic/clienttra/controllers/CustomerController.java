@@ -60,7 +60,7 @@ public class CustomerController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDetailsDTO> getCustomerById(@PathVariable int id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+        return ResponseEntity.ok(customerService.getCustomerByIdCompany(id));
     }
 
     /**

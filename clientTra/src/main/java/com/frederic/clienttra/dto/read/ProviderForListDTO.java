@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProviderForListDTO {
     private Integer idProvider;
+    private Integer idCompany;
     private String comName;
     private String vatNumber;
     private String email;

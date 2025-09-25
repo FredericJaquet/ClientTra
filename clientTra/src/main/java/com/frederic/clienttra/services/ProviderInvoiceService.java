@@ -153,12 +153,12 @@ public class ProviderInvoiceService implements DocumentService {
             throw new CantCreateDocumentWithoutOrdersException();
         }
 
-        // Validate percentages
-        if (dto.getVatRate() < 1) {
-            throw new InvalidVatRateException();
+        // Validate VAT and withholding rates
+        if (dto.getVatRate() > 1) {
+            dto.setVatRate(dto.getVatRate()/100);
         }
-        if (dto.getWithholding() < 1) {
-            throw new InvalidWithholdingException();
+        if (dto.getWithholding() > 1) {
+            dto.setWithholding(dto.getWithholding()/100);
         }
 
         Company orderCompany = getCompany(idCompany, orders, parent);

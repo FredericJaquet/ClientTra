@@ -1,8 +1,6 @@
 package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
-import com.frederic.clienttra.dto.create.CreateOrderRequestDTO;
-import com.frederic.clienttra.dto.demo.DemoCompanyDTO;
 import com.frederic.clienttra.dto.demo.DemoDocumentDTO;
 import com.frederic.clienttra.dto.read.*;
 import com.frederic.clienttra.entities.*;
@@ -44,9 +42,9 @@ public class DocumentMapper {
             return null;
         }
 
-        List<OrderListDTO> orders = entity.getOrders() == null ? List.of() :
+        List<OrderForDocumentDTO> orders = entity.getOrders() == null ? List.of() :
                 entity.getOrders().stream()
-                        .map(orderMapper::toListDtosFromEntity)
+                        .map(orderMapper::toDocumentDtoFromEntity)
                         .collect(Collectors.toCollection(ArrayList::new));
 
         DocumentMinimalDTO parentDto = null;

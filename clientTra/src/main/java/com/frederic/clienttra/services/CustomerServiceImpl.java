@@ -82,6 +82,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Retrieves detailed information for a customer by its ID.
+     *
+     * @param idCompany the customer ID
+     * @return CustomerDetailsDTO with detailed customer information
+     * @throws CustomerNotFoundException if customer is not found or inaccessible
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public CustomerDetailsDTO getCustomerByIdCompany(int idCompany) {
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Customer entity = customerRepository.findByOwnerCompanyAndCompany_IdCompany(owner, idCompany)
+                .orElseThrow(CustomerNotFoundException::new);
+        return customerMapper.toCustomerDetailsDTO(entity);
+    }
+
+    /**
      * Searches customers by matching input text against company name, legal name, or VAT number.
      *
      * @param input the search query string

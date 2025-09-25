@@ -49,6 +49,7 @@ public class CustomerMapper {
         return entities.stream()
                 .map(p -> CustomerForListDTO.builder()
                         .idCustomer(p.getIdCustomer())
+                        .idCompany(p.getIdCompany())
                         .comName(p.getComName())
                         .vatNumber(p.getVatNumber())
                         .email(p.getEmail())
@@ -61,6 +62,7 @@ public class CustomerMapper {
     public CustomerForListDTO toCustomerForListDTO(Customer entity){
         return CustomerForListDTO.builder()
                 .idCustomer(entity.getIdCustomer())
+                .idCompany(entity.getCompany().getIdCompany())
                 .comName(entity.getCompany().getComName())
                 .vatNumber(entity.getCompany().getVatNumber())
                 .email(entity.getCompany().getEmail())

@@ -3,6 +3,8 @@ package com.frederic.clienttra.services;
 import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
+import com.frederic.clienttra.dto.read.ItemDTO;
+import com.frederic.clienttra.dto.read.OrderForDocumentDTO;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
@@ -124,7 +126,28 @@ public class CustomerInvoiceService implements DocumentService {
         Company owner = companyService.getCurrentCompanyOrThrow();
         Document entity = documentRepository.findByOwnerCompanyAndIdDocumentAndDocType(owner, id, type)
                 .orElseThrow(DocumentNotFoundException::new);
-        return documentMapper.toDto(entity);
+        DocumentDTO dto = documentMapper.toDto(entity);
+
+        //Calculate totals in currency2
+        Double rate = entity.getChangeRate().getRate();
+        Double totalGross2 = entity.getTotalGross()*rate;
+        Double totalToPay2 = entity.getTotalToPay()*rate;
+
+        dto.setTotalGrossInCurrency2(totalGross2);
+        dto.setTotalToPayInCurrency2(totalToPay2);
+
+        // Calculate orders quantity
+        List<OrderForDocumentDTO> orders=dto.getOrders();
+
+        for(OrderForDocumentDTO order : orders){
+            double quantity=0.0;
+            for(ItemDTO item : order.getItems()){
+                quantity=quantity + item.getQty();
+            }
+            order.setQuantity(quantity);
+        }
+
+        return dto;
     }
 
     /**

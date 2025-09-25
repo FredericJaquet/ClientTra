@@ -45,6 +45,7 @@ public class ProviderMapper {
         return entities.stream()
                 .map(p -> ProviderForListDTO.builder()
                         .idProvider(p.getIdProvider())
+                        .idCompany(p.getIdCompany())
                         .comName(p.getComName())
                         .vatNumber(p.getVatNumber())
                         .email(p.getEmail())
@@ -57,6 +58,7 @@ public class ProviderMapper {
     public ProviderForListDTO toProviderForListDTO(Provider entity){
         return ProviderForListDTO.builder()
                 .idProvider(entity.getIdProvider())
+                .idCompany(entity.getCompany().getIdCompany())
                 .comName(entity.getCompany().getComName())
                 .vatNumber(entity.getCompany().getVatNumber())
                 .email(entity.getCompany().getEmail())

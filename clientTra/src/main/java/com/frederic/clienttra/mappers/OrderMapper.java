@@ -2,6 +2,7 @@ package com.frederic.clienttra.mappers;
 
 import com.frederic.clienttra.dto.bases.BaseOrderDTO;
 import com.frederic.clienttra.dto.read.OrderDetailsDTO;
+import com.frederic.clienttra.dto.read.OrderForDocumentDTO;
 import com.frederic.clienttra.dto.read.OrderListDTO;
 import com.frederic.clienttra.dto.update.UpdateOrderRequestDTO;
 import com.frederic.clienttra.entities.Company;
@@ -71,7 +72,7 @@ public class OrderMapper {
      * @param entity the OrderListProjection
      * @return mapped OrderListDTO
      */
-    public OrderListDTO toListDtosFromProjectionForDocuments(OrderListForDocumentsProjection entity){
+    public OrderListDTO toListDtoFromProjectionForDocuments(OrderListForDocumentsProjection entity){
         return OrderListDTO.builder()
                 .idOrder(entity.getIdOrder())
                 .descrip(entity.getDescrip())
@@ -104,7 +105,7 @@ public class OrderMapper {
      * @param entity the Order entity
      * @return mapped OrderListDTO
      */
-    public OrderListDTO toListDtosFromEntity(Order entity) {
+    public OrderListDTO toListDtoFromEntity(Order entity) {
         return OrderListDTO.builder()
                 .idOrder(entity.getIdOrder())
                 .descrip(entity.getDescrip())
@@ -115,14 +116,33 @@ public class OrderMapper {
     }
 
     /**
+     * Converts an Order entity to an OrderForDocumentDTO.
+     *
+     * @param entity the Order entity
+     * @return mapped OrderListDTO
+     */
+    public OrderForDocumentDTO toDocumentDtoFromEntity(Order entity) {
+        return OrderForDocumentDTO.builder()
+                .idOrder(entity.getIdOrder())
+                .descrip(entity.getDescrip())
+                .dateOrder(entity.getDateOrder())
+                .pricePerUnit(entity.getPricePerUnit())
+                .units(entity.getUnits())
+                .total(entity.getTotal())
+                .billed(entity.getBilled())
+                .items(itemMapper.toDtos(entity.getItems()))
+                .build();
+    }
+
+    /**
      * Converts a list of OrderListProjections to a list of OrderListDTOs.
      *
      * @param entities list of OrderListProjections
      * @return list of mapped OrderListDTOs
      */
-    public List<OrderListDTO> toListDtosFromProjectionForDocuments(List<OrderListForDocumentsProjection> entities){
+    public List<OrderListDTO> toListDtoFromProjectionForDocuments(List<OrderListForDocumentsProjection> entities){
         return entities.stream()
-                .map(this::toListDtosFromProjectionForDocuments)
+                .map(this::toListDtoFromProjectionForDocuments)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -146,7 +166,7 @@ public class OrderMapper {
      */
     public List<OrderListDTO> toListDtosFromEntities(List<Order> entities){
         return entities.stream()
-                .map(this::toListDtosFromEntity)
+                .map(this::toListDtoFromEntity)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
