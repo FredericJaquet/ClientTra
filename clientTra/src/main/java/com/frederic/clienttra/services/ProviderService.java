@@ -32,7 +32,7 @@ public interface ProviderService {
      * @param id the provider ID.
      * @return provider details DTO.
      */
-    ProviderDetailsDTO getProviderById(int id);
+    ProviderDetailsDTO getProviderByIdCompany(int id);
 
     /**
      * Searches providers by name or VAT number matching the query.

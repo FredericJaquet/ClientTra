@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -59,7 +58,7 @@ public class ProviderController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProviderDetailsDTO> getProviderById(@PathVariable int id) {
-        return ResponseEntity.ok(providerService.getProviderById(id));
+        return ResponseEntity.ok(providerService.getProviderByIdCompany(id));
     }
 
     /**
@@ -110,7 +109,7 @@ public class ProviderController {
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<ProviderDetailsDTO> updateProvider(@PathVariable int id, @RequestBody UpdateProviderRequestDTO dto) {
         providerService.updateProvider(id, dto);
-        return ResponseEntity.ok(providerService.getProviderById(id));
+        return ResponseEntity.ok(providerService.getProviderByIdCompany(id));
     }
 
     /**

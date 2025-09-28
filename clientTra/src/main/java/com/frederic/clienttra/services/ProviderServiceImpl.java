@@ -85,10 +85,10 @@ public class ProviderServiceImpl implements ProviderService {
      */
     @Transactional(readOnly = true)
     @Override
-    public ProviderDetailsDTO getProviderById(int id) {
+    public ProviderDetailsDTO getProviderByIdCompany(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        Provider entity = providerRepository.findByOwnerCompanyAndIdProvider(owner, id)
+        Provider entity = providerRepository.findByOwnerCompanyAndCompany_IdCompany(owner, id)
                 .orElseThrow(ProviderNotFoundException::new);
 
         return providerMapper.toProviderDetailsDTO(entity);

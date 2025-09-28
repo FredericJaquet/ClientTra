@@ -29,6 +29,15 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     Optional<Provider> findByOwnerCompanyAndIdProvider(Company ownerCompany, Integer id);
 
     /**
+     * Finds a provider by its ID and owner company.
+     *
+     * @param ownerCompany the owning company
+     * @param idCompany provider's company ID
+     * @return an Optional containing the Provider if found, or empty otherwise
+     */
+    Optional<Provider> findByOwnerCompanyAndCompany_IdCompany(Company ownerCompany, Integer idCompany);
+
+    /**
      * Finds a provider by its owning company and associated company entity.
      *
      * @param ownerCompany the owning company

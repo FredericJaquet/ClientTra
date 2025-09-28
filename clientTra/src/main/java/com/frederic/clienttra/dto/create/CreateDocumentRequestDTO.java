@@ -40,9 +40,7 @@ public class CreateDocumentRequestDTO implements BaseDocumentDTO {
     private String noteComment;
     private LocalDate deadline;
 
-    @NotNull(message="validation.document.change_rate_required")
     private Integer idChangeRate;
-    @NotNull(message="validation.document.bank_account_required")
     private Integer idBankAccount;
     private Integer idDocumentParent;
     private List<Integer> orderIds;

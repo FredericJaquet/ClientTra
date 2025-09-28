@@ -57,7 +57,7 @@ public class ProviderInvoiceController {
      * @param idCompany provider company ID
      * @return list of {@link DocumentForListDTO} for the provider
      */
-    @GetMapping("/by-customer/{idCompany}")
+    @GetMapping("/by-provider/{idCompany}")
     public ResponseEntity<List<DocumentForListDTO>> getProviderInvoicesByProvider(@PathVariable Integer idCompany) {
         List<DocumentForListDTO> result = documentService.getDocumentsByCompanyId(DOC_TYPE, idCompany);
         return ResponseEntity.ok(result);
@@ -85,7 +85,7 @@ public class ProviderInvoiceController {
      * @param status    document status to filter
      * @return filtered list of provider invoices for the provider
      */
-    @GetMapping("/by-customer/{idCompany}/by-status")
+    @GetMapping("/by-provider/{idCompany}/by-status")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<List<DocumentForListDTO>> getProviderInvoicesByProviderAndStatus(
             @PathVariable Integer idCompany,

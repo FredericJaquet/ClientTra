@@ -163,11 +163,21 @@ public class PurchaseOrderService implements DocumentService {
         LocalDate deadline = null;
 
         // Retrieve related entities
-        ChangeRate changeRate = changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner);
-
+        // Retrieve related entities
+        ChangeRate changeRate = dto.getIdChangeRate() != null
+                ? changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner)
+                : null;
         BankAccount bankAccount = dto.getIdBankAccount() != null
                 ? bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner)
                 : null;
+
+        if(bankAccount == null){
+            bankAccount = owner.getBankAccounts().get(0);
+        }
+
+        if(changeRate == null){
+            changeRate = owner.getChangeRates().get(0);
+        }
 
         Document parent = dto.getIdDocumentParent() == null
                 ? null
@@ -179,20 +189,12 @@ public class PurchaseOrderService implements DocumentService {
             throw new CantCreateDocumentWithoutOrdersException();
         }
 
-        // Validate percentages
-        if (dto.getVatRate() < 1) {
-            throw new InvalidVatRateException();
-        }
-        if (dto.getWithholding() < 1) {
-            throw new InvalidWithholdingException();
-        }
-
         Company orderCompany = getCompany(idCompany, orders, parent);
 
         Company company = companyRepository.findByIdCompany(idCompany)
                 .orElseThrow(CompanyNotFoundException::new);
 
-        // Get the provider linked to the order company
+        // Retrieve the provider linked to the order company
         Provider provider = providerRepository.findByOwnerCompanyAndCompany(owner, orderCompany)
                 .orElseThrow(CustomerNotFoundException::new);
 

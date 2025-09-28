@@ -36,7 +36,7 @@ public class PurchaseOrderController {
      * @return list of purchase orders as {@link DocumentForListDTO}
      */
     @GetMapping
-    public ResponseEntity<List<DocumentForListDTO>> getAllQuotes() {
+    public ResponseEntity<List<DocumentForListDTO>> getAllPos() {
         List<DocumentForListDTO> result = documentService.getAllDocumentsByType(DOC_TYPE);
         return ResponseEntity.ok(result);
     }
@@ -48,7 +48,7 @@ public class PurchaseOrderController {
      * @return detailed purchase order DTO
      */
     @GetMapping("/by-id/{idDocument}")
-    public ResponseEntity<DocumentDTO> getQuoteById(@PathVariable Integer idDocument){
+    public ResponseEntity<DocumentDTO> getPoById(@PathVariable Integer idDocument){
         DocumentDTO dto = documentService.getDocumentById(DOC_TYPE, idDocument);
         return ResponseEntity.ok(dto);
     }
@@ -59,8 +59,8 @@ public class PurchaseOrderController {
      * @param idCompany the company ID
      * @return list of purchase orders linked to the company
      */
-    @GetMapping("/by-customer/{idCompany}")
-    public ResponseEntity<List<DocumentForListDTO>> getQuotesByCustomer(@PathVariable Integer idCompany) {
+    @GetMapping("/by-provider/{idCompany}")
+    public ResponseEntity<List<DocumentForListDTO>> getPosByProvider(@PathVariable Integer idCompany) {
         List<DocumentForListDTO> result = documentService.getDocumentsByCompanyId(DOC_TYPE, idCompany);
         return ResponseEntity.ok(result);
     }
@@ -74,7 +74,7 @@ public class PurchaseOrderController {
      */
     @GetMapping("/by-status")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<List<DocumentForListDTO>> getQuotesByStatus(@RequestParam DocumentStatus status) {
+    public ResponseEntity<List<DocumentForListDTO>> getPosByStatus(@RequestParam DocumentStatus status) {
         List<DocumentForListDTO> result = documentService.getDocumentsByStatus(DOC_TYPE, status);
         return ResponseEntity.ok(result);
     }
@@ -87,9 +87,9 @@ public class PurchaseOrderController {
      * @param status    document status to filter
      * @return list of purchase orders matching company and status
      */
-    @GetMapping("/by-customer/{idCompany}/by-status")
+    @GetMapping("/by-provider/{idCompany}/by-status")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<List<DocumentForListDTO>> getQuotesByCustomerAndStatus(
+    public ResponseEntity<List<DocumentForListDTO>> getPosByProviderAndStatus(
             @PathVariable Integer idCompany,
             @RequestParam DocumentStatus status) {
         List<DocumentForListDTO> result = documentService.getDocumentsByIdCompanyAndStatus(DOC_TYPE, idCompany, status);
@@ -106,7 +106,7 @@ public class PurchaseOrderController {
      */
     @PostMapping("/create/{idCompany}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<DocumentDTO> createQuote(@PathVariable Integer idCompany,
+    public ResponseEntity<DocumentDTO> createPo(@PathVariable Integer idCompany,
                                                    @Valid @RequestBody CreateDocumentRequestDTO dto) {
         DocumentDTO created = documentService.createDocument(idCompany, dto, DOC_TYPE);
         return ResponseEntity.ok(created);
@@ -120,9 +120,9 @@ public class PurchaseOrderController {
      * @param dto        DTO containing update data
      * @return updated purchase order DTO
      */
-    @PatchMapping("{idDocument}")
+    @PatchMapping("/{idDocument}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<DocumentDTO> updateQuote(@PathVariable Integer idDocument, @RequestBody UpdateDocumentRequestDTO dto){
+    public ResponseEntity<DocumentDTO> updatePo(@PathVariable Integer idDocument, @RequestBody UpdateDocumentRequestDTO dto){
         DocumentDTO modified = documentService.updateDocument(idDocument,dto,DOC_TYPE);
         return ResponseEntity.ok(modified);
     }
@@ -135,7 +135,7 @@ public class PurchaseOrderController {
      */
     @GetMapping("/last-number")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<String> getLastQuoteNumber() {
+    public ResponseEntity<String> getLastPoNumber() {
         String lastNumber = documentService.getLastDocumentNumber(DOC_TYPE);
         return ResponseEntity.ok(lastNumber);
     }
@@ -149,8 +149,8 @@ public class PurchaseOrderController {
      */
     @DeleteMapping("/delete/{idDocument}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<GenericResponseDTO> deleteQuote(@PathVariable Integer idDocument){
+    public ResponseEntity<GenericResponseDTO> deletePo(@PathVariable Integer idDocument){
         documentService.softDeleteDocument(idDocument);
-        return ResponseEntity.ok(new GenericResponseDTO("quote.deleted.success"));
+        return ResponseEntity.ok(new GenericResponseDTO("po.deleted.success"));
     }
 }

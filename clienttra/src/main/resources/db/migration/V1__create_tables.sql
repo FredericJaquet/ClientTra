@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS companies (
   id_owner_company     INT,
   CONSTRAINT uq_companies_vat_owner	 UNIQUE(vat_number, id_owner_company),
   CONSTRAINT uq_companies__legal_owner	 UNIQUE(legal_name, id_owner_company),
-  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS addresses (
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS addresses (
   state                VARCHAR(40),
   country              VARCHAR(40) NOT NULL,
   id_company           INT,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE phones (
@@ -49,7 +49,7 @@ CREATE TABLE phones (
   phone_number 		VARCHAR(25) 	NOT NULL,
   kind 			VARCHAR(25),
   id_company 		INT 		NOT NULL,
-  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS contact_persons (
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS contact_persons (
   role                 VARCHAR(40),
   email                VARCHAR(100),
   id_company           INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS bank_accounts (
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
   holder               VARCHAR(40),
   branch               VARCHAR(40),
   id_company           INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS roles (
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS users (
   id_company           INT NOT NULL,
   id_role              INT NOT NULL,
   id_plan              INT NOT NULL,
-  FOREIGN KEY (id_company) 	REFERENCES companies(id_company) ON UPDATE CASCADE,
+  FOREIGN KEY (id_company) 	REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (id_role) 	REFERENCES roles(id_role) ON UPDATE CASCADE,
   FOREIGN KEY (id_plan) 	REFERENCES plans(id_plan) ON UPDATE CASCADE
 );
@@ -112,8 +112,8 @@ CREATE TABLE IF NOT EXISTS customers (
   enabled              BOOLEAN		NOT NULL DEFAULT 1,
   id_company           INT 		NOT NULL,
   id_owner_company     INT 		NOT NULL,
-  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) 	REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) 	REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS providers (
@@ -126,8 +126,8 @@ CREATE TABLE IF NOT EXISTS providers (
   enabled              BOOLEAN 		NOT NULL DEFAULT 1,
   id_company           INT 		NOT NULL,
   id_owner_company     INT 		NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS schemes (
@@ -140,8 +140,8 @@ CREATE TABLE IF NOT EXISTS schemes (
   target_language      VARCHAR(15),
   id_company           INT NOT NULL,
   id_owner_company     INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS scheme_lines (
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS scheme_lines (
   descrip              VARCHAR(255) 	NOT NULL,
   discount             DOUBLE 		NOT NULL DEFAULT 0,
   id_scheme            INT 		NOT NULL,
-  FOREIGN KEY (id_scheme) 		REFERENCES schemes(id_scheme) ON UPDATE CASCADE
+  FOREIGN KEY (id_scheme) 		REFERENCES schemes(id_scheme) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS change_rates (
@@ -183,15 +183,15 @@ CREATE TABLE IF NOT EXISTS documents (
   note_comment	       VARCHAR(1000),
   deadline             DATE,
   id_company           INT,
-  id_change_rate       INT NOT NULL DEFAULT 1,
+  id_change_rate       INT,
   id_bank_account      INT,
   id_document_parent   INT,
   id_owner_company     INT NOT NULL,
-  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_change_rate) REFERENCES change_rates(id_change_rate) ON UPDATE CASCADE,
-  FOREIGN KEY (id_bank_account) REFERENCES bank_accounts(id_bank_account) ON UPDATE CASCADE,
-  FOREIGN KEY (id_document_parent) REFERENCES documents(id_document) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_change_rate) REFERENCES change_rates(id_change_rate) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (id_bank_account) REFERENCES bank_accounts(id_bank_account) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (id_document_parent) REFERENCES documents(id_document) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -207,16 +207,16 @@ CREATE TABLE IF NOT EXISTS orders (
   target_language      VARCHAR(25),
   id_company           INT,
   id_owner_company     INT 		NOT NULL,
-  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON UPDATE CASCADE,
-  FOREIGN KEY (id_owner_company) 	REFERENCES companies(id_company) ON UPDATE CASCADE
+  FOREIGN KEY (id_company) 		REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_owner_company) 	REFERENCES companies(id_company) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS document_orders (
   id_document   INT,
   id_order	INT,
   PRIMARY KEY (id_document, id_order),
-  FOREIGN KEY (id_document) REFERENCES documents(id_document) ON UPDATE CASCADE,
-  FOREIGN KEY (id_order) REFERENCES orders(id_order) ON UPDATE CASCADE
+  FOREIGN KEY (id_document) REFERENCES documents(id_document) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (id_order) REFERENCES orders(id_order) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS items (
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS items (
   discount             DOUBLE NOT NULL DEFAULT 0,
   total                DOUBLE NOT NULL DEFAULT 0,
   id_order             INT NOT NULL,
-  FOREIGN KEY (id_order) REFERENCES orders(id_order) ON UPDATE CASCADE
+  FOREIGN KEY (id_order) REFERENCES orders(id_order) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Datos iniciales

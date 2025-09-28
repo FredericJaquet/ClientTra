@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Service implementation to manage customer invoices and related document operations.
@@ -159,10 +160,13 @@ public class CustomerInvoiceService implements DocumentService {
      */
     @Transactional(readOnly = true)
     public String getLastDocumentNumber(DocumentType type) {
+        String lastNumber;
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        return documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type)
-                .orElseThrow(LastNumberNotFoundException::new);
+       lastNumber=documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type).orElse("N/A");
+
+
+        return lastNumber;
     }
 
     /**

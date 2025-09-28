@@ -48,6 +48,9 @@ public class BankAccountMapper {
      * @return a BankAccountDTO representing the given entity
      */
     public BankAccountDTO toBankAccountDTO(BankAccount bankAccount){
+        if(bankAccount == null){
+            return null;
+        }
         return BankAccountDTO.builder()
                 .idBankAccount(bankAccount.getIdBankAccount())
                 .iban(bankAccount.getIban())

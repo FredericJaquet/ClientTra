@@ -111,7 +111,7 @@ public class QuoteController {
      * @param dto data to update the quote
      * @return updated quote with details
      */
-    @PatchMapping("{idDocument}")
+    @PatchMapping("/{idDocument}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
     public ResponseEntity<DocumentDTO> updateQuote(@PathVariable Integer idDocument, @RequestBody UpdateDocumentRequestDTO dto){
         DocumentDTO modified = documentService.updateDocument(idDocument,dto,DOC_TYPE);

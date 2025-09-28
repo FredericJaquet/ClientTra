@@ -44,6 +44,9 @@ public interface InvoiceForCashFlowReportRepository extends JpaRepository<Docume
         WHERE d.docDate BETWEEN :initDate AND :endDate
           AND d.ownerCompany.idCompany = :idOwnerCompany
           AND d.docType = :docType
+          AND d.status NOT IN (com.frederic.clienttra.enums.DocumentStatus.MODIFIED,
+                               com.frederic.clienttra.enums.DocumentStatus.DELETED)
+            
     """)
     List<InvoiceForCashFlowReportProjection> findInvoicesForCashFlowReport(
             @Param("initDate") LocalDate initDate,

@@ -104,15 +104,15 @@ public class CustomerController {
      * Only users with ADMIN or ACCOUNTING roles are allowed.
      * <p>
      *
-     * @param id  the ID of the customer to update
+     * @param idCompany  the ID of the customer to update
      * @param dto the update payload
      * @return the updated {@link CustomerDetailsDTO}
      */
-    @PatchMapping("/{id}")
+    @PatchMapping("/{idCompany}")
     @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
-    public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int id, @RequestBody UpdateCustomerRequestDTO dto) {
-        customerService.updateCustomer(id, dto);
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+    public ResponseEntity<CustomerDetailsDTO> updateCustomer(@PathVariable int idCompany, @RequestBody UpdateCustomerRequestDTO dto) {
+        customerService.updateCustomer(idCompany, dto);
+        return ResponseEntity.ok(customerService.getCustomerByIdCompany(idCompany));
     }
 
     /**

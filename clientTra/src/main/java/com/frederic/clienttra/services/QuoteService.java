@@ -1,12 +1,16 @@
 package com.frederic.clienttra.services;
 
 import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
+import com.frederic.clienttra.dto.read.BankAccountDTO;
+import com.frederic.clienttra.dto.read.ChangeRateDTO;
 import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
 import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.exceptions.*;
+import com.frederic.clienttra.mappers.BankAccountMapper;
+import com.frederic.clienttra.mappers.ChangeRateMapper;
 import com.frederic.clienttra.mappers.DocumentMapper;
 import com.frederic.clienttra.projections.DocumentListProjection;
 import com.frederic.clienttra.repositories.CompanyRepository;
@@ -33,7 +37,9 @@ public class QuoteService implements DocumentService {
     private final DocumentMapper documentMapper;
     private final DocumentRepository documentRepository;
     private final BankAccountService bankAccountService;
+    private final BankAccountMapper bankAccountMapper;
     private final ChangeRateService changeRateService;
+    private final ChangeRateMapper changeRateMapper;
     private final CompanyService companyService;
     private final CompanyRepository companyRepository;
     private final CustomerRepository customerRepository;
@@ -156,11 +162,23 @@ public class QuoteService implements DocumentService {
         String currency = null;
         LocalDate deadline = null;
 
+        System.out.println(dto.getIdBankAccount());
+
         // Retrieve related entities
-        ChangeRate changeRate = changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner);
+        ChangeRate changeRate = dto.getIdChangeRate() != null
+                ? changeRateService.getChangeRateByIdAndOwner(dto.getIdChangeRate(), owner)
+                : null;
         BankAccount bankAccount = dto.getIdBankAccount() != null
                 ? bankAccountService.getBankAccountByIdAndOwner(dto.getIdBankAccount(), owner)
                 : null;
+
+        if(bankAccount == null){
+            bankAccount = owner.getBankAccounts().get(0);
+        }
+
+        if(changeRate == null){
+            changeRate = owner.getChangeRates().get(0);
+        }
 
         Document parent = dto.getIdDocumentParent() == null
                 ? null
@@ -170,14 +188,6 @@ public class QuoteService implements DocumentService {
         List<Order> orders = orderRepository.findAllByIdOrderInAndOwnerCompany(dto.getOrderIds(), owner);
         if (orders.isEmpty()) {
             throw new CantCreateDocumentWithoutOrdersException();
-        }
-
-        // Validate percentage values
-        if (dto.getVatRate() < 1) {
-            throw new InvalidVatRateException();
-        }
-        if (dto.getWithholding() < 1) {
-            throw new InvalidWithholdingException();
         }
 
         Company orderCompany = getCompany(idCompany, orders, parent);
@@ -263,14 +273,6 @@ public class QuoteService implements DocumentService {
         if (dto.getDocDate() != null) {
             LocalDate deadline = documentUtils.calculateDeadline(dto.getDocDate(), customer.getDuedate());
             entity.setDeadline(deadline);
-        }
-
-        // Validate rates
-        if (dto.getVatRate() != null && dto.getVatRate() < 1) {
-            throw new InvalidVatRateException();
-        }
-        if (dto.getWithholding() != null && dto.getWithholding() < 1) {
-            throw new InvalidWithholdingException();
         }
 
         // Update the entity from DTO fields

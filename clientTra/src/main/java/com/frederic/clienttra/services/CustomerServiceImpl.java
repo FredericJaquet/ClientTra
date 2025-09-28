@@ -171,7 +171,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateCustomer(int id, UpdateCustomerRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
+        Customer entity = customerRepository.findByOwnerCompanyAndCompany_IdCompany(owner, id)
                 .orElseThrow(CustomerNotFoundException::new);
 
         Company company = entity.getCompany();
@@ -201,7 +201,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void disableCustomer(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        Customer entity = customerRepository.findByOwnerCompanyAndIdCustomer(owner, id)
+        Customer entity = customerRepository.findByOwnerCompanyAndCompany_IdCompany(owner, id)
                 .orElseThrow(CustomerNotFoundException::new);
         entity.setEnabled(false);
         customerRepository.save(entity);

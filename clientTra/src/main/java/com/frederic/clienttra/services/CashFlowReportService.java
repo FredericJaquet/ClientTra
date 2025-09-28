@@ -42,6 +42,8 @@ public class CashFlowReportService {
         Company onwerCompany = companyService.getCurrentCompanyOrThrow();
         List<InvoiceForCashFlowReportProjection> rawData = repository.findInvoicesForCashFlowReport(initDate, endDate, onwerCompany.getIdCompany(), type);
 
+        System.out.println(rawData.size());
+
         // Group invoices by company (client or provider)
         Map<Integer, List<InvoiceForCashFlowReportProjection>> groupedByCompany = rawData.stream()
                 .collect(Collectors.groupingBy(InvoiceForCashFlowReportProjection::getIdCompany));
@@ -77,6 +79,7 @@ public class CashFlowReportService {
                     .toList());
 
             parties.add(dto);
+
             grandTotalNet += totalNet;
         }
 

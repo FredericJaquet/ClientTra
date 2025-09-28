@@ -55,29 +55,29 @@ public class Company {
     private List<ContactPerson> contactPersons=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankAccount> bankAccounts=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany")
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChangeRate> changeRates=new ArrayList<>();
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Customer> customers=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany")
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Customer> ownedCustomers=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Provider> providers=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany")
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Provider> ownedProviders=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scheme> schemes=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany")
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scheme> ownedSchemes=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany")
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> ownedDocuments=new ArrayList<>();
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders=new ArrayList<>();
-    @OneToMany(mappedBy = "ownerCompany")
+    @OneToMany(mappedBy = "ownerCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> ownedOrders=new ArrayList<>();
 
     // Convenience methods to add associated entities and keep bidirectional consistency
