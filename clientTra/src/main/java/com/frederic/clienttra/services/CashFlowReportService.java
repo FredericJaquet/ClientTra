@@ -58,7 +58,11 @@ public class CashFlowReportService {
         Map<Integer, InvoiceSummaryForCashFlowReportDTO> fakeInvoices = new HashMap<>();
 
         if(withOrders) {
-            pendingOrders = orderRepository.findByOwnerCompanyPendingOrdersForCustomersByDateOrderDesc(onwerCompany);
+            if(type == DocumentType.INV_CUST) {
+                pendingOrders = orderRepository.findByOwnerCompanyPendingOrdersForCustomersByDateOrderDesc(onwerCompany);
+            }else if(type == DocumentType.INV_PROV){
+                pendingOrders = orderRepository.findByOwnerCompanyPendingOrdersForProvidersByDateOrderDesc(onwerCompany);
+            }
             //Group orders by company (client or provider)
             Map<Integer, List<PendingOrdersForCashflowReportProjection>> ordersGroupedByCompany = pendingOrders.stream()
                     .collect(Collectors.groupingBy(PendingOrdersForCashflowReportProjection::getIdCompany));

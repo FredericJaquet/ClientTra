@@ -59,8 +59,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             o.company.legalName as legalName
         FROM Order o
         JOIN Provider prov ON prov.company = o.company AND prov.ownerCompany = :owner
-    WHERE o.ownerCompany = :owner
-    ORDER BY o.dateOrder DESC
+        WHERE o.ownerCompany = :owner
+        ORDER BY o.dateOrder DESC
     """)
     List<OrderListForDashboardProjection> findByOwnerCompanyOrdersForProvidersByDateOrderDesc(Company owner);
 
@@ -84,7 +84,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             o.idOrder as idOrder,
             o.total as total,
             o.dateOrder as dateOrder,
-            o.company.comName as comName,
             o.company.idCompany as idCompany
         FROM Order o
         JOIN Customer cust ON cust.company = o.company AND cust.ownerCompany = :owner
@@ -94,6 +93,21 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
         ORDER BY o.dateOrder DESC
     """)
     List<PendingOrdersForCashflowReportProjection> findByOwnerCompanyPendingOrdersForCustomersByDateOrderDesc(Company owner);
+
+    @Query("""
+        SELECT
+            o.idOrder as idOrder,
+            o.total as total,
+            o.dateOrder as dateOrder,
+            o.company.idCompany as idCompany
+        FROM Order o
+        JOIN Provider prov ON prov.company = o.company AND prov.ownerCompany = :owner
+        WHERE o.ownerCompany = :owner
+            AND prov.enabled = true
+            AND o.billed = false
+        ORDER BY o.dateOrder DESC
+    """)
+    List<PendingOrdersForCashflowReportProjection> findByOwnerCompanyPendingOrdersForProvidersByDateOrderDesc(Company owner);
 
     /**
      * Finds an order by its ID and owner company.
