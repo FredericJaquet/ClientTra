@@ -4,6 +4,7 @@ import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Order;
 import com.frederic.clienttra.projections.OrderListForDashboardProjection;
 import com.frederic.clienttra.projections.OrderListForDocumentsProjection;
+import com.frederic.clienttra.projections.PendingOrdersForCashflowReportProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -48,7 +49,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      */
     List<OrderListForDocumentsProjection> findByOwnerCompanyAndBilledFalseOrderByDateOrderDesc(Company owner);
 
-
     @Query("""
         SELECT
             o.idOrder as idOrder,
@@ -56,7 +56,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             o.dateOrder as dateOrder,
             o.total as total,
             o.billed as billed,
-            o.company.comName as comName
+            o.company.legalName as legalName
         FROM Order o
         JOIN Provider prov ON prov.company = o.company AND prov.ownerCompany = :owner
     WHERE o.ownerCompany = :owner
@@ -78,6 +78,22 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
         ORDER BY o.dateOrder DESC
     """)
     List<OrderListForDashboardProjection> findByOwnerCompanyOrdersForCustomersByDateOrderDesc(Company owner);
+
+    @Query("""
+        SELECT
+            o.idOrder as idOrder,
+            o.total as total,
+            o.dateOrder as dateOrder,
+            o.company.comName as comName,
+            o.company.idCompany as idCompany
+        FROM Order o
+        JOIN Customer cust ON cust.company = o.company AND cust.ownerCompany = :owner
+        WHERE o.ownerCompany = :owner
+            AND cust.enabled = true
+            AND o.billed = false
+        ORDER BY o.dateOrder DESC
+    """)
+    List<PendingOrdersForCashflowReportProjection> findByOwnerCompanyPendingOrdersForCustomersByDateOrderDesc(Company owner);
 
     /**
      * Finds an order by its ID and owner company.

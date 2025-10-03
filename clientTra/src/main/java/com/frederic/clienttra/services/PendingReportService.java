@@ -8,7 +8,9 @@ import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.mappers.PendingReportMapper;
 import com.frederic.clienttra.projections.InvoiceForPendingReportProjection;
+import com.frederic.clienttra.projections.OrderListForDashboardProjection;
 import com.frederic.clienttra.repositories.InvoiceForPendingReportRepository;
+import com.frederic.clienttra.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

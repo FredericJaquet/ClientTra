@@ -131,6 +131,20 @@ public class CustomerInvoiceController {
     }
 
     /**
+     * Toggle  status to "Paid" or "Unpaid"
+     * Restricted to ADMIN and ACCOUNTING roles.
+     *
+     * @param idDocument the ID of the document to delete
+     * @return a success message wrapped in {@link GenericResponseDTO}
+     */
+    @GetMapping("toggle-paid-status/{idDocument}")
+    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTING')")
+    public ResponseEntity<GenericResponseDTO> togglePaidStatus(@PathVariable Integer idDocument){
+        documentService.togglePaidStatus(idDocument);
+        return ResponseEntity.ok(new GenericResponseDTO("invoice.modified.success"));
+    }
+
+    /**
      * Retrieves the last customer invoice number issued.
      * Restricted to ADMIN and ACCOUNTING roles.
      *

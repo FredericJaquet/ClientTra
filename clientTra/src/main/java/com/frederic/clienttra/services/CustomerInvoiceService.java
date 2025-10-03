@@ -1,5 +1,6 @@
 package com.frederic.clienttra.services;
 
+import com.frederic.clienttra.dto.GenericResponseDTO;
 import com.frederic.clienttra.dto.bases.BaseDocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentDTO;
 import com.frederic.clienttra.dto.read.DocumentForListDTO;
@@ -297,6 +298,25 @@ public class CustomerInvoiceService implements DocumentService {
         Integer idCompany = entityParent.getCompany().getIdCompany();
 
         return createDocument(idCompany, dto, DocumentType.INV_CUST);
+    }
+
+    /**
+     * Toggle  status to "Paid" or "Unpaid"
+     *
+     * @param idDocument the ID of the document to delete
+     * @throws DocumentNotFoundException if the document does not exist or is not owned by the current user
+     */
+    public void togglePaidStatus(Integer idDocument){
+        Company owner = companyService.getCurrentCompanyOrThrow();
+        Document entity = documentRepository.findByOwnerCompanyAndIdDocument(owner, idDocument)
+                .orElseThrow(DocumentNotFoundException::new);
+        if(entity.getStatus() == DocumentStatus.PAID){
+            entity.setStatus(DocumentStatus.PENDING);
+        }
+        if(entity.getStatus() == DocumentStatus.PENDING){
+            entity.setStatus(DocumentStatus.PAID);
+        }
+        documentRepository.save(entity);
     }
 
     /**

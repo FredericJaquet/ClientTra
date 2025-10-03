@@ -15,5 +15,4 @@ public interface InvoiceForCashFlowReportProjection {
     Double getTotalNet();
     Double getTotalVat();
     Double getTotalWithholding();
-
 }

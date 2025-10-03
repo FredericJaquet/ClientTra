@@ -1,6 +1,7 @@
 package com.frederic.clienttra.controllers;
 
 import com.frederic.clienttra.dto.read.CashFlowReportDTO;
+import com.frederic.clienttra.dto.read.CashFlowGraphDTO;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.services.CashFlowReportService;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +34,9 @@ public class CashFlowReportController {
      * @return a {@link CashFlowReportDTO} representing the income report
      */
     @GetMapping("/income")
-    public ResponseEntity<CashFlowReportDTO> getIncomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate) {
+    public ResponseEntity<CashFlowReportDTO> getIncomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate, @RequestParam Boolean withOrders) {
         // Uses DocumentType.INV_CUST to retrieve customer invoice data
-        CashFlowReportDTO dto = service.generate(initDate, endDate, DocumentType.INV_CUST);
+        CashFlowReportDTO dto = service.generateReport(initDate, endDate, DocumentType.INV_CUST, withOrders);
         return ResponseEntity.ok(dto);
     }
 
@@ -47,9 +48,37 @@ public class CashFlowReportController {
      * @return a {@link CashFlowReportDTO} representing the outcome report
      */
     @GetMapping("/outcome")
-    public ResponseEntity<CashFlowReportDTO> getOutcomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate) {
+    public ResponseEntity<CashFlowReportDTO> getOutcomeReport(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate, @RequestParam Boolean withOrders) {
         // Uses DocumentType.INV_PROV to retrieve provider invoice data
-        CashFlowReportDTO dto = service.generate(initDate, endDate, DocumentType.INV_PROV);
+        CashFlowReportDTO dto = service.generateReport(initDate, endDate, DocumentType.INV_PROV, withOrders);
+        return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * Generates an income report (based on monthly incomes) for the given date range.
+     *
+     * @param initDate the start date of the report
+     * @param endDate  the end date of the report
+     * @return a {@link CashFlowGraphDTO} representing the income report
+     */
+    @GetMapping("/income/graph")
+    public ResponseEntity<CashFlowGraphDTO> getIncomeReportGraph(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate) {
+        // Uses DocumentType.INV_CUST to retrieve customer invoice data
+        CashFlowGraphDTO dto = service.generateGraph(initDate, endDate, DocumentType.INV_CUST);
+        return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * Generates an outcome report (based on monthly outcomes) for the given date range.
+     *
+     * @param initDate the start date of the report
+     * @param endDate  the end date of the report
+     * @return a {@link CashFlowGraphDTO} representing the outcome report
+     */
+    @GetMapping("/outcome/graph")
+    public ResponseEntity<CashFlowGraphDTO> getOutcomeReportGraph(@RequestParam LocalDate initDate, @RequestParam LocalDate endDate) {
+        // Uses DocumentType.INV_PROV to retrieve customer invoice data
+        CashFlowGraphDTO dto = service.generateGraph(initDate, endDate, DocumentType.INV_PROV);
         return ResponseEntity.ok(dto);
     }
 

@@ -1,11 +1,16 @@
 package com.frederic.clienttra.mappers;
 
+import com.frederic.clienttra.dto.read.CashFlowGraphDTO;
 import com.frederic.clienttra.dto.read.InvoiceSummaryForCashFlowReportDTO;
+import com.frederic.clienttra.dto.read.MonthlyForCashFlowGraphDTO;
 import com.frederic.clienttra.dto.read.PartyForCashFlowReportDTO;
+import com.frederic.clienttra.projections.InvoiceForCashFlowGraphProjection;
 import com.frederic.clienttra.projections.InvoiceForCashFlowReportProjection;
 import org.springframework.stereotype.Component;
 
+import java.time.YearMonth;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Mapper class for converting invoice and party projections into DTOs
@@ -40,7 +45,7 @@ public class CashFlowReportMapper {
                         p.getTotalVat(),
                         p.getTotalWithholding()
                 ))
-                .toList();
+                .collect(Collectors.toList());
 
         return PartyForCashFlowReportDTO.builder()
                 .idCompany(idCompany)

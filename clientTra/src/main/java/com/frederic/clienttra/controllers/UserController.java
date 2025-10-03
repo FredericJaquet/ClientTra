@@ -148,7 +148,7 @@ public class UserController {
      * @param dto data containing old and new password
      * @return success message
      */
-    @PatchMapping("/me/password")
+    @PatchMapping("/me/change-password")
     public ResponseEntity<GenericResponseDTO> changePassword(@Valid @RequestBody UpdatePasswordRequestDTO dto) {
         userService.changePassword(dto);
         String msg = messageResolver.getMessage("user.password.changed", "Password successfully changed");

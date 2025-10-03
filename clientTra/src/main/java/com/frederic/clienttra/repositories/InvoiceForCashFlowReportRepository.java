@@ -2,6 +2,7 @@ package com.frederic.clienttra.repositories;
 
 import com.frederic.clienttra.entities.Document;
 import com.frederic.clienttra.enums.DocumentType;
+import com.frederic.clienttra.projections.InvoiceForCashFlowGraphProjection;
 import com.frederic.clienttra.projections.InvoiceForCashFlowReportProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,7 +31,7 @@ public interface InvoiceForCashFlowReportRepository extends JpaRepository<Docume
      * @return list of projections containing invoice details for the report
      */
     @Query("""
-        SELECT 
+        SELECT
             c.id AS idCompany,
             c.legalName AS legalName,
             c.vatNumber AS vatNumber,
@@ -46,9 +47,35 @@ public interface InvoiceForCashFlowReportRepository extends JpaRepository<Docume
           AND d.docType = :docType
           AND d.status NOT IN (com.frederic.clienttra.enums.DocumentStatus.MODIFIED,
                                com.frederic.clienttra.enums.DocumentStatus.DELETED)
-            
     """)
     List<InvoiceForCashFlowReportProjection> findInvoicesForCashFlowReport(
+            @Param("initDate") LocalDate initDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("idOwnerCompany") Integer idOwnerCompany,
+            @Param("docType") DocumentType docType);
+
+    /**
+     * Finds invoices for cash flow Graph purposes, filtered by date range, owner company ID,
+     * and document type.
+     *
+     * @param initDate the start date of the range (inclusive)
+     * @param endDate the end date of the range (inclusive)
+     * @param idOwnerCompany the ID of the owning company
+     * @param docType the type of document (usually INVOICE)
+     * @return list of projections containing invoice details for the graph
+     */
+    @Query("""
+        SELECT
+            d.docDate AS docDate,
+            d.totalNet AS totalNet
+        FROM Document d
+        WHERE d.docDate BETWEEN :initDate AND :endDate
+          AND d.ownerCompany.idCompany = :idOwnerCompany
+          AND d.docType = :docType
+          AND d.status NOT IN (com.frederic.clienttra.enums.DocumentStatus.MODIFIED,
+                               com.frederic.clienttra.enums.DocumentStatus.DELETED)
+    """)
+    List<InvoiceForCashFlowGraphProjection> findInvoicesForCashFlowGraph(
             @Param("initDate") LocalDate initDate,
             @Param("endDate") LocalDate endDate,
             @Param("idOwnerCompany") Integer idOwnerCompany,

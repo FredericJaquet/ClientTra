@@ -21,5 +21,4 @@ public class InvoiceSummaryForPendingReportDTO {
     private String docNumber;
     private Double totalToPay;
     private DocumentStatus status;
-
 }
