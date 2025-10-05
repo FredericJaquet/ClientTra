@@ -207,7 +207,7 @@ public class ProviderServiceImpl implements ProviderService {
     public void disableProvider(int id) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        Provider entity = providerRepository.findByOwnerCompanyAndIdProvider(owner, id)
+        Provider entity = providerRepository.findByOwnerCompanyAndCompany_IdCompany(owner, id)
                 .orElseThrow(ProviderNotFoundException::new);
 
         entity.setEnabled(false);

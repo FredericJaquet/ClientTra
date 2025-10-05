@@ -56,7 +56,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             o.dateOrder as dateOrder,
             o.total as total,
             o.billed as billed,
-            o.company.legalName as legalName
+            o.company.comName as comName
         FROM Order o
         JOIN Provider prov ON prov.company = o.company AND prov.ownerCompany = :owner
         WHERE o.ownerCompany = :owner
