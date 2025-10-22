@@ -1,0 +1,46 @@
+@startuml
+' ----------------------
+' DTOs de registro y usuario
+' ----------------------
+package dto.create{
+    class CreateUserRequestDTO {
+      +String username {NotBlank}
+      +String password {NotBlank}
+      +String email {Email, Size<=100}
+      +String preferredLanguage
+      +Integer idRole
+      +Integer idPlan
+    }
+
+    class RegistrationActualCompanyRequestDTO {
+      +String vatNumber {NotBlank}
+      +String comName
+      +String legalName {NotBlank}
+      +String email {Email, Size<=100}
+      +String web
+      +CreateAddressRequestDTO address {NotNull}
+    }
+
+    class RegistrationRequestDTO {
+      +String adminUsername {NotBlank}
+      +String adminEmail {NotBlank, Email, Size<=100}
+      +String adminPassword {NotBlank}
+      +String preferredLanguage
+      +String vatNumber
+      +String comName
+      +String legalName {NotBlank}
+      +String email {Email, Size<=100}
+      +String web
+      +CreateAddressRequestDTO address {NotNull}
+      +String preferredTheme
+      +Boolean darkMode
+    }
+
+
+    ' ----------------------
+    ' Relaciones de composición
+    ' ----------------------
+    RegistrationActualCompanyRequestDTO *-- CreateAddressRequestDTO : address
+    RegistrationRequestDTO *-- CreateAddressRequestDTO : address
+}
+@enduml

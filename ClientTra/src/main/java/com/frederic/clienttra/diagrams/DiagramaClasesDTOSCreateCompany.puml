@@ -1,0 +1,78 @@
+@startuml
+title DTOs Create (Company, Address, Contact, Phone)
+
+' ==== CONFIGURACIÓN ESTÉTICA ====
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    BorderColor #2C3E50
+    ArrowColor #2C3E50
+    FontSize 12
+}
+skinparam package {
+    BorderColor #2C3E50
+    FontSize 13
+    FontStyle bold
+}
+
+' ==== PACKAGE PRINCIPAL ====
+package "dto.create" {
+
+    class CreateBaseCompanyRequestDTO {
+        +String vatNumber <<@NotBlank>>
+        +String comName
+        +String legalName <<@NotBlank>>
+        +String email <<@Email, @Size(max=100)>>
+        +String web
+        +List<CreateContactPersonRequestDTO> contactPersons
+        +List<CreatePhoneRequestDTO> phones
+        +List<CreateAddressRequestDTO> addresses <<@NotNull>>
+        +List<CreateBankAccountRequestDTO> bankAccounts
+    }
+
+    class CreateAddressRequestDTO implements BaseAddressDTO {
+        +String street <<@NotBlank>>
+        +String stNumber <<@NotBlank>>
+        +String apt
+        +String cp <<@NotBlank>>
+        +String city <<@NotBlank>>
+        +String state
+        +String country <<@NotBlank>>
+    }
+
+    class CreateContactPersonRequestDTO implements BaseContactPersonDTO {
+        +String firstname <<@NotBlank>>
+        +String middlename <<@NotBlank>>
+        +String lastname
+        +String role
+        +String email <<@Email, @Size(max=100)>>
+    }
+
+    class CreatePhoneRequestDTO implements BasePhoneDTO {
+        +String phoneNumber <<@NotBlank>>
+        +String kind
+    }
+
+    class CreateBankAccountRequestDTO implements BaseBankAccountDTO {
+        + String iban <<@ValidIban>>;
+        + String swift;
+        + String branch;
+        + String holder;
+    }
+
+    ' ==== RELACIONES ENTRE DTOs ====
+    CreateBaseCompanyRequestDTO --> CreateAddressRequestDTO : has list >
+    CreateBaseCompanyRequestDTO --> CreateContactPersonRequestDTO : has list >
+    CreateBaseCompanyRequestDTO --> CreatePhoneRequestDTO : has list >
+    CreateBaseCompanyRequestDTO --> CreateBankAccountRequestDTO : has list>
+}
+
+' ==== IMPLEMENTACIONES ====
+CreateAddressRequestDTO -|> BaseAddressDTO
+CreateContactPersonRequestDTO -|> BaseContactPersonDTO
+CreatePhoneRequestDTO -|> BasePhoneDTO
+CreateBankAccountRequestDTO -|> BaseBankAccountDTO
+
+
+
+@enduml

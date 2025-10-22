@@ -1,0 +1,65 @@
+@startuml
+' Orientación
+left to right direction
+
+' =====================
+' Clases principales
+' =====================
+package "entities" {
+
+class Company
+class Document {
+    - idDocument: Integer
+    - docNumber: String
+    - docDate: LocalDate
+    - docType: DocumentType
+    - status: DocumentStatus
+    - totalNet: Double
+    - totalVat: Double
+    - totalGross: Double
+    - totalWithholding: Double
+    - totalToPay: Double
+}
+class Order {
+    - idOrder: Integer
+    - descrip: String
+    - dateOrder: LocalDate
+    - total: Double
+    - billed: Boolean
+}
+class Item {
+    - idItem: Integer
+    - descrip: String
+    - qty: Double
+    - discount: Double
+    - total: Double
+}
+class BankAccount
+class ChangeRate
+}
+
+' =====================
+' Relaciones
+' =====================
+Company "1" --> "*" Document : documents
+Document "1" --> "1" Company : company
+Company "1" --> "*" Document : ownedDocuments
+Document "1" --> "1" Company : ownerCompany
+
+Document "1" --> "0..1" Document : documentParent
+
+Company "1" --> "*" Order : orders
+Order "1" --> "1" Company : company
+Company "1" --> "*" Order : ownedOrders
+Order "1" --> "1" Company : ownerCompany
+
+Document "*" --> "*" Order : orders
+Order "*" --> "*" Document : documents
+
+Order "1" --> "*" Item : items
+Item "1" --> "1" Order : order
+
+Document "0..1" --> "0..1" BankAccount : bankAccount
+Document "0..1" --> "0..1" ChangeRate : changeRate
+
+@enduml

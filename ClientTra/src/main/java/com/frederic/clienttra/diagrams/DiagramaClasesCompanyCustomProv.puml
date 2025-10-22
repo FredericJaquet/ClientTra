@@ -1,0 +1,71 @@
+@startuml
+' Orientación del diagrama
+left to right direction
+
+' =====================
+' Clases principales
+' =====================
+package "entities" {
+class Company {
+
+}
+
+class Customer {
+    - idCustomer: Integer
+    - invoicingMethod: String
+    - duedate: Integer
+    - payMethod: String
+    - defaultLanguage: String
+    - defaultVat: Double
+    - defaultWithholding: Double
+    - europe: Boolean
+    - enabled: Boolean
+}
+
+class Provider {
+    - idProvider: Integer
+    - defaultLanguage: String
+    - defaultVat: Double
+    - defaultWithholding: Double
+    - duedate: Integer
+    - europe: Boolean
+    - enabled: Boolean
+}
+
+class Scheme {
+    - idScheme: Integer
+    - schemeName: String
+    - price: Double
+    - units: String
+    - fieldName: String
+    - sourceLanguage: String
+    - targetLanguage: String
+}
+
+class SchemeLine {
+    - idSchemeLine: Integer
+    - descrip: String
+    - discount: Double
+}
+}
+
+' =====================
+' Relaciones
+' =====================
+Company "0..1" --> "*" Company : ownerCompany / childCompanies
+Company "1" --> "*" Customer : customers
+Customer "1" --> "1" Company : company
+Company "1" --> "*" Customer : ownedCustomers
+Customer "1" --> "1" Company : ownerCompany
+Company "1" --> "*" Provider : providers
+Provider "1" --> "1" Company : company
+Company "1" --> "*" Provider : ownedProviders
+Provider "1" --> "1" Company : ownerCompany
+Company "1" --> "*" Scheme : schemes
+Scheme "1" --> "1" Company : company
+Company "1" --> "*" Scheme : ownedSchemes
+Scheme "1" --> "1" Company : ownerCompany
+Scheme "1" --> "*" SchemeLine : schemeLines
+SchemeLine "1" --> "1" Scheme : scheme
+
+@enduml

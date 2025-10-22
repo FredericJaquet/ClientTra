@@ -1,0 +1,75 @@
+@startuml
+title ClientTra - Package controllers.company
+
+package controllers {
+
+    class OwnerController {
+        + getCompanyById(id: Long) : ResponseEntity<CompanyDTO>
+        + updateCompany(id: Long, companyDTO: CompanyDTO) : ResponseEntity<CompanyDTO>
+        + getCompanyProfile() : ResponseEntity<CompanyDTO>
+    }
+
+    class AddressController {
+        + getAddressesByCompany(id: Long) : ResponseEntity<List<AddressDTO>>
+        + createAddress(addressDTO: AddressDTO) : ResponseEntity<AddressDTO>
+        + updateAddress(id: Long, addressDTO: AddressDTO) : ResponseEntity<AddressDTO>
+        + deleteAddress(id: Long) : ResponseEntity<Void>
+    }
+
+    class PhoneController {
+        + getPhonesByCompany(id: Long) : ResponseEntity<List<PhoneDTO>>
+        + addPhone(phoneDTO: PhoneDTO) : ResponseEntity<PhoneDTO>
+        + updatePhone(id: Long, phoneDTO: PhoneDTO) : ResponseEntity<PhoneDTO>
+        + deletePhone(id: Long) : ResponseEntity<Void>
+    }
+
+    class BankAccountController {
+        + getAccountsByCompany(id: Long) : ResponseEntity<List<BankAccountDTO>>
+        + createAccount(accountDTO: BankAccountDTO) : ResponseEntity<BankAccountDTO>
+        + updateAccount(id: Long, accountDTO: BankAccountDTO) : ResponseEntity<BankAccountDTO>
+        + deleteAccount(id: Long) : ResponseEntity<Void>
+    }
+
+    class ContactPersonController {
+        + getContactsByCompany(id: Long) : ResponseEntity<List<ContactPersonDTO>>
+        + createContact(contactDTO: ContactPersonDTO) : ResponseEntity<ContactPersonDTO>
+        + updateContact(id: Long, contactDTO: ContactPersonDTO) : ResponseEntity<ContactPersonDTO>
+        + deleteContact(id: Long) : ResponseEntity<Void>
+    }
+
+    class UserController {
+        - userService : UserService
+        - messageResolver : MessageResolver
+
+        + getAllUsers() : ResponseEntity<List<UserForAdminDTO>>
+        + getUserById(id: int) : ResponseEntity<UserForAdminDTO>
+        + getSelfUser() : ResponseEntity<UserSelfDTO>
+        + createUser(dto: CreateUserRequestDTO) : ResponseEntity<UserForAdminDTO>
+        + updateSelf(dto: UpdateSelfRequestDTO) : ResponseEntity<UserSelfDTO>
+        + deleteUser(id: int) : ResponseEntity<GenericResponseDTO>
+        + reactivateUser(id: int) : ResponseEntity<GenericResponseDTO>
+        + updateUser(dto: UpdateUserForAdminDTO) : ResponseEntity<UserForAdminDTO>
+        + changePassword(dto: UpdatePasswordRequestDTO) : ResponseEntity<GenericResponseDTO>
+    }
+}
+
+' ==== Dependencias principales ====
+OwnerController --> CompanyService : usa
+OwnerController --> MessageResolver : usa
+
+AddressController --> AddressService : usa
+PhoneController --> PhoneService : usa
+BankAccountController --> BankAccountService : usa
+ContactPersonController --> ContactPersonService : usa
+
+UserController --> UserService : usa
+UserController --> MessageResolver : usa
+UserController ..> UserForAdminDTO
+UserController ..> UserSelfDTO
+UserController ..> CreateUserRequestDTO
+UserController ..> UpdateUserForAdminDTO
+UserController ..> UpdateSelfRequestDTO
+UserController ..> UpdatePasswordRequestDTO
+UserController ..> GenericResponseDTO
+
+@enduml

@@ -1,0 +1,82 @@
+@startuml
+title DTOs Create - Document, Order, Item & Change Rate
+
+' ==== CONFIGURACIÓN VISUAL ====
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    BorderColor #2C3E50
+    ArrowColor #2C3E50
+    FontSize 12
+}
+skinparam package {
+    BorderColor #2C3E50
+    FontSize 13
+    FontStyle bold
+}
+
+' ==== PACKAGE PRINCIPAL ====
+package "dto.create" {
+
+    ' ===== DOCUMENT =====
+    class CreateDocumentRequestDTO implements BaseDocumentDTO {
+        +String docNumber <<@NotBlank>>
+        +LocalDate docDate <<@NotNull>>
+        +DocumentType docType
+        +DocumentStatus status = null
+        +String language = "es"
+        +Double vatRate = 0.21
+        +Double withholding = 0.15
+        +String currency = "€"
+        +String noteDelivery
+        +String notePayment
+        +String noteComment
+        +LocalDate deadline
+        +Integer idChangeRate
+        +Integer idBankAccount
+        +Integer idDocumentParent
+        +List<Integer> orderIds
+    }
+
+    ' ===== ORDER =====
+    class CreateOrderRequestDTO implements BaseOrderDTO {
+        +String descrip <<@NotBlank>>
+        +LocalDate dateOrder <<@NotNull>>
+        +Double pricePerUnit <<@NotNull>>
+        +String units
+        +Double total = 0.0
+        +Boolean billed
+        +String fieldName
+        +String sourceLanguage
+        +String targetLanguage
+        +List<CreateItemRequestDTO> items <<@NotEmpty>>
+    }
+
+    ' ===== ITEM =====
+    class CreateItemRequestDTO implements BaseItemDTO {
+        +String descrip <<@NotBlank>>
+        +Double qty <<@NotNull>>
+        +Double discount = 0.0
+        +Double total = 0.0
+    }
+
+    ' ===== CHANGE RATE =====
+    class CreateChangeRateRequestDTO implements BaseChangeRateDTO {
+        +String currency1 <<@NotBlank>>
+        +String currency2 <<@NotBlank>>
+        +Double rate <<@NotNull>>
+        +LocalDate date <<@NotNull>>
+    }
+
+    ' ===== RELACIONES =====
+    CreateDocumentRequestDTO --> CreateOrderRequestDTO : has list >
+    CreateOrderRequestDTO --> CreateItemRequestDTO : has list >
+}
+
+' ==== IMPLEMENTACIONES ====
+CreateDocumentRequestDTO -|> BaseDocumentDTO
+CreateOrderRequestDTO -|> BaseOrderDTO
+CreateItemRequestDTO -|> BaseItemDTO
+CreateChangeRateRequestDTO -|> BaseChangeRateDTO
+
+@enduml

@@ -1,0 +1,115 @@
+@startuml
+title DTO Base Interfaces - com.frederic.clienttra.dto.bases
+
+package dto.bases {
+
+  ' ==== ADDRESS ====
+  interface BaseAddressDTO {
+    + getStreet(): String
+    + getStNumber(): String
+    + getApt(): String
+    + getCp(): String
+    + getCity(): String
+    + getState(): String
+    + getCountry(): String
+  }
+
+  ' ==== BANK ACCOUNT ====
+  interface BaseBankAccountDTO {
+    + getIban(): String
+    + getSwift(): String
+    + getBranch(): String
+    + getHolder(): String
+  }
+
+  ' ==== CHANGE RATE ====
+  interface BaseChangeRateDTO {
+    + getCurrency1(): String
+    + getCurrency2(): String
+    + getRate(): Double
+    + getDate(): LocalDate
+  }
+
+  ' ==== CONTACT PERSON ====
+  interface BaseContactPersonDTO {
+    + getFirstname(): String
+    + getMiddlename(): String
+    + getLastname(): String
+    + getRole(): String
+    + getEmail(): String
+  }
+
+  ' ==== DOCUMENT ====
+  interface BaseDocumentDTO {
+    + getDocNumber(): String
+    + getDocDate(): LocalDate
+    + getDocType(): DocumentType
+    + getStatus(): DocumentStatus
+    + getLanguage(): String
+    + getVatRate(): Double
+    + setVatRate(Double vatRate)
+    + getWithholding(): Double
+    + setWithholding(Double withholding)
+    + getCurrency(): String
+    + getNoteDelivery(): String
+    + getNotePayment(): String
+    + getNoteComment(): String
+    + getDeadline(): LocalDate
+    + getIdChangeRate(): Integer
+    + getIdBankAccount(): Integer
+    + getIdDocumentParent(): Integer
+    + setIdDocumentParent(Integer idDocumentParent)
+    + getOrderIds(): List<Integer>
+  }
+
+  ' ==== ITEM ====
+  interface BaseItemDTO {
+    + getDescrip(): String
+    + getQty(): Double
+    + getDiscount(): Double
+    + getTotal(): Double
+  }
+
+  ' ==== ORDER ====
+  interface BaseOrderDTO {
+    + getDescrip(): String
+    + getDateOrder(): LocalDate
+    + getPricePerUnit(): Double
+    + getUnits(): String
+    + getTotal(): Double
+    + getBilled(): Boolean
+    + getFieldName(): String
+    + getSourceLanguage(): String
+    + getTargetLanguage(): String
+    + getItems(): List<? extends BaseItemDTO>
+  }
+
+  ' ==== PHONE ====
+  interface BasePhoneDTO {
+    + getPhoneNumber(): String
+    + getKind(): String
+  }
+
+  ' ==== SCHEME LINE ====
+  interface BaseSchemeLineDTO {
+    + getDescrip(): String
+    + getDiscount(): Double
+  }
+
+  ' ==== SCHEME ====
+  interface BaseSchemeDTO {
+    + getSchemeName(): String
+    + getPrice(): Double
+    + getUnits(): String
+    + getFieldName(): String
+    + getSourceLanguage(): String
+    + getTargetLanguage(): String
+    + getSchemeLines(): List<? extends BaseSchemeLineDTO>
+  }
+
+  ' ==== RELATIONSHIPS ====
+  BaseOrderDTO --> BaseItemDTO : uses
+  BaseSchemeDTO --> BaseSchemeLineDTO : uses
+}
+
+@enduml

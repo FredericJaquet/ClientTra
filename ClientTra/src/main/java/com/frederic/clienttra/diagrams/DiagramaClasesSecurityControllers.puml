@@ -1,0 +1,62 @@
+@startuml ClientTra_Security_API
+skinparam classAttributeIconSize 0
+
+' ==========================
+' Clases controladoras
+' ==========================
+class AuthController {
+  +POST /api/auth/login
+  note right
+    Roles: todos los usuarios pueden intentar login
+    Retorna JWT + user info + preferencias
+  end note
+}
+
+class ContextController {
+  +GET /api/context
+  note right
+    Retorna el contexto actual del usuario (idioma, theme, modo)
+    Roles: cualquier usuario autenticado
+  end note
+}
+
+class RegistrationController {
+  +POST /api/registration/actual-data
+  +POST /api/registration/demo-data
+  note right
+    Registro de empresas reales o demo
+    Roles: público (antes de login)
+  end note
+}
+
+class DemoDataDeletingController {
+  +DELETE /api/demo-data-deleting/demo-data
+  +POST /api/demo-data-deleting/register-company
+  note right
+    Gestión de demo data y registro de empresa real
+    Roles: ROLE_ADMIN
+  end note
+}
+
+' ==========================
+' Relaciones conceptuales
+' ==========================
+AuthController --> "uses" JwtUtil
+AuthController --> "uses" CustomUserDetailsService
+ContextController --> "uses" ContextService
+RegistrationController --> "uses" RegistrationService
+RegistrationController --> "uses" DemoDataService
+DemoDataDeletingController --> "uses" DemoDataService
+DemoDataDeletingController --> "uses" RegistrationService
+
+' ==========================
+' Notas generales
+' ==========================
+note top
+  - AuthController gestiona login y JWT
+  - ContextController retorna configuración y preferencias del usuario
+  - RegistrationController maneja creación de usuarios/empresas reales y demo
+  - DemoDataDeletingController elimina demo data y permite registrar empresa real
+end note
+
+@enduml

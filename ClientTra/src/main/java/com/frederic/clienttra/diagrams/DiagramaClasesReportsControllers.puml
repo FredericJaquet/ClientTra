@@ -1,0 +1,44 @@
+@startuml ClientTra_Reports_API
+skinparam classAttributeIconSize 0
+
+' ==========================
+' Clases controladoras de informes
+' ==========================
+class CashFlowReportController {
+  +GET /api/reports/cash-flow/income
+  +GET /api/reports/cash-flow/outcome
+  +GET /api/reports/cash-flow/income/graph
+  +GET /api/reports/cash-flow/outcome/graph
+  note right
+    Genera reportes de flujo de caja (ingresos/gastos)
+    con opción de incluir pedidos.
+    Devuelve DTOs: CashFlowReportDTO / CashFlowGraphDTO
+  end note
+}
+
+class PendingReportController {
+  +GET /api/reports/pending/income
+  +GET /api/reports/pending/outcome
+  note right
+    Genera reportes de pendientes (ingresos/gastos)
+    Devuelve DTOs: PendingReportDTO
+  end note
+}
+
+' ==========================
+' Relaciones conceptuales con servicios
+' ==========================
+CashFlowReportController --> "uses" CashFlowReportService
+PendingReportController --> "uses" PendingReportService
+
+' ==========================
+' Notas generales
+' ==========================
+note top
+  - CashFlowReportController: reportes de flujo de caja por fechas,
+    con o sin pedidos, gráficos y totales.
+  - PendingReportController: reportes de documentos pendientes de facturar.
+  - Ambos usan enums DocumentType para diferenciar cliente/proveedor.
+end note
+
+@enduml

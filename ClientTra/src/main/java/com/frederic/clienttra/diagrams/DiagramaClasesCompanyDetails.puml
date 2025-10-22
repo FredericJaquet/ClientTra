@@ -1,0 +1,106 @@
+@startuml
+' Orientación general
+left to right direction
+skinparam class {
+    BackgroundColor<<Company>> LightBlue
+    BackgroundColor<<Detail>> LightYellow
+    BackgroundColor<<Enum>> LightGreen
+    ArrowColor DarkGray
+    BorderColor Black
+    RoundCorner 10
+}
+
+' =====================
+' Clases principales
+' =====================
+package "entities" {
+
+class Company <<Company>> {
+    - idCompany: Integer
+    - vatNumber: String
+    - comName: String
+    - legalName: String
+}
+
+class Address <<Detail>> {
+    - idAddress: Integer
+    - street: String
+    - stNumber: String
+    - apt: String
+    - cp: String
+    - city: String
+    - state: String
+    - country: String
+}
+
+class BankAccount <<Detail>> {
+    - idBankAccount: Integer
+    - iban: String
+    - swift: String
+    - branch: String
+    - holder: String
+}
+
+class ChangeRate <<Detail>> {
+    - idChangeRate: Integer
+    - currency1: String
+    - currency2: String
+    - rate: Double
+    - date: LocalDate
+}
+
+class ContactPerson <<Detail>> {
+    - idContactPerson: Integer
+    - firstname: String
+    - middlename: String
+    - lastname: String
+    - role: String
+    - email: String
+}
+
+class Phone <<Detail>> {
+    - idPhone: Integer
+    - phoneNumber: String
+    - kind: String
+}
+
+class User <<Detail>> {
+    - idUser: Integer
+    - userName: String
+    - passwd: String
+    - email: String
+    - preferredLanguage: String
+    - preferredTheme: String
+    - darkMode: boolean
+    - enabled: boolean
+}
+
+class Plan <<Enum>> {
+    - idPlan: Integer
+    - planName: String
+}
+
+class Role <<Enum>> {
+    - idRole: Integer
+    - roleName: String
+}
+
+}
+
+' =====================
+' Relaciones
+' =====================
+Company "0..1" --> "*" Company : ownerCompany / childCompanies
+
+Company "1" --> "*" Address : addresses
+Company "1" --> "*" Phone : phones
+Company "1" --> "*" BankAccount : bankAccounts
+Company "1" --> "*" ChangeRate : changeRates
+Company "1" --> "*" ContactPerson : contactPersons
+Company "1" --> "*" User : users
+
+User "1" --> "1" Role : role
+User "1" --> "1" Plan : plan
+
+
+@enduml

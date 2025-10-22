@@ -1,0 +1,47 @@
+@startuml
+title DTOs Create - Company, Customer & Provider
+
+' ==== CONFIGURACIÓN ESTÉTICA ====
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    BorderColor #2C3E50
+    ArrowColor #2C3E50
+    FontSize 12
+}
+skinparam package {
+    BorderColor #2C3E50
+    FontSize 13
+    FontStyle bold
+}
+
+' ==== PACKAGE PRINCIPAL ====
+package "dto.create" {
+
+    class CreateBaseCompanyRequestDTO {
+    }
+
+    ' ==== NUEVOS DTOs: CUSTOMER & PROVIDER ====
+    class CreateCustomerRequestDTO extends CreateBaseCompanyRequestDTO {
+        +String defaultLanguage = "es"
+        +Double defaultVat = 0.21
+        +Double defaultWithholding = 0.15
+        +String invoicingMethod
+        +String payMethod
+        +Integer duedate
+        +Boolean europe = true
+    }
+
+    class CreateProviderRequestDTO extends CreateBaseCompanyRequestDTO {
+        +String defaultLanguage = "es"
+        +Double defaultVat = 0.21
+        +Double defaultWithholding = 0.15
+        +Integer duedate
+        +Boolean europe = true
+    }
+
+    ' ==== RELACIONES ENTRE DTOs ====
+    CreateCustomerRequestDTO -|> CreateBaseCompanyRequestDTO
+    CreateProviderRequestDTO -|> CreateBaseCompanyRequestDTO
+}
+@enduml

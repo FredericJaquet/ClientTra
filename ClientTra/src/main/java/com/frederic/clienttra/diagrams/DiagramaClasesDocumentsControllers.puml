@@ -1,0 +1,113 @@
+@startuml ClientTra_Documents_API
+skinparam classAttributeIconSize 0
+
+package controllers {
+class CustomerInvoiceController {
+  +GET /api/customer-invoices
+  +GET /api/customer-invoices/by-id/{idDocument}
+  +GET /api/customer-invoices/by-customer/{idCompany}
+  +GET /api/customer-invoices/by-status [ADMIN, ACCOUNTING]
+  +GET /api/customer-invoices/by-customer/{idCompany}/by-status [ADMIN, ACCOUNTING]
+  +POST /api/customer-invoices/create/{idCompany} [ADMIN, ACCOUNTING]
+  +POST /api/customer-invoices/modify-to-new-version/{idDocument} [ADMIN, ACCOUNTING]
+  +GET /api/customer-invoices/toggle-paid-status/{idDocument} [ADMIN, ACCOUNTING]
+  +GET /api/customer-invoices/last-number [ADMIN, ACCOUNTING]
+  +DELETE /api/customer-invoices/delete/{idDocument} [ADMIN, ACCOUNTING]
+}
+
+class ProviderInvoiceController {
+  +GET /api/provider-invoices
+  +GET /api/provider-invoices/by-id/{idDocument}
+  +GET /api/provider-invoices/by-provider/{idCompany}
+  +GET /api/provider-invoices/by-status [ADMIN, ACCOUNTING]
+  +GET /api/provider-invoices/by-provider/{idCompany}/by-status [ADMIN, ACCOUNTING]
+  +POST /api/provider-invoices/create/{idCompany} [ADMIN, ACCOUNTING]
+  +POST /api/provider-invoices/modify-to-new-version/{idDocument} [ADMIN, ACCOUNTING]
+  +GET /api/provider-invoices/toggle-paid-status/{idDocument} [ADMIN, ACCOUNTING]
+  +DELETE /api/provider-invoices/delete/{idDocument} [ADMIN, ACCOUNTING]
+}
+
+class PurchaseOrderController {
+  +GET /api/pos
+  +GET /api/pos/by-id/{idDocument}
+  +GET /api/pos/by-provider/{idCompany}
+  +GET /api/pos/by-status [ADMIN, ACCOUNTING]
+  +GET /api/pos/by-provider/{idCompany}/by-status [ADMIN, ACCOUNTING]
+  +POST /api/pos/create/{idCompany} [ADMIN, ACCOUNTING]
+  +PATCH /api/pos/{idDocument} [ADMIN, ACCOUNTING]
+  +GET /api/pos/last-number [ADMIN, ACCOUNTING]
+  +DELETE /api/pos/delete/{idDocument} [ADMIN, ACCOUNTING]
+}
+
+class QuoteController {
+  +GET /api/quotes
+  +GET /api/quotes/by-id/{idDocument}
+  +GET /api/quotes/by-customer/{idCompany}
+  +GET /api/quotes/by-status [ADMIN, ACCOUNTING]
+  +GET /api/quotes/by-customer/{idCompany}/by-status [ADMIN, ACCOUNTING]
+  +POST /api/quotes/create/{idCompany} [ADMIN, ACCOUNTING]
+  +PATCH /api/quotes/{idDocument} [ADMIN, ACCOUNTING]
+  +GET /api/quotes/last-number [ADMIN, ACCOUNTING]
+  +DELETE /api/quotes/delete/{idDocument} [ADMIN, ACCOUNTING]
+}
+
+class OrderController {
+  +GET /api/companies/{idCompany}/orders
+  +GET /api/companies/{idCompany}/orders/pending
+  +GET /api/companies/{idCompany}/orders/{idOrder}
+  +POST /api/companies/{idCompany}/orders [ADMIN, ACCOUNTING]
+  +PATCH /api/companies/{idCompany}/orders/{idOrder} [ADMIN, ACCOUNTING]
+  +DELETE /api/companies/{idCompany}/orders/{idOrder} [ADMIN, ACCOUNTING]
+}
+
+class OrderGlobalController {
+  +GET /api/orders/pending
+  +GET /api/orders/customers
+  +GET /api/orders/providers
+  +GET /api/orders/{idOrder}
+  +DELETE /api/orders/{idOrder} [ADMIN, ACCOUNTING]
+}
+}
+
+' ==========================
+' Relaciones conceptuales
+' ==========================
+CustomerInvoiceController --> "uses" CustomerInvoiceService
+ProviderInvoiceController --> "uses" ProviderInvoiceService
+PurchaseOrderController --> "uses" PurchaseOrderService
+QuoteController --> "uses" QuoteService
+OrderController --> "uses" OrderService
+OrderGlobalController --> "uses" OrderService
+
+' ==========================
+' Notas
+' ==========================
+note top of CustomerInvoiceController
+  DOC_TYPE = INV_CUST
+  Handles customer invoices
+end note
+
+note top of ProviderInvoiceController
+  DOC_TYPE = INV_PROV
+  Handles provider invoices
+end note
+
+note top of PurchaseOrderController
+  DOC_TYPE = PO
+  Handles purchase orders
+end note
+
+note top of QuoteController
+  DOC_TYPE = QUOTE
+  Handles quotes
+end note
+
+note top of OrderController
+  Orders tied to a specific company
+end note
+
+note top of OrderGlobalController
+  Orders not tied to a specific company
+end note
+
+@enduml

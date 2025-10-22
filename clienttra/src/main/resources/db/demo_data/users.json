@@ -10,7 +10,7 @@
     "userName": "accounting_test",
     "passwd": "accounting_testPass",
     "email": "accounting_test@example.com",
-    "idRole": 2
+    "idRole": 2,
     "planName": 3
   },
   {

@@ -1,0 +1,58 @@
+@startuml
+title ClientTra - Package config
+!theme plain
+
+' Forzamos dirección de izquierda a derecha
+left to right direction
+
+' ==== Definición de clases ====
+package config {
+
+    class InternationalizationConfig {
+        + messageSource() : MessageSource
+        + getValidator(messageSource: MessageSource) : LocalValidatorFactoryBean
+    }
+
+    class LocaleConfig {
+        + localeResolver() : LocaleResolver
+    }
+
+    class SecurityConfig {
+        - jwtAuthFilter : JwtAuthFilter
+        + passwordEncoder() : PasswordEncoder
+        + authenticationManager(config: AuthenticationConfiguration) : AuthenticationManager
+        + securityFilterChain(http: HttpSecurity, accessDeniedHandler: CustomAccessDeniedHandler) : SecurityFilterChain
+        + corsConfigurationSource() : CorsConfigurationSource
+    }
+
+    class WebConfig {
+        + addResourceHandlers(registry: ResourceHandlerRegistry) : void
+    }
+}
+
+' ==== Dependencias principales ====
+InternationalizationConfig --> "1" MessageSource : usa
+InternationalizationConfig --> "1" LocalValidatorFactoryBean : configura
+
+LocaleConfig --> "1" LocaleResolver : crea
+LocaleConfig ..> CustomUserDetails : lee idioma preferido
+LocaleConfig ..> SecurityContextHolder : obtiene autenticación
+
+SecurityConfig --> JwtAuthFilter : usa
+SecurityConfig --> CustomAccessDeniedHandler : maneja errores
+SecurityConfig --> AuthenticationManager : crea
+SecurityConfig --> PasswordEncoder : crea
+SecurityConfig --> SecurityFilterChain : construye
+SecurityConfig --> CorsConfigurationSource : define CORS
+
+WebConfig --> ResourceHandlerRegistry : configura recursos
+
+' ==== Distribución visual manual ====
+together {
+  InternationalizationConfig -- LocaleConfig
+}
+together {
+  SecurityConfig -- WebConfig
+}
+
+@enduml

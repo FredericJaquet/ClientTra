@@ -1,0 +1,83 @@
+@startuml
+' ----------------------
+' DTOs de Demo (modo demo)
+' ----------------------
+package dto.demo{
+class DemoCompanyDTO {
+  +String vatNumber
+  +String comName
+  +String legalName
+  +String email
+  +String web
+  +String defaultLanguage
+  +Double defaultVAT
+  +Double defaultWithholding
+  +String invoicingMethod
+  +String payMethod
+  +Integer duedate
+  +Boolean europe
+  +List<CreateContactPersonRequestDTO> contactPersons
+  +List<CreatePhoneRequestDTO> phones
+  +List<CreateAddressRequestDTO> addresses
+  +List<CreateBankAccountRequestDTO> bankAccounts
+  +List<CreateSchemeRequestDTO> schemes
+  +List<DemoDocumentDTO> documents
+  +List<CreateOrderRequestDTO> orders
+}
+
+class DemoDocumentDTO {
+  +String docNumber
+  +LocalDate docDate
+  +DocumentType docType
+  +DocumentStatus status
+  +String language
+  +Double vatRate
+  +Double withholding
+  +Double totalNet
+  +Double totalVat
+  +Double totalGross
+  +Double totalWithholding
+  +Double totalToPay
+  +String currency
+  +String noteDelivery
+  +String notePayment
+  +String noteComment
+  +LocalDate deadline
+  +CreateChangeRateRequestDTO changeRate
+  +CreateBankAccountRequestDTO bankAccount
+  +List<CreateOrderRequestDTO> orders
+}
+
+class DemoOwnerCompanyDTO {
+  +String vatNumber
+  +String comName
+  +String legalName
+  +String email
+  +String web
+  +List<CreateAddressRequestDTO> addresses
+  +List<CreateBankAccountRequestDTO> bankAccounts
+  +List<CreateChangeRateRequestDTO> changeRates
+}
+}
+package dto.create{
+
+' ----------------------
+' Relaciones de composición
+' ----------------------
+DemoCompanyDTO *-- CreateContactPersonRequestDTO : contactPersons
+DemoCompanyDTO *-- CreatePhoneRequestDTO : phones
+DemoCompanyDTO *-- CreateAddressRequestDTO : addresses
+DemoCompanyDTO *-- CreateBankAccountRequestDTO : bankAccounts
+DemoCompanyDTO *-- CreateSchemeRequestDTO : schemes
+DemoCompanyDTO *-- DemoDocumentDTO : documents
+DemoCompanyDTO *-- CreateOrderRequestDTO : orders
+
+DemoDocumentDTO *-- CreateChangeRateRequestDTO : changeRate
+DemoDocumentDTO *-- CreateBankAccountRequestDTO : bankAccount
+DemoDocumentDTO *-- CreateOrderRequestDTO : orders
+
+DemoOwnerCompanyDTO *-- CreateAddressRequestDTO : addresses
+DemoOwnerCompanyDTO *-- CreateBankAccountRequestDTO : bankAccounts
+DemoOwnerCompanyDTO *-- CreateChangeRateRequestDTO : changeRates
+}
+@enduml

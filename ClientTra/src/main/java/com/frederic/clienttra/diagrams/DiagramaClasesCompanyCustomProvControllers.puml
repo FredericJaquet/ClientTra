@@ -1,0 +1,42 @@
+@startuml
+title ClientTra - Package controllers.customer.provider
+
+package controllers {
+
+    class CustomerController {
+        + getAllCustomers() : ResponseEntity<List<CustomerForListDTO>>
+        + getAllCustomersEnabled(enabled: boolean) : ResponseEntity<List<CustomerForListDTO>>
+        + getCustomerById(id: int) : ResponseEntity<CustomerDetailsDTO>
+        + searchCustomers(input: String) : ResponseEntity<List<CustomerForListDTO>>
+        + getMinimalCustomers() : ResponseEntity<List<BaseCompanyMinimalDTO>>
+        + createCustomer(dto: CreateCustomerRequestDTO) : ResponseEntity<CustomerForListDTO>
+        + updateCustomer(idCompany: int, dto: UpdateCustomerRequestDTO) : ResponseEntity<CustomerDetailsDTO>
+        + deleteCustomer(id: int) : ResponseEntity<GenericResponseDTO>
+    }
+
+    class ProviderController {
+        + getAllProviders() : ResponseEntity<List<ProviderForListDTO>>
+        + getAllProvidersEnabled(enabled: boolean) : ResponseEntity<List<ProviderForListDTO>>
+        + getProviderById(id: int) : ResponseEntity<ProviderDetailsDTO>
+        + searchProvider(input: String) : ResponseEntity<List<ProviderForListDTO>>
+        + getMinimalProviders() : ResponseEntity<List<BaseCompanyMinimalDTO>>
+        + createProvider(dto: CreateProviderRequestDTO) : ResponseEntity<ProviderForListDTO>
+        + updateProvider(id: int, dto: UpdateProviderRequestDTO) : ResponseEntity<ProviderDetailsDTO>
+        + deleteProvider(id: int) : ResponseEntity<GenericResponseDTO>
+    }
+
+    class SchemeController {
+        + getAllSchemes(idCompany: Integer) : ResponseEntity<List<SchemeDTO>>
+        + getSchemeById(idCompany: Integer, idScheme: Integer) : ResponseEntity<SchemeDTO>
+        + deleteScheme(idCompany: Integer, idScheme: Integer) : ResponseEntity<GenericResponseDTO>
+        + createScheme(idCompany: Integer, dto: CreateSchemeRequestDTO) : ResponseEntity<SchemeDTO>
+        + updateScheme(idCompany: Integer, idScheme: Integer, dto: UpdateSchemeRequestDTO) : ResponseEntity<SchemeDTO>
+    }
+}
+
+' ==== Dependencias principales ====
+CustomerController --> CustomerService : usa
+ProviderController --> ProviderService : usa
+SchemeController --> SchemeService : usa
+
+@enduml

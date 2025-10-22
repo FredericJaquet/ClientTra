@@ -1,0 +1,50 @@
+@startuml
+title DTOs Create - Schemes
+
+' ==== CONFIGURACIÓN VISUAL ====
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    BorderColor #2C3E50
+    ArrowColor #2C3E50
+    FontSize 12
+}
+skinparam package {
+    BorderColor #2C3E50
+    FontSize 13
+    FontStyle bold
+}
+
+' ==== PACKAGE PRINCIPAL ====
+package "dto.create" {
+
+    ' ===== SCHEME =====
+    class CreateSchemeRequestDTO implements BaseSchemeDTO {
+        +String schemeName <<@NotBlank>>
+        +Double price <<@NotNull>>
+        +String units
+        +String fieldName
+        +String sourceLanguage
+        +String targetLanguage
+        +List<CreateSchemeLineRequestDTO> schemeLines
+    }
+
+    ' ===== SCHEME LINE =====
+    class CreateSchemeLineRequestDTO implements BaseSchemeLineDTO {
+        +String descrip
+        +Double discount
+    }
+
+    ' ===== RELACIONES =====
+    CreateSchemeRequestDTO --> CreateSchemeLineRequestDTO : has list >
+}
+
+' ==== IMPLEMENTACIONES ====
+CreateSchemeRequestDTO -|> BaseSchemeDTO
+CreateSchemeLineRequestDTO -|> BaseSchemeLineDTO
+
+' ==== POSICIONAMIENTO ====
+BaseSchemeDTO -[hidden]-> CreateSchemeRequestDTO
+BaseSchemeLineDTO -[hidden]-> CreateSchemeLineRequestDTO
+
+@enduml
