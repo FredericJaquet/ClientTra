@@ -34,7 +34,7 @@ public interface InvoiceForPendingReportRepository extends JpaRepository<Documen
                 d.docNumber AS docNumber,
                 d.totalToPay AS totalToPay,
                 d.status AS status,
-                d.docDate AS docDate
+                d.deadline AS deadline
             FROM Document d
             JOIN d.company c
             WHERE d.status = :status

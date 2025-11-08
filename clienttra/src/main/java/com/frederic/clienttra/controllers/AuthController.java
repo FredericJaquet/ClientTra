@@ -29,37 +29,6 @@ public class AuthController {
     private final CustomUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    /*@PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            CustomUserDetails userDetails = (CustomUserDetails) userDetailsService
-                    .loadUserByUsername(request.getUsername());
-
-            String jwt = jwtUtil.generateToken(userDetails);
-
-            return ResponseEntity.ok(Map.of(
-                    "token", jwt,
-                    "username", userDetails.getUsername(),
-                    "role", userDetails.getAuthorities().iterator().next().getAuthority(),
-                    "preferredLanguage", userDetails.getPreferredLanguage(),
-                    "preferredTheme", userDetails.getPreferredTheme(),
-                    "preferredMode", userDetails.getPreferredMode()
-            ));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid credentials"));
-        }
-    }*/
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         try {

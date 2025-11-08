@@ -18,10 +18,12 @@ import com.frederic.clienttra.repositories.DocumentRepository;
 import com.frederic.clienttra.repositories.OrderRepository;
 import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -161,11 +163,26 @@ public class CustomerInvoiceService implements DocumentService {
      */
     @Transactional(readOnly = true)
     public String getLastDocumentNumber(DocumentType type) {
-        String lastNumber;
         Company owner = companyService.getCurrentCompanyOrThrow();
+        String lastNumber;
+        String yearPrefix = Year.now().toString() + "-";
 
-       lastNumber=documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type).orElse("N/A");
+        System.out.println("CustomerInvoiceService linea 169: "+yearPrefix);
 
+        lastNumber = documentRepository
+                .findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(owner, type, yearPrefix, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if(lastNumber == null){
+            yearPrefix = (Year.now().minusYears(1)).toString() + "-";
+            lastNumber = documentRepository
+                    .findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(owner, type, yearPrefix, PageRequest.of(0, 1))
+                    .stream()
+                    .findFirst()
+                    .orElse("N/A");
+        }
 
         return lastNumber;
     }
@@ -313,7 +330,7 @@ public class CustomerInvoiceService implements DocumentService {
         if(entity.getStatus() == DocumentStatus.PAID){
             entity.setStatus(DocumentStatus.PENDING);
         }
-        if(entity.getStatus() == DocumentStatus.PENDING){
+        else if(entity.getStatus() == DocumentStatus.PENDING){
             entity.setStatus(DocumentStatus.PAID);
         }
         documentRepository.save(entity);

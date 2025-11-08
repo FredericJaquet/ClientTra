@@ -1,4 +1,6 @@
--- Índices adicionales
+-- ===========================================================
+-- Creación de índices para optimización de consultas
+-- ===========================================================
 
 -- Companies
 CREATE UNIQUE INDEX idx_companies_vat_number ON companies(vat_number);

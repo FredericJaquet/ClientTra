@@ -248,7 +248,7 @@ public class ProviderInvoiceService implements DocumentService {
         if(entity.getStatus() == DocumentStatus.PAID){
             entity.setStatus(DocumentStatus.PENDING);
         }
-        if(entity.getStatus() == DocumentStatus.PENDING){
+        else if(entity.getStatus() == DocumentStatus.PENDING){
             entity.setStatus(DocumentStatus.PAID);
         }
         documentRepository.save(entity);

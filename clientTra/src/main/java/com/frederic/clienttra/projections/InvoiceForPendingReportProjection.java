@@ -14,6 +14,6 @@ public interface InvoiceForPendingReportProjection {
     String getDocNumber();
     Double getTotalToPay();
     DocumentStatus getStatus();
-    LocalDate getDocDate();
+    LocalDate getDeadline();
 
 }

@@ -6,6 +6,7 @@ import com.frederic.clienttra.enums.DocumentStatus;
 import com.frederic.clienttra.enums.DocumentType;
 import com.frederic.clienttra.projections.DocumentListProjection;
 import com.frederic.clienttra.projections.DocumentMinimalProjection;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -156,7 +157,6 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
                                                                                  @Param("idCompany") Integer idCompany,
                                                                                  @Param("status") DocumentStatus status,
                                                                                  @Param("ownerCompany") Company ownerCompany);
-
     /**
      * Finds a document by owner company, document ID, and document type.
      *
@@ -185,14 +185,19 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
      * @return an Optional containing the highest document number as String, if any
      */
     @Query("""
-        SELECT d.docNumber
+    SELECT d.docNumber
         FROM Document d
         WHERE d.ownerCompany = :ownerCompany
           AND d.docType = :docType
+          AND d.docNumber LIKE CONCAT(:yearPrefix, '%')
+          AND d.status NOT IN ('MODIFIED','DELETED')
         ORDER BY d.docNumber DESC
-        LIMIT 1
     """)
-    Optional<String> findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(Company ownerCompany, DocumentType docType);
+    List<String> findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(
+            @Param("ownerCompany") Company ownerCompany,
+            @Param("docType") DocumentType docType,
+            @Param("yearPrefix") String yearPrefix,
+            Pageable pageable);
 
     /**
      * Retrieves a minimal list of documents (ID and number) filtered by owner company and document type,
@@ -214,4 +219,5 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
         ORDER BY d.docNumber DESC
     """)
     List<DocumentMinimalProjection> findMinimalListByOwnerCompanyAndDocType(@Param("ownerCompany") Company ownerCompany, @Param("docType") String docType);
+
 }

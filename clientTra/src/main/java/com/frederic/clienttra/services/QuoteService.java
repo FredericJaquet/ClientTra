@@ -19,10 +19,12 @@ import com.frederic.clienttra.repositories.DocumentRepository;
 import com.frederic.clienttra.repositories.OrderRepository;
 import com.frederic.clienttra.utils.DocumentUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Objects;
 
@@ -136,8 +138,25 @@ public class QuoteService implements DocumentService {
     @Transactional(readOnly = true)
     public String getLastDocumentNumber(DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        return documentRepository.findTop1DocNumberByOwnerCompanyAndDocTypeOrderByDocNumberDesc(owner, type)
-                .orElseThrow(LastNumberNotFoundException::new);
+        String yearPrefix = Year.now().toString() + "-";
+        String lastNumber;
+
+        lastNumber = documentRepository
+                .findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(owner, type, yearPrefix, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if(lastNumber == null){
+            yearPrefix = (Year.now().minusYears(1)).toString() + "-";
+            lastNumber = documentRepository
+                    .findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(owner, type, yearPrefix, PageRequest.of(0, 1))
+                    .stream()
+                    .findFirst()
+                    .orElse("N/A");
+        }
+
+        return lastNumber;
     }
 
     /**

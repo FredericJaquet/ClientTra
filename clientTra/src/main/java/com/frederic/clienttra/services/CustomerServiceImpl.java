@@ -126,7 +126,10 @@ public class CustomerServiceImpl implements CustomerService {
     public List<BaseCompanyMinimalDTO> getMinimalCustomerList() {
         Company owner = companyService.getCurrentCompanyOrThrow();
         List<CustomerMinimalProjection> entities = customerRepository.findMinimalListByOwnerCompany(owner);
-        return customerMapper.toMinimalDTOs(entities);
+        List<BaseCompanyMinimalDTO>dtos = customerMapper.toMinimalDTOs(entities);
+        dtos.sort(Comparator.comparing(BaseCompanyMinimalDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+
+        return dtos;
     }
 
     /**

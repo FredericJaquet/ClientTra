@@ -19,6 +19,7 @@ import com.frederic.clienttra.mappers.ItemMapper;
 import com.frederic.clienttra.mappers.OrderMapper;
 import com.frederic.clienttra.projections.OrderListForDashboardProjection;
 import com.frederic.clienttra.projections.OrderListForDocumentsProjection;
+import com.frederic.clienttra.repositories.DocumentRepository;
 import com.frederic.clienttra.repositories.OrderRepository;
 import com.frederic.clienttra.utils.DocumentUtils;
 import com.frederic.clienttra.validators.OwnerValidator;
@@ -40,6 +41,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final ItemMapper itemMapper;
+    private final DocumentRepository documentRepository;
     private final DocumentUtils documentUtils;
     private final OwnerValidator ownerValidator;
 
@@ -228,16 +230,9 @@ public class OrderService {
         Order entity = orderRepository.findByIdOrderAndOwnerCompany(idOrder, owner)
                 .orElseThrow(OrderNotFoundException::new);
 
-        List<Document> documents=entity.getDocuments();
+        //List<Document> documents =entity.getDocuments();
 
-        // Check that the order does not belong to an already paid invoice
-        for(Document document : documents){
-            if(document.getDocType().equals(DocumentType.INV_PROV) || document.getDocType().equals(DocumentType.INV_CUST)){
-                if(!document.getStatus().equals(DocumentStatus.PENDING)){
-                    throw new CantModifyPaidInvoiceException();
-                }
-            }
-        }
+        List<Document> documents = new ArrayList<>(entity.getDocuments());//Esto se hace así para evitar bloqueos de Hibernate (En caso contrario, Spring Data intenta iterar de nuevo sobre esa misma colección gestionada, que fue modificada durante la iteración anterior → ConcurrentModificationException.)
 
         // Validate the order belongs to the correct company
         if (!entity.getOwnerCompany().equals(owner) || !entity.getCompany().getIdCompany().equals(idCompany)) {
@@ -312,9 +307,23 @@ public class OrderService {
             }
         }
 
-        Order savedEntity = orderRepository.save(entity);
+        Order savedOrder = orderRepository.saveAndFlush(entity);
 
-        return orderMapper.toDetailsDto(savedEntity);
+        // Check that the order does not belong to an already paid invoice nor an accepted QUOTE/PO and recalculate totals
+        for (Document document : documents) {
+            if (document.getDocType().equals(DocumentType.INV_PROV) || document.getDocType().equals(DocumentType.INV_CUST)) {
+                if (!(document.getStatus().equals(DocumentStatus.PENDING)
+                        || document.getStatus().equals(DocumentStatus.MODIFIED)
+                        || document.getStatus().equals(DocumentStatus.DELETED))) {
+                    throw new CantModifyPaidInvoiceException();
+                }
+            }
+            documentUtils.calculateTotals(document);
+        }
+
+        documentRepository.saveAll(documents);
+
+        return orderMapper.toDetailsDto(savedOrder);
     }
 
     /**

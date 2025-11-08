@@ -164,13 +164,13 @@ public class CompanyMapper {
             }
             entity.setLegalName(dto.getLegalName());
         }
-        if(dto.getEmail()!=null){
+        if(dto.getEmail()!=null && !dto.getEmail().isBlank()){
             if(!EmailValidator.isValidEmail(dto.getEmail())){
                 throw new InvalidEmailException();
             }
             entity.setEmail(dto.getEmail());
         }
-        if(dto.getWeb()!=null){
+        if(dto.getWeb()!=null && !dto.getWeb().isBlank()){
             entity.setWeb(dto.getWeb());
         }
     }
@@ -201,13 +201,14 @@ public class CompanyMapper {
             }
             entity.setLegalName(dto.getLegalName());
         }
-        if(dto.getEmail()!=null){
+
+        if(dto.getEmail()!=null && !dto.getEmail().isBlank()){
             if(!EmailValidator.isValidEmail(dto.getEmail())){
                 throw new InvalidEmailException();
             }
             entity.setEmail(dto.getEmail());
         }
-        if(dto.getWeb()!=null){
+        if(dto.getWeb()!=null && !dto.getWeb().isBlank()){
             entity.setWeb(dto.getWeb());
         }
         if(dto.getLogoPath()!=null){

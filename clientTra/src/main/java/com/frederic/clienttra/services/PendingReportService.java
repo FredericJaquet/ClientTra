@@ -45,7 +45,7 @@ public class PendingReportService {
 
         // Group invoices by YearMonth of the document date
         Map<YearMonth, List<InvoiceForPendingReportProjection>> groupedByYearMonth =  rawData.stream()
-                .collect(Collectors.groupingBy(p -> YearMonth.from(p.getDocDate())));
+                .collect(Collectors.groupingBy(p -> YearMonth.from(p.getDeadline())));
 
         List<MonthlyPendingReportDTO> monthlyReport =  new ArrayList<>();
         double grandTotal = 0.0;

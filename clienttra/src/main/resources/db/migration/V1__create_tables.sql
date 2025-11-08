@@ -1,10 +1,19 @@
+-- ===========================================================
+-- Script de creación de la base de datos CLIENTTRA
+-- Autor: Frédéric Jaquet
+-- Fecha: 2025-10-21
+-- Descripción: Estructura completa de tablas, claves foráneas e índices
+-- Base de datos: MySQL 8.x
+-- ===========================================================
+
+
 DROP TABLE IF EXISTS document_orders;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS document_details;
 DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS scheme_lines;
-DROP TABLE IF EXISTS Schemes;
+DROP TABLE IF EXISTS schemes;
 DROP TABLE IF EXISTS providers;
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS users;
@@ -196,7 +205,7 @@ CREATE TABLE IF NOT EXISTS documents (
 
 CREATE TABLE IF NOT EXISTS orders (
   id_order             INT 		AUTO_INCREMENT PRIMARY KEY,
-  descrip              VARCHAR(100) 	NOT NULL,
+  descrip              VARCHAR(255) 	NOT NULL,
   date_order           DATE 		NOT NULL,
   price_per_unit       DOUBLE 		NOT NULL,
   units                VARCHAR(15),

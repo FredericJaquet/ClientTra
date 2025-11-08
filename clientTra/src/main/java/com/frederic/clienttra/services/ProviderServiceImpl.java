@@ -127,7 +127,10 @@ public class ProviderServiceImpl implements ProviderService {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
         List<ProviderMinimalProjection> entities = providerRepository.findMinimalListByOwnerCompany(owner);
-        return providerMapper.toMinimalDTOs(entities);
+        List<BaseCompanyMinimalDTO>dtos = providerMapper.toMinimalDTOs(entities);
+        dtos.sort(Comparator.comparing(BaseCompanyMinimalDTO::getComName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+
+        return dtos;
     }
 
     /**
@@ -175,7 +178,7 @@ public class ProviderServiceImpl implements ProviderService {
     public void updateProvider(int id, UpdateProviderRequestDTO dto) {
         Company owner = companyService.getCurrentCompanyOrThrow();
 
-        Provider entity = providerRepository.findByOwnerCompanyAndIdProvider(owner, id)
+        Provider entity = providerRepository.findByOwnerCompanyAndCompany_IdCompany(owner, id)
                 .orElseThrow(ProviderNotFoundException::new);
 
         Company company = entity.getCompany();
