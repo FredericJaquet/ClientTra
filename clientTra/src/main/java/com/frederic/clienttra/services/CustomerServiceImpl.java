@@ -4,12 +4,15 @@ import com.frederic.clienttra.dto.create.*;
 import com.frederic.clienttra.dto.read.*;
 import com.frederic.clienttra.dto.update.*;
 import com.frederic.clienttra.entities.*;
+import com.frederic.clienttra.exceptions.CompanyAlreadyExistsException;
 import com.frederic.clienttra.exceptions.CustomerNotFoundException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.projections.CustomerListProjection;
 import com.frederic.clienttra.projections.CustomerMinimalProjection;
 import com.frederic.clienttra.repositories.*;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -145,7 +148,19 @@ public class CustomerServiceImpl implements CustomerService {
 
         Company companyEntity = companyMapper.toEntity(dto);
         companyEntity.setOwnerCompany(owner);
-        Company savedCompany = companyRepository.save(companyEntity);
+
+        Company savedCompany;
+        try {
+            savedCompany = companyRepository.save(companyEntity);
+        } catch (DataIntegrityViolationException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException cve &&
+                    cve.getConstraintName() != null &&
+                    cve.getConstraintName().contains("uq_companies_vat_owner")) {
+                throw new CompanyAlreadyExistsException();
+            }
+            System.out.println("CustomerServiceImpl linea 158");
+            throw ex;
+        }
 
         if(dto.getDefaultVat()>1){
             dto.setDefaultVat(dto.getDefaultVat()/100);

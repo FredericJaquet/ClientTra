@@ -138,7 +138,7 @@ public class QuoteService implements DocumentService {
     @Transactional(readOnly = true)
     public String getLastDocumentNumber(DocumentType type) {
         Company owner = companyService.getCurrentCompanyOrThrow();
-        String yearPrefix = Year.now().toString() + "-";
+        String yearPrefix = "Q"+Year.now().toString() + "-";
         String lastNumber;
 
         lastNumber = documentRepository
@@ -148,7 +148,7 @@ public class QuoteService implements DocumentService {
                 .orElse(null);
 
         if(lastNumber == null){
-            yearPrefix = (Year.now().minusYears(1)).toString() + "-";
+            yearPrefix = "Q"+(Year.now().minusYears(1)).toString() + "-";
             lastNumber = documentRepository
                     .findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(owner, type, yearPrefix, PageRequest.of(0, 1))
                     .stream()

@@ -1,13 +1,16 @@
 package com.frederic.clienttra.exceptions;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.frederic.clienttra.utils.MessageResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -44,6 +47,33 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 "Access denied. You do not have permission to perform this action.",
                 request.getRequestURI());
+    }
+
+    //Wronf Date Formar
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
+                invalidFormatException.getTargetType() == LocalDate.class) {
+
+           String code = "validation.date.invalid"; // clave para MessageResolver
+            String fallbackMessage = "The date provided is invalid. Please check the format or range.";
+
+            return buildErrorResponse(
+                    HttpStatus.BAD_REQUEST,
+                    code,
+                    fallbackMessage,
+                    request.getRequestURI()
+            );
+        }
+
+        //TODO, crear respuesta correcta
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                "Malformed request body. Please verify the data format.",
+                "Error",
+                request.getRequestURI()
+        );
     }
 
     // --- Resources not found (404) ---

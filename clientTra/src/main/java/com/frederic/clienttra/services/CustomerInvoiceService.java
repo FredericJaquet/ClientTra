@@ -167,8 +167,6 @@ public class CustomerInvoiceService implements DocumentService {
         String lastNumber;
         String yearPrefix = Year.now().toString() + "-";
 
-        System.out.println("CustomerInvoiceService linea 169: "+yearPrefix);
-
         lastNumber = documentRepository
                 .findDocNumbersByOwnerCompanyAndDocTypeAndDocNumberStartingWith(owner, type, yearPrefix, PageRequest.of(0, 1))
                 .stream()

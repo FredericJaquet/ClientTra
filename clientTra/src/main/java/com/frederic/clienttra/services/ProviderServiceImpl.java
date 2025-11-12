@@ -7,6 +7,7 @@ import com.frederic.clienttra.dto.read.ProviderForListDTO;
 import com.frederic.clienttra.dto.update.UpdateProviderRequestDTO;
 import com.frederic.clienttra.entities.Company;
 import com.frederic.clienttra.entities.Provider;
+import com.frederic.clienttra.exceptions.CompanyAlreadyExistsException;
 import com.frederic.clienttra.exceptions.ProviderNotFoundException;
 import com.frederic.clienttra.mappers.CompanyMapper;
 import com.frederic.clienttra.mappers.ProviderMapper;
@@ -15,6 +16,8 @@ import com.frederic.clienttra.projections.ProviderMinimalProjection;
 import com.frederic.clienttra.repositories.CompanyRepository;
 import com.frederic.clienttra.repositories.ProviderRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,7 +150,19 @@ public class ProviderServiceImpl implements ProviderService {
 
         Company companyEntity = companyMapper.toEntity(dto);
         companyEntity.setOwnerCompany(owner);
-        Company savedCompany = companyRepository.save(companyEntity);
+        Company savedCompany;
+
+        try {
+            savedCompany = companyRepository.save(companyEntity);
+        } catch (DataIntegrityViolationException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException cve &&
+                    cve.getConstraintName() != null &&
+                    cve.getConstraintName().contains("uq_companies_vat_owner")) {
+                throw new CompanyAlreadyExistsException();
+            }
+            System.out.println("CustomerServiceImpl linea 158");
+            throw ex;
+        }
 
         if(dto.getDefaultVat()>1){
             dto.setDefaultVat(dto.getDefaultVat()/100);
