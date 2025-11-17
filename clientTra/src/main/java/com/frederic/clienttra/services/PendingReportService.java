@@ -44,8 +44,13 @@ public class PendingReportService {
         List<InvoiceForPendingReportProjection> rawData = repository.findInvoiceForPendingReport(owner.getIdCompany(), type, DocumentStatus.PENDING);
 
         // Group invoices by YearMonth of the document date
-        Map<YearMonth, List<InvoiceForPendingReportProjection>> groupedByYearMonth =  rawData.stream()
-                .collect(Collectors.groupingBy(p -> YearMonth.from(p.getDeadline())));
+        Map<YearMonth, List<InvoiceForPendingReportProjection>> groupedByYearMonth = new HashMap<>();
+        try {
+            groupedByYearMonth = rawData.stream()
+                    .collect(Collectors.groupingBy(p -> YearMonth.from(p.getDeadline())));
+        }catch(NullPointerException e){
+            System.out.println(e.getMessage());
+        }
 
         List<MonthlyPendingReportDTO> monthlyReport =  new ArrayList<>();
         double grandTotal = 0.0;
