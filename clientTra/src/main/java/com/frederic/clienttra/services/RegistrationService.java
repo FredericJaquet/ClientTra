@@ -6,7 +6,6 @@ import com.frederic.clienttra.entities.*;
 import com.frederic.clienttra.exceptions.CompanyAlreadyExistsException;
 import com.frederic.clienttra.mappers.AddressMapper;
 import com.frederic.clienttra.repositories.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,7 +51,6 @@ public class RegistrationService {
      * @throws CompanyAlreadyExistsException if a company with the same VAT number already exists.
      * @throws RuntimeException if the ADMIN role or FREEMIUM plan are not found.
      */
-    @Transactional
     public void register(RegistrationRequestDTO dto) {
 
         boolean exists = companyRepository.existsByVatNumberAndOwnerCompanyIsNull(dto.getVatNumber());
@@ -159,7 +157,7 @@ public class RegistrationService {
                 .currency1("€")
                 .currency2("€")
                 .rate(1.0)
-                .date(LocalDate.of(2025,1,1))
+                .date(LocalDate.now())
                 .build();
 
         company.addAddress(address);
@@ -168,10 +166,13 @@ public class RegistrationService {
 
         company.addUser(user);
 
-        companyRepository.save(company);
+        Company newCompany=companyRepository.save(company);
+
+        user.setCompany(newCompany);
 
         userRepository.save(user);
 
         companyRepository.delete(demoCompany);
+
     }
 }

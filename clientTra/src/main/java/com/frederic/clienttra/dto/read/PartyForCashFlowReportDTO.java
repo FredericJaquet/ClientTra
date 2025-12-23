@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,5 +24,12 @@ public class PartyForCashFlowReportDTO {
     private Double totalVat;
     private Double totalWithholding;
     private List<InvoiceSummaryForCashFlowReportDTO> invoices;
+
+    public void addInvoice(InvoiceSummaryForCashFlowReportDTO invoice){
+        if(invoices==null){
+            invoices=new ArrayList<>();
+        }
+        invoices.add(invoice);
+    }
 
 }

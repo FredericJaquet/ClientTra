@@ -80,10 +80,14 @@ class UserServiceTest {
     void getAllUsers_shouldReturnListSortedByName() {
         // given
         int idCompany = 1;
+        int idCurrentUser = 2;
+
         try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
             mockedSecurityUtils.when(SecurityUtils::getCurrentUserCompanyId).thenReturn(idCompany);
 
-            int idCurrentUser = 2;
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserCompanyId).thenReturn(idCompany);
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(idCurrentUser);
+
             User u1 = new User();
             u1.setUserName("Carlos");
             User u2 = new User();

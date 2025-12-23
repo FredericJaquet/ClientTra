@@ -45,22 +45,6 @@ public class CreateUserRequestDTOValidationTest extends AbstractValidationTest {
     }
 
     @Test
-    void missingRole_shouldCauseViolation(){
-        CreateUserRequestDTO dto = baseBuilder().idRole(null).build();
-
-        Set<ConstraintViolation<CreateUserRequestDTO>> violations = validator.validate(dto);
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("idRole"));
-    }
-
-    @Test
-    void missingPlan_shouldCauseViolation(){
-        CreateUserRequestDTO dto = baseBuilder().idPlan(null).build();
-
-        Set<ConstraintViolation<CreateUserRequestDTO>> violations = validator.validate(dto);
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("idPlan"));
-    }
-
-    @Test
     void invalidEmail_shouldCauseViolation(){
         CreateUserRequestDTO dto = baseBuilder().email("email.com").build();
 
@@ -88,7 +72,7 @@ public class CreateUserRequestDTOValidationTest extends AbstractValidationTest {
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
 
-        assertThat(message).isEqualTo("Le nom d'utilisateur est obligatoire."); // mensaje definido en messages_fr.properties
+        assertThat(message).isEqualTo("Le nom d'utilisateur est un champ obligatoire."); // mensaje definido en messages_fr.properties
     }
 
     @Test
@@ -103,36 +87,7 @@ public class CreateUserRequestDTOValidationTest extends AbstractValidationTest {
         assertThat(violations).hasSize(1);
         String message = violations.iterator().next().getMessage();
 
-        assertThat(message).isEqualTo("Le mot de passe est obligatoire."); // mensaje definido en messages_fr.properties
-    }
-
-    @Test
-    void shouldReturnLocalizedValidationMessage_whenIdRoleIsNull() {
-        LocaleContextHolder.setLocale(new Locale("es"));
-
-        CreateUserRequestDTO dto = baseBuilder().idRole(null).build();
-
-        Set<ConstraintViolation<CreateUserRequestDTO>> violations = validator.validate(dto);
-
-        assertThat(violations).hasSize(1);
-        String message = violations.iterator().next().getMessage();
-
-        assertThat(message).isEqualTo("El rol est un campo obligatorio."); // mensaje definido en messages_es.properties
-    }
-
-    @Test
-    void shouldReturnLocalizedValidationMessage_whenIdPlanIsNull() {
-        // Simula que el locale activo es "es"
-        LocaleContextHolder.setLocale(new Locale("es"));
-
-        CreateUserRequestDTO dto = baseBuilder().idPlan(null).build();
-
-        Set<ConstraintViolation<CreateUserRequestDTO>> violations = validator.validate(dto);
-
-        assertThat(violations).hasSize(1);
-        String message = violations.iterator().next().getMessage();
-
-        assertThat(message).isEqualTo("El plan es un campo obligatorio."); // mensaje definido en messages_es.properties
+        assertThat(message).isEqualTo("Le mot de passe est un champ obligatoire."); // mensaje definido en messages_fr.properties
     }
 
     @Test

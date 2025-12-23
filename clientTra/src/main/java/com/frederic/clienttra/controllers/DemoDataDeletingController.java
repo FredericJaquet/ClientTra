@@ -48,6 +48,7 @@ public class DemoDataDeletingController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GenericResponseDTO> registerRealCompany(@Valid @RequestBody RegistrationActualCompanyRequestDTO dto) {
         registrationService.registerFromDemo(dto);
+
         return ResponseEntity.ok(new GenericResponseDTO("registration.created.success"));
     }
 }

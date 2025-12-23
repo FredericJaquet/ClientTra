@@ -6,13 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.frederic.clienttra.dto.create.CreateOrderRequestDTO;
-import com.frederic.clienttra.dto.create.CreateProviderRequestDTO;
 import com.frederic.clienttra.dto.create.CreateUserRequestDTO;
 import com.frederic.clienttra.dto.demo.DemoCompanyDTO;
 import com.frederic.clienttra.dto.demo.DemoDocumentDTO;
 import com.frederic.clienttra.dto.demo.DemoOwnerCompanyDTO;
 import com.frederic.clienttra.entities.*;
-import com.frederic.clienttra.exceptions.CompanyNotFoundException;
 import com.frederic.clienttra.exceptions.UserAlreadyExistsException;
 import com.frederic.clienttra.mappers.*;
 import com.frederic.clienttra.repositories.*;
@@ -23,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Random;
 
 /**
  * Service class to load and delete demo data into/from the database.
@@ -33,7 +31,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-public class DemoDataService { // TODO: Add unit/integration tests if this function remains in production
+public class DemoDataService {
 
     private final AddressRepository addressRepository;
     private final BankAccountRepository bankAccountRepository;
@@ -102,7 +100,7 @@ public class DemoDataService { // TODO: Add unit/integration tests if this funct
      */
     private Company createDemoCompany(DemoOwnerCompanyDTO dto, String userName) {
         Company company = new Company();
-        company.setVatNumber(dto.getVatNumber());
+        company.setVatNumber(generateRandomVatNum());
         company.setComName(dto.getComName() + " for " + userName);
         company.setLegalName(dto.getLegalName() + " for " + userName + " S.A.");
         company.setEmail(dto.getEmail());
@@ -231,5 +229,18 @@ public class DemoDataService { // TODO: Add unit/integration tests if this funct
         } catch (Exception e) {
             throw new RuntimeException("Error reading JSON from " + path, e);
         }
+    }
+
+    private String generateRandomVatNum(){
+        String vatNum="";
+        String letters="abcdefghijklmnopqrstuvwxyz";
+        Random ran=new Random();
+        do{
+            vatNum="ES";
+            vatNum=vatNum.concat(String.valueOf(letters.charAt(ran.nextInt(letters.length()))));
+            vatNum=vatNum.concat(String.valueOf(ran.nextInt(1000000000)));
+        }while(companyRepository.existsByVatNumberAndOwnerCompanyIsNull(vatNum));
+
+        return vatNum;
     }
 }

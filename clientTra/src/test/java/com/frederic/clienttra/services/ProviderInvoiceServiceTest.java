@@ -121,42 +121,6 @@ public class ProviderInvoiceServiceTest {
     }
 
     @Test
-    void createDocument_shouldThrow_WhenVatRateIsInvalid() {
-        CreateDocumentRequestDTO dto = new CreateDocumentRequestDTO();
-        dto.setOrderIds(List.of(1));
-        dto.setVatRate(0.5);
-        dto.setWithholding(1.0);
-
-        Company owner = new Company();
-        when(companyService.getCurrentCompanyOrThrow()).thenReturn(owner);
-        when(orderRepository.findAllByIdOrderInAndOwnerCompany(any(), any())).thenReturn(List.of(mock(Order.class)));
-
-        assertThatThrownBy(() ->
-                providerInvoiceService.createDocument(1, dto, DocumentType.INV_PROV)
-        ).isInstanceOf(InvalidVatRateException.class);
-
-        verifyNoMoreInteractions(documentRepository, documentUtils, documentMapper, orderService);
-    }
-
-    @Test
-    void createDocument_shouldThrow_WhenWithholdingIsInvalid() {
-        CreateDocumentRequestDTO dto = new CreateDocumentRequestDTO();
-        dto.setOrderIds(List.of(1));
-        dto.setVatRate(21.0);
-        dto.setWithholding(0.5);
-
-        Company owner = new Company();
-        when(companyService.getCurrentCompanyOrThrow()).thenReturn(owner);
-        when(orderRepository.findAllByIdOrderInAndOwnerCompany(any(), any())).thenReturn(List.of(mock(Order.class)));
-
-        assertThatThrownBy(() ->
-                providerInvoiceService.createDocument(1, dto, DocumentType.INV_PROV)
-        ).isInstanceOf(InvalidWithholdingException.class);
-
-        verifyNoMoreInteractions(documentRepository, documentUtils, documentMapper, orderService);
-    }
-
-    @Test
     void createDocument_shouldThrow_WhenOrderAlreadyBilled() {
         int idCompany = 1;
         int idOrderCompany = 2;

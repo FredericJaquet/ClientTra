@@ -80,8 +80,20 @@ public class CashFlowReportService {
                         .totalWithholding(0.0)
                         .build();
 
-                fakeInvoices.put(idCompany, invoice);
+                if(!groupedByCompany.containsKey(idCompany)){
+                    Company company = companyService.getCompanyById(idCompany);
+                    PartyForCashFlowReportDTO dto = PartyForCashFlowReportDTO.builder()
+                                    .idCompany(company.getIdCompany())
+                                    .legalName(company.getLegalName())
+                                    .vatNumber(company.getVatNumber())
+                                    .build();
+                    dto.addInvoice(invoice);
+                    parties.add(dto);
+                }else{
+                    fakeInvoices.put(idCompany, invoice);
+                }
             }
+
         }
 
         for (Map.Entry<Integer, List<InvoiceForCashFlowReportProjection>> entry : groupedByCompany.entrySet()) {
@@ -102,6 +114,10 @@ public class CashFlowReportService {
                 dto.getInvoices().add(fakeInvoices.get(idCompany));
             }
 
+            parties.add(dto);
+        }
+
+        for(PartyForCashFlowReportDTO dto : parties){
             // Calculate totals per company
             double totalNet = dto.getInvoices().stream().mapToDouble(i -> Optional.ofNullable(i.getTotalNet()).orElse(0.0)).sum();
             double totalVat = dto.getInvoices().stream().mapToDouble(i -> Optional.ofNullable(i.getTotalVat()).orElse(0.0)).sum();
@@ -114,8 +130,6 @@ public class CashFlowReportService {
             dto.setInvoices(dto.getInvoices().stream()
                     .sorted(Comparator.comparing(InvoiceSummaryForCashFlowReportDTO::getInvoiceNumber))
                     .toList());
-
-            parties.add(dto);
 
             grandTotalNet += totalNet;
         }

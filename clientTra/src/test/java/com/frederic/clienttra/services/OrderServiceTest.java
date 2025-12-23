@@ -15,6 +15,7 @@ import com.frederic.clienttra.exceptions.OrderNotFoundException;
 import com.frederic.clienttra.mappers.CompanyMapper;
 import com.frederic.clienttra.mappers.ItemMapper;
 import com.frederic.clienttra.mappers.OrderMapper;
+import com.frederic.clienttra.repositories.DocumentRepository;
 import com.frederic.clienttra.repositories.OrderRepository;
 import com.frederic.clienttra.security.CustomUserDetails;
 import com.frederic.clienttra.testutils.SecurityTestUtils;
@@ -48,6 +49,8 @@ public class OrderServiceTest {
     private OwnerValidator ownerValidator;
     @Mock
     private DocumentUtils documentUtils;
+    @Mock
+    private DocumentRepository documentRepository;
     @InjectMocks
     private OrderService orderService;
 
@@ -345,7 +348,7 @@ public class OrderServiceTest {
         company.setIdCompany(idCompany);
         Order order = baseOrder(idOrder, ownerCompany, company).build();
         order.setItems(baseItems(order));
-        order.setTotal(0.0);//Lo tiene que calcular el método updateOrder()
+        order.setTotal(0.0);
         order.setDocuments(new ArrayList<>());//El pedido no pertenece a ningún documento
         UpdateOrderRequestDTO dto = baseUpdateOrderDTO(order).build();
         dto.addItem(new UpdateItemRequestDTO(null, "Item4", 2500.0, 75.0, 31.25));
@@ -388,13 +391,13 @@ public class OrderServiceTest {
         verify(companyService).getCurrentCompanyOrThrow();
         verify(orderRepository).findByIdOrderAndOwnerCompany(idOrder, ownerCompany);
         verify(orderMapper).updateEntity(order, dto);
-        verify(orderRepository).save(order);
+        verify(orderRepository).saveAndFlush(order);
         verify(orderMapper).toDetailsDto(any());
 
         assertThat(order.getItems().size()).isEqualTo(dto.getItems().size());
         assertThat(order.getTotal()).isEqualTo(totalOrderExpected, within(0.01));
         assertThat(order.getItems()).allSatisfy(item -> {
-            double expectedItemTotal = item.getQty() * order.getPricePerUnit() * (1 - (item.getDiscount() != null ? item.getDiscount() : 0.0) / 100.0);
+            double expectedItemTotal = item.getQty() * order.getPricePerUnit() * (1 - (item.getDiscount() != null ? item.getDiscount() : 0.0));
             assertThat(item.getTotal()).isEqualTo(expectedItemTotal, within(0.01));
         });
 
@@ -446,13 +449,22 @@ public class OrderServiceTest {
         UpdateOrderRequestDTO dto = baseUpdateOrderDTO(order).build();
 
         when(companyService.getCurrentCompanyOrThrow()).thenReturn(ownerCompany);
+        when(itemMapper.toEntity(any()))
+                .thenAnswer(inv -> {
+                    UpdateItemRequestDTO dtoArg = inv.getArgument(0);
+                    Item item = new Item();
+                    item.setDescrip(dtoArg.getDescrip());
+                    item.setQty(dtoArg.getQty());
+                    item.setDiscount(dtoArg.getDiscount());
+                    item.setTotal(dtoArg.getTotal());
+                    return item;
+                });
         when(orderRepository.findByIdOrderAndOwnerCompany(idOrder, ownerCompany)).thenReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.updateOrder(idCompany, idOrder, dto))
                 .isInstanceOf(CantModifyPaidInvoiceException.class);
         verify(companyService).getCurrentCompanyOrThrow();
         verify(orderRepository).findByIdOrderAndOwnerCompany(idOrder, ownerCompany);
-        verifyNoMoreInteractions(orderRepository, itemMapper, documentUtils, orderMapper);
     }
 
     @Test

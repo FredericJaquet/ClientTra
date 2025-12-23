@@ -152,5 +152,4 @@ public class Company {
         users.add(user);
         user.setCompany(this);
     }
-
 }

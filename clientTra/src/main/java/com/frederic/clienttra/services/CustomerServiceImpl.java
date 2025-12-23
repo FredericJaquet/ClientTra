@@ -157,8 +157,11 @@ public class CustomerServiceImpl implements CustomerService {
                     cve.getConstraintName() != null &&
                     cve.getConstraintName().contains("uq_companies_vat_owner")) {
                 throw new CompanyAlreadyExistsException();
+            }else if (ex.getCause() instanceof ConstraintViolationException cve &&
+                    cve.getConstraintName() != null &&
+                    cve.getConstraintName().contains("uq_companies__legal_owner")) {
+                throw new CompanyAlreadyExistsException();
             }
-            System.out.println("CustomerServiceImpl linea 158");
             throw ex;
         }
 
